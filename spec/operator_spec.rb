@@ -1,5 +1,19 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe SPARQL::Algebra::Operator do
-  # TODO
+  before :all do
+    @is_iri = SPARQL::Algebra::Operator::IsIRI.new
+  end
+
+  describe "IsIRI#evaluate(RDF::URI)" do
+    it "returns true" do
+      @is_iri.evaluate(RDF::URI('http://rdf.rubyforge.org/')).should eql RDF::Literal(true)
+    end
+  end
+
+  describe "IsIRI#evaluate(RDF::Node)" do
+    it "returns false" do
+      @is_iri.evaluate(RDF::Node.new).should eql RDF::Literal(false)
+    end
+  end
 end

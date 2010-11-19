@@ -2,6 +2,8 @@ module SPARQL; module Algebra
   ##
   # A SPARQL operator.
   class Operator
+    autoload :IsIRI, 'sparql/algebra/operator/is_iri'
+
     ##
     # @param [Hash{Symbol => Object}] options
     def initialize(options = {})
