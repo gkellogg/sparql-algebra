@@ -8,6 +8,13 @@ module SPARQL; module Algebra
     autoload :Str,       'sparql/algebra/operator/str'
 
     ##
+    # @param  [Array<Object>] args
+    # @return [Object]
+    def self.evaluate(*args)
+      self.new.evaluate(*args)
+    end
+
+    ##
     # @param [Hash{Symbol => Object}] options
     def initialize(options = {})
       @options = options.dup
@@ -21,6 +28,7 @@ module SPARQL; module Algebra
       ##
       # @param  [Object] arg
       # @return [Object]
+      # @abstract
       def evaluate(arg)
         raise NotImplementedError, "#{self.class}#evaluate"
       end
@@ -35,6 +43,7 @@ module SPARQL; module Algebra
       # @param  [Object] arg1
       # @param  [Object] arg2
       # @return [Object]
+      # @abstract
       def evaluate(arg1, arg2)
         raise NotImplementedError, "#{self.class}#evaluate"
       end
@@ -50,6 +59,7 @@ module SPARQL; module Algebra
       # @param  [Object] arg2
       # @param  [Object] arg3
       # @return [Object]
+      # @abstract
       def evaluate(arg1, arg2, arg3)
         raise NotImplementedError, "#{self.class}#evaluate"
       end
