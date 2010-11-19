@@ -1,7 +1,7 @@
 module SPARQL; module Algebra
   class Operator
     ##
-    # The SPARQL `IsBlank` operator.
+    # The SPARQL `isBlank` operator.
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-isBlank
     class IsBlank < Operator::Unary

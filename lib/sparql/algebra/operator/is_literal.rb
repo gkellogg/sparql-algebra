@@ -1,7 +1,7 @@
 module SPARQL; module Algebra
   class Operator
     ##
-    # The SPARQL `IsLiteral` operator.
+    # The SPARQL `isLiteral` operator.
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-isLiteral
     class IsLiteral < Operator::Unary

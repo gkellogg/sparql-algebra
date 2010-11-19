@@ -1,7 +1,7 @@
 module SPARQL; module Algebra
   class Operator
     ##
-    # The SPARQL `IsIRI`/`IsURI` operator.
+    # The SPARQL `isIRI`/`isURI` operator.
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-isIRI
     class IsIRI < Operator::Unary

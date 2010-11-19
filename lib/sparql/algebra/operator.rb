@@ -5,6 +5,7 @@ module SPARQL; module Algebra
     autoload :IsBlank,   'sparql/algebra/operator/is_blank'
     autoload :IsIRI,     'sparql/algebra/operator/is_iri'
     autoload :IsLiteral, 'sparql/algebra/operator/is_literal'
+    autoload :Str,       'sparql/algebra/operator/str'
 
     ##
     # @param [Hash{Symbol => Object}] options
