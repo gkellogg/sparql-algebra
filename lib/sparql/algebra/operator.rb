@@ -2,7 +2,8 @@ module SPARQL; module Algebra
   ##
   # A SPARQL operator.
   class Operator
-    autoload :IsIRI, 'sparql/algebra/operator/is_iri'
+    autoload :IsIRI,   'sparql/algebra/operator/is_iri'
+    autoload :IsBlank, 'sparql/algebra/operator/is_blank'
 
     ##
     # @param [Hash{Symbol => Object}] options
