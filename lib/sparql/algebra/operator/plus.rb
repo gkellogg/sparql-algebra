@@ -8,12 +8,13 @@ module SPARQL; module Algebra
       NAME = :+
 
       ##
-      # Returns the argument incremented by one.
+      # Returns the operand incremented by one.
       #
       # @param  [RDF::Query::Solution] solution
       # @return [RDF::Literal::Numeric]
+      # @raise  [ArgumentError] if the operand is not an `RDF::Literal::Numeric`
       def evaluate(solution)
-        case term = arguments.first # TODO: variable lookup
+        case term = operands.first # TODO: variable lookup
           when Numeric
             RDF::Literal(term + 1)
           when RDF::Literal::Decimal, RDF::Literal::Double # FIXME: RDF::Literal::Numeric

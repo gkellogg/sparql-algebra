@@ -8,13 +8,13 @@ module SPARQL; module Algebra
       NAME = :str
 
       ##
-      # Returns the string form of the argument.
+      # Returns the string form of the operand.
       #
       # @param  [RDF::Query::Solution] solution
       # @return [RDF::Literal] a simple literal
-      # @raise  [ArgumentError] if the argument is not an `RDF::Literal` or `RDF::URI`
+      # @raise  [ArgumentError] if the operand is not an `RDF::Literal` or `RDF::URI`
       def evaluate(solution)
-        case term = arguments.first
+        case term = operands.first
           when RDF::Literal then RDF::Literal(term.value)
           when RDF::URI     then RDF::Literal(term.to_s)
           else raise ArgumentError, "expected an RDF::Literal or RDF::URI, but got #{term.inspect}"

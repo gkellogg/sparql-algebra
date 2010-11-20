@@ -36,7 +36,7 @@ describe SPARQL::Algebra::Operator do
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-plus
   context "Plus" do
     describe ".evaluate(RDF::Literal::Numeric)" do
-      it "returns the argument incremented by one" do
+      it "returns the operand incremented by one" do
         @plus.evaluate(RDF::Literal(41)).should == RDF::Literal(42)
       end
     end
@@ -57,7 +57,7 @@ describe SPARQL::Algebra::Operator do
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-minus
   context "Minus" do
     describe ".evaluate(RDF::Literal::Numeric)" do
-      it "returns the argument decremented by one" do
+      it "returns the operand decremented by one" do
         @minus.evaluate(RDF::Literal(43)).should == RDF::Literal(42)
       end
     end

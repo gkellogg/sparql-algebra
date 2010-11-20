@@ -8,12 +8,12 @@ module SPARQL; module Algebra
       NAME = [:isIRI, :isURI]
 
       ##
-      # Returns `true` if the argument is an `RDF::URI`, `false` otherwise.
+      # Returns `true` if the operand is an `RDF::URI`, `false` otherwise.
       #
       # @param  [RDF::Query::Solution] solution
       # @return [RDF::Literal::Boolean] `true` or `false`
       def evaluate(solution)
-        term = arguments.first # TODO: variable lookup
+        term = operands.first # TODO: variable lookup
         RDF::Literal(term.is_a?(RDF::URI))
       end
     end # IsIRI

@@ -35,11 +35,10 @@ module SPARQL; module Algebra
     attr_reader :options
 
     ##
-    # The arguments to this operator instance.
+    # The operands to this operator.
     #
     # @return [Array]
-    attr_reader :arguments
-    alias_method :args, :arguments
+    attr_reader :operands
 
     ##
     # @param  [RDF::Query::Solution] solution
@@ -51,21 +50,19 @@ module SPARQL; module Algebra
     end
 
     ##
-    # Returns the SPARQL S-Expression (SSE) representation of this operator
-    # instance.
+    # Returns the SPARQL S-Expression (SSE) representation of this operator.
     #
     # @return [Array]
     # @see    http://openjena.org/wiki/SSE
     def to_sse
       operator = [self.class.const_get(:NAME)].flatten.first
-      operands = arguments || []
-      [operator, *operands]
+      [operator, *(operands || [])]
     end
 
     ##
     # A SPARQL nullary operator.
     #
-    # Operators of this kind take no arguments.
+    # Operators of this kind take no operands.
     #
     # @abstract
     class Nullary < Operator
@@ -75,7 +72,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(options = {})
-        @arguments = []
+        @operands = []
         super(options)
       end
     end # Nullary
@@ -83,7 +80,7 @@ module SPARQL; module Algebra
     ##
     # A SPARQL unary operator.
     #
-    # Operators of this kind take one argument.
+    # Operators of this kind take one operand.
     #
     # @abstract
     class Unary < Operator
@@ -94,7 +91,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg, options = {})
-        @arguments = [arg]
+        @operands = [arg]
         super(options)
       end
     end # Unary
@@ -102,7 +99,7 @@ module SPARQL; module Algebra
     ##
     # A SPARQL binary operator.
     #
-    # Operators of this kind take two arguments.
+    # Operators of this kind take two operands.
     #
     # @abstract
     class Binary < Operator
@@ -114,7 +111,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg1, arg2, options = {})
-        @arguments = [arg1, arg2]
+        @operands = [arg1, arg2]
         super(options)
       end
     end # Binary
@@ -122,7 +119,7 @@ module SPARQL; module Algebra
     ##
     # A SPARQL ternary operator.
     #
-    # Operators of this kind take three arguments.
+    # Operators of this kind take three operands.
     #
     # @abstract
     class Ternary < Operator
@@ -135,7 +132,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg1, arg2, arg3, options = {})
-        @arguments = [arg1, arg2, arg3]
+        @operands = [arg1, arg2, arg3]
         super(options)
       end
     end # Ternary

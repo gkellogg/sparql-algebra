@@ -8,13 +8,13 @@ module SPARQL; module Algebra
       NAME = :isLiteral
 
       ##
-      # Returns `true` if the argument is an `RDF::Literal`, `false`
+      # Returns `true` if the operand is an `RDF::Literal`, `false`
       # otherwise.
       #
       # @param  [RDF::Query::Solution] solution
       # @return [RDF::Literal::Boolean] `true` or `false`
       def evaluate(solution)
-        term = arguments.first # TODO: variable lookup
+        term = operands.first # TODO: variable lookup
         RDF::Literal(term.is_a?(RDF::Literal))
       end
     end # IsLiteral
