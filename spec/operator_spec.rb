@@ -12,6 +12,7 @@ describe SPARQL::Algebra::Operator do
     @is_literal = SPARQL::Algebra::Operator::IsLiteral
     @str        = SPARQL::Algebra::Operator::Str
     @lang       = SPARQL::Algebra::Operator::Lang
+    @datatype   = SPARQL::Algebra::Operator::Datatype
   end
 
   # @see http://www.w3.org/TR/xpath-functions/#func-not
@@ -209,9 +210,14 @@ describe SPARQL::Algebra::Operator do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-lang
   context "Lang" do
-    describe ".evaluate(RDF::Literal)" do
-      it "returns a simple literal" do
+    describe ".evaluate(RDF::Literal) with a simple literal" do
+      it "returns an empty string as a simple literal" do
         @lang.evaluate(RDF::Literal('Hello')).should eql RDF::Literal('')
+      end
+    end
+
+    describe ".evaluate(RDF::Literal) with a language-tagged literal" do
+      it "returns the language tag as a simple literal" do
         @lang.evaluate(RDF::Literal('Hello', :language => :en)).should eql RDF::Literal('en')
         @lang.evaluate(RDF::Literal('Hello', :language => :EN)).should eql RDF::Literal('EN')
       end
@@ -234,15 +240,36 @@ describe SPARQL::Algebra::Operator do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-datatype
   context "Datatype" do
-    describe ".evaluate(RDF::Literal) with a typed literal" do
-      it "returns an IRI" do
-        pending # TODO
+    describe ".evaluate(RDF::Literal) with a simple literal" do
+      it "returns the datatype IRI of xsd:string" do
+        @datatype.evaluate(RDF::Literal('Hello')).should eql RDF::XSD.string
       end
     end
 
-    describe ".evaluate(RDF::Literal) with a simple literal" do
-      it "returns an IRI" do
-        pending # TODO
+    describe ".evaluate(RDF::Literal) with a typed literal" do
+      it "returns the datatype IRI" do
+        @datatype.evaluate(RDF::Literal('Hello', :datatype => RDF::XSD.string)).should eql RDF::XSD.string
+        @datatype.evaluate(RDF::Literal('Hello', :datatype => RDF::XSD.token)).should eql RDF::XSD.token
+      end
+    end
+
+    describe ".evaluate(RDF::Literal) with a language-tagged literal" do
+      it "raises an ArgumentError" do
+        lambda { @datatype.evaluate(RDF::Literal('Hello', :language => :en)) }.should raise_error(ArgumentError)
+      end
+    end
+
+    describe ".evaluate(RDF::Value)" do
+      it "raises an ArgumentError" do
+        lambda { @datatype.evaluate(RDF::Node.new) }.should raise_error(ArgumentError)
+        lambda { @datatype.evaluate(RDF::DC.title) }.should raise_error(ArgumentError)
+      end
+    end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @datatype.new(RDF::Literal('Hello')).to_sse.should == [:datatype, RDF::Literal('Hello')]
+        @datatype.new(RDF::Literal('Hello', :datatype => RDF::XSD.string)).to_sse.should == [:datatype, RDF::Literal('Hello', :datatype => RDF::XSD.string)]
       end
     end
   end

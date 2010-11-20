@@ -13,6 +13,7 @@ module SPARQL; module Algebra
     autoload :IsLiteral, 'sparql/algebra/operator/is_literal'
     autoload :Str,       'sparql/algebra/operator/str'
     autoload :Lang,      'sparql/algebra/operator/lang'
+    autoload :Datatype,  'sparql/algebra/operator/datatype'
 
     ##
     # @param  [Array<Object>] args
