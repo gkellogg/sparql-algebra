@@ -5,6 +5,8 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-bound
     class Bound < Operator::Unary
+      NAME = :bound
+
       ##
       # Returns `true` if the argument is a variable that is bound to a
       # value in the given `solution`, `false` otherwise.
@@ -12,7 +14,7 @@ module SPARQL; module Algebra
       # @param  [RDF::Query::Solution] solution
       # @return [RDF::Literal::Boolean] `true` or `false`
       def evaluate(solution)
-        case var = @arg
+        case var = arguments.first
           when RDF::Query::Variable, Symbol
             RDF::Literal(solution.bound?(var))
           else raise ArgumentError, "expected RDF::Query::Variable, but got #{var.inspect}"

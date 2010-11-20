@@ -33,6 +33,13 @@ module SPARQL; module Algebra
     attr_reader :options
 
     ##
+    # The arguments to this operator instance.
+    #
+    # @return [Array]
+    attr_reader :arguments
+    alias_method :args, :arguments
+
+    ##
     # @param  [RDF::Query::Solution] solution
     #   a query solution containing zero or more variable bindings
     # @return [RDF::Value]
@@ -54,6 +61,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(options = {})
+        @arguments = []
         super(options)
       end
     end # Nullary
@@ -72,7 +80,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg, options = {})
-        @arg = arg
+        @arguments = [arg]
         super(options)
       end
     end # Unary
@@ -92,7 +100,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg1, arg2, options = {})
-        @arg1, @arg2 = arg1, arg2
+        @arguments = [arg1, arg2]
         super(options)
       end
     end # Binary
@@ -113,7 +121,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg1, arg2, arg3, options = {})
-        @arg1, @arg2, @arg3 = arg1, arg2, arg3
+        @arguments = [arg1, arg2, arg3]
         super(options)
       end
     end # Ternary
