@@ -19,8 +19,8 @@ module SPARQL; module Algebra
       def evaluate(solution)
         case literal = operand(0, solution)
           when RDF::Literal then case
-            when literal.typed? then RDF::URI(literal.datatype)
-            when literal.plain? then RDF::XSD.string
+            when literal.typed?  then RDF::URI(literal.datatype)
+            when literal.simple? then RDF::XSD.string
             else raise TypeError, "expected a typed or simple RDF::Literal, but got #{literal.inspect}"
           end
           else raise TypeError, "expected an RDF::Literal, but got #{literal.inspect}"

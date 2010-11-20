@@ -110,8 +110,8 @@ module SPARQL; module Algebra
     # @see    http://www.w3.org/TR/rdf-sparql-query/#ebv
     def boolean(literal)
       case literal
-        when TrueClass, FalseClass
-          RDF::Literal(literal)
+        when FalseClass then RDF::Literal::FALSE
+        when TrueClass  then RDF::Literal::TRUE
         # If the argument is a typed literal with a datatype of
         # `xsd:boolean`, the EBV is the value of that argument.
         # However, the EBV of any literal whose type is `xsd:boolean` is
@@ -124,7 +124,7 @@ module SPARQL; module Algebra
         # the EBV is true.
         # However, the EBV of any literal whose type is numeric is
         # false if the lexical form is not valid for that datatype.
-        when RDF::Literal::Decimal, RDF::Literal::Double # FIXME: RDF::Literal::Numeric
+        when RDF::Literal::Numeric
           RDF::Literal(literal.valid? && !(literal.zero?) && !(literal.respond_to?(:nan?) && literal.nan?))
         # If the argument is a plain literal or a typed literal with a
         # datatype of `xsd:string`, the EBV is false if the operand value

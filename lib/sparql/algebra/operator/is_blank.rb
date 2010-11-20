@@ -15,8 +15,8 @@ module SPARQL; module Algebra
       # @raise  [TypeError] if the operand is not an `RDF::Term`
       def evaluate(solution)
         case term = operand(0, solution)
-          when RDF::Node  then RDF::Literal(true)
-          when RDF::Value then RDF::Literal(false) # FIXME: RDF::Term
+          when RDF::Node then RDF::Literal::TRUE
+          when RDF::Term then RDF::Literal::FALSE
           else raise TypeError, "expected an RDF::Term, but got #{term.inspect}"
         end
       end
