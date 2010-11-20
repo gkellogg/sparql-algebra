@@ -12,9 +12,13 @@ module SPARQL; module Algebra
       #
       # @param  [RDF::Query::Solution] solution
       # @return [RDF::Literal::Boolean] `true` or `false`
+      # @raise  [TypeError] if the operand is not an `RDF::Term`
       def evaluate(solution)
-        term = operands.first # TODO: variable lookup
-        RDF::Literal(term.is_a?(RDF::Node))
+        case term = operand(0, solution)
+          when RDF::Node  then RDF::Literal(true)
+          when RDF::Value then RDF::Literal(false) # FIXME: RDF::Term
+          else raise TypeError, "expected an RDF::Term, but got #{term.inspect}"
+        end
       end
     end # IsBlank
   end # Operator

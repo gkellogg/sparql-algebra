@@ -16,7 +16,7 @@ module SPARQL; module Algebra
       # @return [RDF::Literal] a simple literal
       # @raise  [TypeError] if the operand is not an `RDF::Literal`
       def evaluate(solution)
-        case literal = operands.first # TODO: variable lookup
+        case literal = operand(0, solution)
           when RDF::Literal then RDF::Literal(literal.language.to_s)
           else raise TypeError, "expected an RDF::Literal, but got #{literal.inspect}"
         end

@@ -223,7 +223,7 @@ describe SPARQL::Algebra::Operator do
       end
     end
 
-    describe ".evaluate(RDF::Value)" do
+    describe ".evaluate(RDF::Term)" do
       it "raises an TypeError" do
         lambda { @lang.evaluate(RDF::Node.new) }.should raise_error(TypeError)
         lambda { @lang.evaluate(RDF::DC.title) }.should raise_error(TypeError)
@@ -259,7 +259,7 @@ describe SPARQL::Algebra::Operator do
       end
     end
 
-    describe ".evaluate(RDF::Value)" do
+    describe ".evaluate(RDF::Term)" do
       it "raises an TypeError" do
         lambda { @datatype.evaluate(RDF::Node.new) }.should raise_error(TypeError)
         lambda { @datatype.evaluate(RDF::DC.title) }.should raise_error(TypeError)
@@ -372,7 +372,7 @@ describe SPARQL::Algebra::Operator do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
   context "Equal" do
-    describe ".evaluate(RDF::Value, RDF::Value)" do
+    describe ".evaluate(RDF::Term, RDF::Term)" do
       it "returns RDF::Literal(true) if the terms are equal" do
         pending # TODO
       end
@@ -385,7 +385,7 @@ describe SPARQL::Algebra::Operator do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
   context "NotEqual" do
-    describe ".evaluate(RDF::Value, RDF::Value)" do
+    describe ".evaluate(RDF::Term, RDF::Term)" do
       it "returns RDF::Literal(false) if the terms are equal" do
         pending # TODO
       end
@@ -398,7 +398,7 @@ describe SPARQL::Algebra::Operator do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-sameTerm
   context "SameTerm" do
-    describe ".evaluate(RDF::Value, RDF::Value)" do
+    describe ".evaluate(RDF::Term, RDF::Term)" do
       it "returns RDF::Literal(true) if the terms are the same" do
         pending # TODO
       end

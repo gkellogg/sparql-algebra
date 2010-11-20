@@ -17,8 +17,8 @@ module SPARQL; module Algebra
     autoload :Datatype,  'sparql/algebra/operator/datatype'
 
     ##
-    # @param  [Array<Object>] args
-    # @return [RDF::Value]
+    # @param  [Array<RDF::Term>] args
+    # @return [RDF::Term]
     # @see    Operator#evaluate
     def self.evaluate(*args)
       self.new(*args).evaluate(RDF::Query::Solution.new)
@@ -45,6 +45,22 @@ module SPARQL; module Algebra
     attr_reader :operands
 
     ##
+    # Returns the operand at the given `index`.
+    #
+    # If the optional `bindings` argument is provided, it is used for
+    # performing variable lookup in case the operand is a variable.
+    #
+    # @param  [Integer] index
+    #   an operand index in the range `(0...(operands.count))`
+    # @param  [RDF::Query::Solution, #[]] bindings
+    #   optional bindings for looking up variable values
+    # @return [RDF::Term]
+    def operand(index, bindings = {})
+      operand = operands[index]
+      operand.is_a?(RDF::Query::Variable) ? bindings[operand.to_sym] : operand
+    end
+
+    ##
     # Returns `true` if any of the operands are variables, `false`
     # otherwise.
     #
@@ -67,7 +83,7 @@ module SPARQL; module Algebra
     ##
     # @param  [RDF::Query::Solution] solution
     #   a query solution containing zero or more variable bindings
-    # @return [RDF::Value]
+    # @return [RDF::Term]
     # @abstract
     def evaluate(solution)
       raise NotImplementedError, "#{self.class}#evaluate"
@@ -150,7 +166,7 @@ module SPARQL; module Algebra
       ARITY = 1
 
       ##
-      # @param  [Object] arg
+      # @param  [RDF::Term] arg
       #   the operand
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
@@ -170,9 +186,9 @@ module SPARQL; module Algebra
       ARITY = 2
 
       ##
-      # @param  [Object] arg1
+      # @param  [RDF::Term] arg1
       #   the first operand
-      # @param  [Object] arg2
+      # @param  [RDF::Term] arg2
       #   the second operand
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
@@ -192,11 +208,11 @@ module SPARQL; module Algebra
       ARITY = 3
 
       ##
-      # @param  [Object] arg1
+      # @param  [RDF::Term] arg1
       #   the first operand
-      # @param  [Object] arg2
+      # @param  [RDF::Term] arg2
       #   the second operand
-      # @param  [Object] arg3
+      # @param  [RDF::Term] arg3
       #   the third operand
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})

@@ -14,7 +14,7 @@ module SPARQL; module Algebra
       # @return [RDF::Literal::Numeric]
       # @raise  [TypeError] if the operand is not an `RDF::Literal::Numeric`
       def evaluate(solution)
-        case term = operands.first # TODO: variable lookup
+        case term = operand(0, solution)
           when Numeric
             RDF::Literal(term - 1)
           when RDF::Literal::Decimal, RDF::Literal::Double # FIXME: RDF::Literal::Numeric

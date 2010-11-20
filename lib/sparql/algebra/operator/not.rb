@@ -18,7 +18,7 @@ module SPARQL; module Algebra
       # @return [RDF::Literal::Boolean]
       # @raise  [TypeError] if the operand could not be coerced to an `RDF::Literal::Boolean`
       def evaluate(solution)
-        case bool = boolean(operands.first) # TODO: variable lookup
+        case bool = boolean(operand(0, solution))
           when RDF::Literal::Boolean
             RDF::Literal(bool.false?)
           else super
