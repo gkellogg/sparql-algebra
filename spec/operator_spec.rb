@@ -3,6 +3,7 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 describe SPARQL::Algebra::Operator do
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   before :all do
+    @not        = SPARQL::Algebra::Operator::Not
     @plus       = SPARQL::Algebra::Operator::Plus
     @minus      = SPARQL::Algebra::Operator::Minus
     @bound      = SPARQL::Algebra::Operator::Bound
@@ -16,13 +17,13 @@ describe SPARQL::Algebra::Operator do
   context "Not" do
     describe ".evaluate(RDF::Literal(true))" do
       it "returns RDF::Literal(false)" do
-        pending # TODO
+        @not.evaluate(RDF::Literal(true)).should eql RDF::Literal(false)
       end
     end
 
     describe ".evaluate(RDF::Literal(false))" do
       it "returns RDF::Literal(true)" do
-        pending # TODO
+        @not.evaluate(RDF::Literal(false)).should eql RDF::Literal(true)
       end
     end
 
@@ -31,13 +32,19 @@ describe SPARQL::Algebra::Operator do
         pending # TODO
       end
     end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @not.new(RDF::Literal(true)).to_sse.should == [:not, RDF::Literal(true)]
+      end
+    end
   end
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-plus
   context "Plus" do
     describe ".evaluate(RDF::Literal::Numeric)" do
       it "returns the operand incremented by one" do
-        @plus.evaluate(RDF::Literal(41)).should == RDF::Literal(42)
+        @plus.evaluate(RDF::Literal(41)).should eql RDF::Literal(42)
       end
     end
 
@@ -58,7 +65,7 @@ describe SPARQL::Algebra::Operator do
   context "Minus" do
     describe ".evaluate(RDF::Literal::Numeric)" do
       it "returns the operand decremented by one" do
-        @minus.evaluate(RDF::Literal(43)).should == RDF::Literal(42)
+        @minus.evaluate(RDF::Literal(43)).should eql RDF::Literal(42)
       end
     end
 

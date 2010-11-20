@@ -4,6 +4,7 @@ module SPARQL; module Algebra
   #
   # @abstract
   class Operator
+    autoload :Not,       'sparql/algebra/operator/not'
     autoload :Plus,      'sparql/algebra/operator/plus'
     autoload :Minus,     'sparql/algebra/operator/minus'
     autoload :Bound,     'sparql/algebra/operator/bound'
@@ -59,6 +60,45 @@ module SPARQL; module Algebra
       [operator, *(operands || [])]
     end
 
+  protected
+
+    ##
+    # Returns the effective boolean value (EBV) of the given `literal`.
+    #
+    # @param  [RDF::Literal] literal
+    # @return [RDF::Literal::Boolean] `true` or `false`
+    # @raise  [TypeError] if the literal could not be coerced to an `RDF::Literal::Boolean`
+    # @see    http://www.w3.org/TR/rdf-sparql-query/#ebv
+    def boolean(literal)
+      case literal
+        when TrueClass, FalseClass
+          RDF::Literal(literal)
+        # If the argument is a typed literal with a datatype of
+        # `xsd:boolean`, the EBV is the value of that argument.
+        # However, the EBV of any literal whose type is `xsd:boolean` is
+        # false if the lexical form is not valid for that datatype.
+        when RDF::Literal::Boolean
+          RDF::Literal(literal.valid? && literal.true?)
+        # If the argument is a numeric type or a typed literal with a
+        # datatype derived from a numeric type, the EBV is false if the
+        # operand value is NaN or is numerically equal to zero; otherwise
+        # the EBV is true.
+        # However, the EBV of any literal whose type is numeric is
+        # false if the lexical form is not valid for that datatype.
+        when RDF::Literal::Decimal, RDF::Literal::Double # FIXME: RDF::Literal::Numeric
+          RDF::Literal(literal.valid? && !(literal.zero?) && !(literal.respond_to?(:nan?) && literal.nan?))
+        # If the argument is a plain literal or a typed literal with a
+        # datatype of `xsd:string`, the EBV is false if the operand value
+        # has zero length; otherwise the EBV is true.
+        else case
+          when literal.plain? || literal.datatype.eql?(RDF::XSD.string)
+            RDF::Literal(!(literal.value.empty?))
+        # All other arguments, including unbound arguments, produce a type error.
+          else raise TypeError, "could not coerce #{literal.inspect} to an RDF::Literal::Boolean"
+        end
+      end
+    end
+
     ##
     # A SPARQL nullary operator.
     #
@@ -88,6 +128,7 @@ module SPARQL; module Algebra
 
       ##
       # @param  [Object] arg
+      #   the operand
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg, options = {})
@@ -107,7 +148,9 @@ module SPARQL; module Algebra
 
       ##
       # @param  [Object] arg1
+      #   the first operand
       # @param  [Object] arg2
+      #   the second operand
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg1, arg2, options = {})
@@ -127,8 +170,11 @@ module SPARQL; module Algebra
 
       ##
       # @param  [Object] arg1
+      #   the first operand
       # @param  [Object] arg2
+      #   the second operand
       # @param  [Object] arg3
+      #   the third operand
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg1, arg2, arg3, options = {})
