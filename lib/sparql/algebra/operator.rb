@@ -4,6 +4,7 @@ module SPARQL; module Algebra
   #
   # @abstract
   class Operator
+    # Unary operators
     autoload :Not,       'sparql/algebra/operator/not'
     autoload :Plus,      'sparql/algebra/operator/plus'
     autoload :Minus,     'sparql/algebra/operator/minus'
@@ -42,6 +43,26 @@ module SPARQL; module Algebra
     #
     # @return [Array]
     attr_reader :operands
+
+    ##
+    # Returns `true` if any of the operands are variables, `false`
+    # otherwise.
+    #
+    # @return [Boolean] `true` or `false`
+    # @see    #constant?
+    def variable?
+      operands.any? { |operand| operand.is_a?(RDF::Query::Variable) }
+    end
+
+    ##
+    # Returns `true` if none of the operands are variables, `false`
+    # otherwise.
+    #
+    # @return [Boolean] `true` or `false`
+    # @see    #variable?
+    def constant?
+      !(variable?)
+    end
 
     ##
     # @param  [RDF::Query::Solution] solution
