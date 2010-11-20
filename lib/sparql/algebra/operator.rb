@@ -49,6 +49,18 @@ module SPARQL; module Algebra
     end
 
     ##
+    # Returns the SPARQL S-Expression (SSE) representation of this operator
+    # instance.
+    #
+    # @return [Array]
+    # @see    http://openjena.org/wiki/SSE
+    def to_sse
+      operator = [self.class.const_get(:NAME)].flatten.first
+      operands = arguments || []
+      [operator, *operands]
+    end
+
+    ##
     # A SPARQL nullary operator.
     #
     # Operators of this kind take no arguments.

@@ -58,6 +58,12 @@ describe SPARQL::Algebra::Operator do
         lambda { @bound.evaluate(nil) }.should raise_error(ArgumentError)
       end
     end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @bound.new(RDF::Query::Variable.new(:foo)).to_sse.should == [:bound, RDF::Query::Variable.new(:foo)]
+      end
+    end
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-isIRI
@@ -77,6 +83,12 @@ describe SPARQL::Algebra::Operator do
     describe ".evaluate(RDF::Literal)" do
       it "returns RDF::Literal(false)" do
         @is_iri.evaluate(RDF::Literal(42)).should eql RDF::Literal(false)
+      end
+    end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @is_iri.new(RDF::DC.title).to_sse.should == [:isIRI, RDF::DC.title]
       end
     end
   end
@@ -100,6 +112,12 @@ describe SPARQL::Algebra::Operator do
         @is_blank.evaluate(RDF::Literal(42)).should eql RDF::Literal(false)
       end
     end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @is_blank.new(RDF::Node.new(:foo)).to_sse.should == [:isBlank, RDF::Node.new(:foo)]
+      end
+    end
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-isLiteral
@@ -121,6 +139,12 @@ describe SPARQL::Algebra::Operator do
         @is_literal.evaluate(RDF::DC.title).should eql RDF::Literal(false)
       end
     end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @is_literal.new(RDF::Literal("Hello")).to_sse.should == [:isLiteral, RDF::Literal("Hello")]
+      end
+    end
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-str
@@ -135,6 +159,12 @@ describe SPARQL::Algebra::Operator do
     describe ".evaluate(RDF::URI)" do
       it "returns the IRI string as a simple literal" do
         @str.evaluate(RDF::DC.title).should eql RDF::Literal(RDF::DC.title.to_s)
+      end
+    end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @str.new(RDF::DC.title).to_sse.should == [:str, RDF::DC.title]
       end
     end
   end
