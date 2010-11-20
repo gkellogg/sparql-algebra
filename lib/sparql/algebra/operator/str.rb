@@ -17,7 +17,7 @@ module SPARQL; module Algebra
         case term = arguments.first
           when RDF::Literal then RDF::Literal(term.value)
           when RDF::URI     then RDF::Literal(term.to_s)
-          else raise ArgumentError, "expected RDF::Literal or RDF::URI, but got #{term.inspect}"
+          else raise ArgumentError, "expected an RDF::Literal or RDF::URI, but got #{term.inspect}"
         end
       end
     end # Str

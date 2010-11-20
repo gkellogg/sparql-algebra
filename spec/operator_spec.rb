@@ -3,6 +3,7 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 describe SPARQL::Algebra::Operator do
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   before :all do
+    @plus       = SPARQL::Algebra::Operator::Plus
     @bound      = SPARQL::Algebra::Operator::Bound
     @is_iri     = SPARQL::Algebra::Operator::IsIRI
     @is_blank   = SPARQL::Algebra::Operator::IsBlank
@@ -33,8 +34,22 @@ describe SPARQL::Algebra::Operator do
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-plus
   context "Plus" do
-    describe ".evaluate(term)" do
-      # TODO
+    describe ".evaluate(RDF::Literal::Numeric)" do
+      it "returns the argument incremented by one" do
+        @plus.evaluate(RDF::Literal(41)).should == RDF::Literal(42)
+      end
+    end
+
+    describe ".evaluate(RDF::Literal)" do
+      it "raises an ArgumentError" do
+        lambda { @plus.evaluate(RDF::Literal('')) }.should raise_error(ArgumentError)
+      end
+    end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @plus.new(RDF::Literal(42)).to_sse.should == [:+, RDF::Literal(42)]
+      end
     end
   end
 

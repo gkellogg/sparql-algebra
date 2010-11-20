@@ -17,7 +17,7 @@ module SPARQL; module Algebra
         case var = arguments.first
           when RDF::Query::Variable, Symbol
             RDF::Literal(solution.bound?(var))
-          else raise ArgumentError, "expected RDF::Query::Variable, but got #{var.inspect}"
+          else raise ArgumentError, "expected an RDF::Query::Variable, but got #{var.inspect}"
         end
       end
     end # Bound
