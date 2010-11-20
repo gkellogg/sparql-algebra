@@ -5,6 +5,7 @@ module SPARQL; module Algebra
   # @abstract
   class Operator
     autoload :Plus,      'sparql/algebra/operator/plus'
+    autoload :Minus,     'sparql/algebra/operator/minus'
     autoload :Bound,     'sparql/algebra/operator/bound'
     autoload :IsBlank,   'sparql/algebra/operator/is_blank'
     autoload :IsIRI,     'sparql/algebra/operator/is_iri'
