@@ -6,11 +6,13 @@ module SPARQL; module Algebra
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-isLiteral
     class IsLiteral < Operator::Unary
       ##
-      # Returns `true` if `term` is an `RDF::Literal`, `false` otherwise.
+      # Returns `true` if the argument is an `RDF::Literal`, `false`
+      # otherwise.
       #
-      # @param  [RDF::Value] term an RDF term
+      # @param  [RDF::Query::Solution] solution
       # @return [RDF::Literal::Boolean] `true` or `false`
-      def evaluate(term)
+      def evaluate(solution)
+        term = @arg # TODO: variable lookup
         RDF::Literal(term.is_a?(RDF::Literal))
       end
     end # IsLiteral

@@ -6,11 +6,12 @@ module SPARQL; module Algebra
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-isBlank
     class IsBlank < Operator::Unary
       ##
-      # Returns `true` if `term` is an `RDF::Node`, `false` otherwise.
+      # Returns `true` if the argument is an `RDF::Node`, `false` otherwise.
       #
-      # @param  [RDF::Value] term an RDF term
+      # @param  [RDF::Query::Solution] solution
       # @return [RDF::Literal::Boolean] `true` or `false`
-      def evaluate(term)
+      def evaluate(solution)
+        term = @arg # TODO: variable lookup
         RDF::Literal(term.is_a?(RDF::Node))
       end
     end # IsBlank
