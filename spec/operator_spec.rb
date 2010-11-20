@@ -11,6 +11,7 @@ describe SPARQL::Algebra::Operator do
     @is_blank   = SPARQL::Algebra::Operator::IsBlank
     @is_literal = SPARQL::Algebra::Operator::IsLiteral
     @str        = SPARQL::Algebra::Operator::Str
+    @lang       = SPARQL::Algebra::Operator::Lang
   end
 
   # @see http://www.w3.org/TR/xpath-functions/#func-not
@@ -210,7 +211,23 @@ describe SPARQL::Algebra::Operator do
   context "Lang" do
     describe ".evaluate(RDF::Literal)" do
       it "returns a simple literal" do
-        pending # TODO
+        @lang.evaluate(RDF::Literal('Hello')).should eql RDF::Literal('')
+        @lang.evaluate(RDF::Literal('Hello', :language => :en)).should eql RDF::Literal('en')
+        @lang.evaluate(RDF::Literal('Hello', :language => :EN)).should eql RDF::Literal('EN')
+      end
+    end
+
+    describe ".evaluate(RDF::Value)" do
+      it "raises an ArgumentError" do
+        lambda { @lang.evaluate(RDF::Node.new) }.should raise_error(ArgumentError)
+        lambda { @lang.evaluate(RDF::DC.title) }.should raise_error(ArgumentError)
+      end
+    end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @lang.new(RDF::Literal('Hello')).to_sse.should == [:lang, RDF::Literal('Hello')]
+        @lang.new(RDF::Literal('Hello', :language => :en)).to_sse.should == [:lang, RDF::Literal('Hello', :language => :en)]
       end
     end
   end
