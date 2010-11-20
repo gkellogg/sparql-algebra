@@ -51,8 +51,8 @@ describe SPARQL::Algebra::Operator do
     end
 
     describe ".evaluate(RDF::Literal)" do
-      it "raises an ArgumentError" do
-        lambda { @plus.evaluate(RDF::Literal('')) }.should raise_error(ArgumentError)
+      it "raises an TypeError" do
+        lambda { @plus.evaluate(RDF::Literal('')) }.should raise_error(TypeError)
       end
     end
 
@@ -72,8 +72,8 @@ describe SPARQL::Algebra::Operator do
     end
 
     describe ".evaluate(RDF::Literal)" do
-      it "raises an ArgumentError" do
-        lambda { @minus.evaluate(RDF::Literal('')) }.should raise_error(ArgumentError)
+      it "raises an TypeError" do
+        lambda { @minus.evaluate(RDF::Literal('')) }.should raise_error(TypeError)
       end
     end
 
@@ -93,8 +93,8 @@ describe SPARQL::Algebra::Operator do
     end
 
     describe ".evaluate(term)" do
-      it "raises an ArgumentError" do
-        lambda { @bound.evaluate(nil) }.should raise_error(ArgumentError)
+      it "raises an TypeError" do
+        lambda { @bound.evaluate(nil) }.should raise_error(TypeError)
       end
     end
 
@@ -224,9 +224,9 @@ describe SPARQL::Algebra::Operator do
     end
 
     describe ".evaluate(RDF::Value)" do
-      it "raises an ArgumentError" do
-        lambda { @lang.evaluate(RDF::Node.new) }.should raise_error(ArgumentError)
-        lambda { @lang.evaluate(RDF::DC.title) }.should raise_error(ArgumentError)
+      it "raises an TypeError" do
+        lambda { @lang.evaluate(RDF::Node.new) }.should raise_error(TypeError)
+        lambda { @lang.evaluate(RDF::DC.title) }.should raise_error(TypeError)
       end
     end
 
@@ -254,15 +254,15 @@ describe SPARQL::Algebra::Operator do
     end
 
     describe ".evaluate(RDF::Literal) with a language-tagged literal" do
-      it "raises an ArgumentError" do
-        lambda { @datatype.evaluate(RDF::Literal('Hello', :language => :en)) }.should raise_error(ArgumentError)
+      it "raises an TypeError" do
+        lambda { @datatype.evaluate(RDF::Literal('Hello', :language => :en)) }.should raise_error(TypeError)
       end
     end
 
     describe ".evaluate(RDF::Value)" do
-      it "raises an ArgumentError" do
-        lambda { @datatype.evaluate(RDF::Node.new) }.should raise_error(ArgumentError)
-        lambda { @datatype.evaluate(RDF::DC.title) }.should raise_error(ArgumentError)
+      it "raises an TypeError" do
+        lambda { @datatype.evaluate(RDF::Node.new) }.should raise_error(TypeError)
+        lambda { @datatype.evaluate(RDF::DC.title) }.should raise_error(TypeError)
       end
     end
 

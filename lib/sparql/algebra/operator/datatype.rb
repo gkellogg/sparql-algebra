@@ -15,15 +15,15 @@ module SPARQL; module Algebra
       #
       # @param  [RDF::Query::Solution] solution
       # @return [RDF::URI] the datatype IRI, or `xsd:string` for simple literals
-      # @raise  [ArgumentError] if the operand is not a typed or simple `RDF::Literal`
+      # @raise  [TypeError] if the operand is not a typed or simple `RDF::Literal`
       def evaluate(solution)
         case literal = operands.first # TODO: variable lookup
           when RDF::Literal then case
             when literal.typed? then RDF::URI(literal.datatype)
             when literal.plain? then RDF::XSD.string
-            else raise ArgumentError, "expected a typed or simple RDF::Literal, but got #{literal.inspect}"
+            else raise TypeError, "expected a typed or simple RDF::Literal, but got #{literal.inspect}"
           end
-          else raise ArgumentError, "expected an RDF::Literal, but got #{literal.inspect}"
+          else raise TypeError, "expected an RDF::Literal, but got #{literal.inspect}"
         end
       end
     end # Datatype
