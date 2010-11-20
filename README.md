@@ -1,8 +1,8 @@
 SPARQL Algebra for RDF.rb
 =========================
 
-This is a [Ruby][] implementation of the [SPARQL][] algebra for [RDF.rb][].
-(Currently in pre-alpha state.)
+This is an in-the-works (currently pre-alpha) [Ruby][] implementation of the
+[SPARQL][] algebra for [RDF.rb][].
 
 * <http://github.com/bendiken/sparql-algebra>
 
@@ -10,13 +10,28 @@ Features
 --------
 
 * 100% free and unencumbered [public domain](http://unlicense.org/) software.
+* Currently implements all of SPARQL 1.0's unary operators (binary and
+  ternary operators are in the works).
 * Compatible with Ruby 1.8.7+, Ruby 1.9.x, and JRuby 1.4/1.5.
 
 Examples
 --------
 
-    require 'rubygems'
     require 'sparql/algebra'
+    
+    include SPARQL::Algebra
+
+### Evaluating operators without a solution sequence
+
+    Operator::IsBlank.evaluate(RDF::Node.new)           #=> RDF::Literal(true)
+    Operator::IsIRI.evaluate(RDF::DC.title)             #=> RDF::Literal(true)
+    Operator::IsLiteral.evaluate(RDF::Literal(3.1415))  #=> RDF::Literal(true)
+
+### Evaluating operators with a solution sequence
+
+    expression = Operator::Bound.new(RDF::Query::Variable.new(:email))
+    solutions  = query.execute(...) # see RDF::Query and RDF::Query::Solutions
+    solutions.filter! { |solution| expression.evaluate(solution).true? }
 
 Documentation
 -------------
@@ -24,6 +39,7 @@ Documentation
 <http://sparql.rubyforge.org/algebra/>
 
 * {SPARQL::Algebra}
+  * {SPARQL::Algebra::Operator}
 
 Dependencies
 ------------
