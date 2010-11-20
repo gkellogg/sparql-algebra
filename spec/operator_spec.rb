@@ -3,6 +3,7 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 describe SPARQL::Algebra::Operator do
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   before :all do
+    @bound      = SPARQL::Algebra::Operator::Bound
     @is_iri     = SPARQL::Algebra::Operator::IsIRI
     @is_blank   = SPARQL::Algebra::Operator::IsBlank
     @is_literal = SPARQL::Algebra::Operator::IsLiteral
@@ -48,13 +49,13 @@ describe SPARQL::Algebra::Operator do
   context "Bound" do
     describe ".evaluate(RDF::Query::Variable)" do
       it "returns an RDF::Literal::Boolean" do
-        pending # TODO
+        @bound.evaluate(RDF::Query::Variable.new(:foo)).should be_an(RDF::Literal::Boolean)
       end
     end
 
     describe ".evaluate(term)" do
       it "raises an ArgumentError" do
-        pending # TODO
+        lambda { @bound.evaluate(nil) }.should raise_error(ArgumentError)
       end
     end
   end
