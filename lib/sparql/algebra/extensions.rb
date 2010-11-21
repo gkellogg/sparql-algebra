@@ -9,6 +9,14 @@ module RDF::Term
   def evaluate(bindings = {})
     self
   end
+
+  ##
+  # Returns `self`.
+  #
+  # @return [RDF::Term] `self`
+  def to_sse
+    self
+  end
 end # RDF::Term
 
 ##
