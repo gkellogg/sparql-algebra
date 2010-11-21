@@ -51,3 +51,5 @@ module SPARQL
     Variable = RDF::Query::Variable
   end # Algebra
 end # SPARQL
+
+require 'sparql/algebra/extensions'
