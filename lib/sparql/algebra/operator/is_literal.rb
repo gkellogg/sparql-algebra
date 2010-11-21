@@ -8,6 +8,17 @@ module SPARQL; module Algebra
       NAME = :isLiteral
 
       ##
+      # Initializes a new operator instance.
+      #
+      # @param  [RDF::Term] term
+      #   an RDF term
+      # @param  [Hash{Symbol => Object}] options
+      #   any additional options (see {Operator#initialize})
+      def initialize(term, options = {})
+        super(term, options)
+      end
+
+      ##
       # Returns `true` if the operand is an `RDF::Literal`, `false`
       # otherwise.
       #

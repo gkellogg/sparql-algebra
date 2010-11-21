@@ -9,6 +9,19 @@ module SPARQL; module Algebra
       NAME = [:and, :'&&']
 
       ##
+      # Initializes a new operator instance.
+      #
+      # @param  [RDF::Literal::Boolean] left
+      #   the left operand
+      # @param  [RDF::Literal::Boolean] right
+      #   the right operand
+      # @param  [Hash{Symbol => Object}] options
+      #   any additional options (see {Operator#initialize})
+      def initialize(left, right, options = {})
+        super(left, right, options)
+      end
+
+      ##
       # Returns the logical `AND` of the left operand and the right operand.
       #
       # Note that this operator operates on the effective boolean value
@@ -18,9 +31,9 @@ module SPARQL; module Algebra
       # @return [RDF::Literal::Boolean]
       # @raise  [TypeError] if the operands could not be coerced to `RDF::Literal::Boolean`
       def evaluate(bindings = {})
-        lhs = lambda { boolean(operand(0).evaluate(bindings)).true? }
-        rhs = lambda { boolean(operand(1).evaluate(bindings)).true? }
-        RDF::Literal(lhs.call && rhs.call) # FIXME: error handling
+        left  = lambda { boolean(operand(0).evaluate(bindings)).true? }
+        right = lambda { boolean(operand(1).evaluate(bindings)).true? }
+        RDF::Literal(left.call && right.call) # FIXME: error handling
       end
     end # And
   end # Operator

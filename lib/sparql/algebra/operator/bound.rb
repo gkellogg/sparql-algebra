@@ -8,6 +8,17 @@ module SPARQL; module Algebra
       NAME = :bound
 
       ##
+      # Initializes a new operator instance.
+      #
+      # @param  [RDF::Query::Variable] var
+      #   a variable
+      # @param  [Hash{Symbol => Object}] options
+      #   any additional options (see {Operator#initialize})
+      def initialize(var, options = {})
+        super(var, options)
+      end
+
+      ##
       # Returns `true` if the operand is a variable that is bound to a
       # value in the given `bindings`, `false` otherwise.
       #

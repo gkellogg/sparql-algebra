@@ -8,6 +8,17 @@ module SPARQL; module Algebra
       NAME = [:isIRI, :isURI]
 
       ##
+      # Initializes a new operator instance.
+      #
+      # @param  [RDF::Term] term
+      #   an RDF term
+      # @param  [Hash{Symbol => Object}] options
+      #   any additional options (see {Operator#initialize})
+      def initialize(term, options = {})
+        super(term, options)
+      end
+
+      ##
       # Returns `true` if the operand is an `RDF::URI`, `false` otherwise.
       #
       # @param  [RDF::Query::Solution, #[]] bindings
@@ -20,6 +31,8 @@ module SPARQL; module Algebra
           else raise TypeError, "expected an RDF::Term, but got #{term.inspect}"
         end
       end
+
+      Operator::IsURI = IsIRI
     end # IsIRI
   end # Operator
 end; end # SPARQL::Algebra

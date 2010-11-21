@@ -8,6 +8,17 @@ module SPARQL; module Algebra
       NAME = [:+, :plus]
 
       ##
+      # Initializes a new operator instance.
+      #
+      # @param  [RDF::Literal::Numeric] numeric
+      #   a numeric RDF literal
+      # @param  [Hash{Symbol => Object}] options
+      #   any additional options (see {Operator#initialize})
+      def initialize(numeric, options = {})
+        super(numeric, options)
+      end
+
+      ##
       # Returns the operand incremented by one.
       #
       # @param  [RDF::Query::Solution, #[]] bindings

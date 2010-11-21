@@ -13,6 +13,7 @@ module SPARQL; module Algebra
     autoload :Bound,       'sparql/algebra/operator/bound'
     autoload :IsBlank,     'sparql/algebra/operator/is_blank'
     autoload :IsIRI,       'sparql/algebra/operator/is_iri'
+    autoload :IsURI,       'sparql/algebra/operator/is_iri'
     autoload :IsLiteral,   'sparql/algebra/operator/is_literal'
     autoload :Str,         'sparql/algebra/operator/str'
     autoload :Lang,        'sparql/algebra/operator/lang'

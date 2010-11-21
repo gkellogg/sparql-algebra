@@ -8,6 +8,17 @@ module SPARQL; module Algebra
       NAME = :lang
 
       ##
+      # Initializes a new operator instance.
+      #
+      # @param  [RDF::Literal] literal
+      #   an RDF literal
+      # @param  [Hash{Symbol => Object}] options
+      #   any additional options (see {Operator#initialize})
+      def initialize(literal, options = {})
+        super(literal, options)
+      end
+
+      ##
       # Returns the language tag of the operand, if it has one.
       #
       # If the operand has no language tag, returns `""`.

@@ -8,6 +8,17 @@ module SPARQL; module Algebra
       NAME = [:not, :'!']
 
       ##
+      # Initializes a new operator instance.
+      #
+      # @param  [RDF::Literal::Boolean] operand
+      #   the operand
+      # @param  [Hash{Symbol => Object}] options
+      #   any additional options (see {Operator#initialize})
+      def initialize(operand, options = {})
+        super(operand, options)
+      end
+
+      ##
       # Returns the logical `NOT` (inverse) of the operand.
       #
       # Note that this operator operates on the effective boolean value

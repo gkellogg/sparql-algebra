@@ -8,6 +8,17 @@ module SPARQL; module Algebra
       NAME = :datatype
 
       ##
+      # Initializes a new operator instance.
+      #
+      # @param  [RDF::Literal] literal
+      #   a typed or simple RDF literal
+      # @param  [Hash{Symbol => Object}] options
+      #   any additional options (see {Operator#initialize})
+      def initialize(literal, options = {})
+        super(literal, options)
+      end
+
+      ##
       # Returns the datatype IRI of the operand.
       #
       # If the operand is a simple literal, returns a datatype of

@@ -8,6 +8,17 @@ module SPARQL; module Algebra
       NAME = :str
 
       ##
+      # Initializes a new operator instance.
+      #
+      # @param  [RDF::Literal, RDF::URI] term
+      #   an RDF literal or IRI
+      # @param  [Hash{Symbol => Object}] options
+      #   any additional options (see {Operator#initialize})
+      def initialize(term, options = {})
+        super(term, options)
+      end
+
+      ##
       # Returns the string form of the operand.
       #
       # @param  [RDF::Query::Solution, #[]] bindings
