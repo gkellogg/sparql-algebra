@@ -611,7 +611,46 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-sameTerm
+  # @see http://www.w3.org/TR/rdf-concepts/#section-Graph-URIref
+  # @see http://www.w3.org/TR/rdf-concepts/#section-Literal-Equality
+  # @see http://www.w3.org/TR/rdf-concepts/#section-blank-nodes
   context "Operator::SameTerm" do
+    examples = {
+      [RDF::Node(:foo), RDF::Node(:foo)] => true,
+      [RDF::Node(:foo), RDF::Node(:bar)] => false,
+    }
+    examples.each do |input, output|
+      describe ".evaluate(RDF::Node(#{input[0].to_sym.inspect}), RDF::Node(#{input[1].to_sym.inspect}))" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @same_term.evaluate(input[0], input[1]).should eql RDF::Literal(output)
+        end
+      end
+    end
+
+    examples = {
+      [RDF::DC.title, RDF::DC.title.dup] => true,
+      [RDF::DC.title, RDF::DC11.title]   => false,
+    }
+    examples.each do |input, output|
+      describe ".evaluate(RDF::URI(#{input[0].to_s.inspect}), RDF::URI(#{input[1].to_s.inspect}))" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @same_term.evaluate(input[0], input[1]).should eql RDF::Literal(output)
+        end
+      end
+    end
+
+    examples = {
+      [RDF::Literal('foo'), RDF::Literal('foo')] => true,
+      [RDF::Literal('foo'), RDF::Literal('bar')] => false,
+    }
+    examples.each do |input, output|
+      describe ".evaluate(RDF::Literal(#{input[0].to_s.inspect}), RDF::Literal(#{input[1].to_s.inspect}))" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @same_term.evaluate(input[0], input[1]).should eql RDF::Literal(output)
+        end
+      end
+    end
+
     describe ".evaluate(RDF::Term, RDF::Term)" do
       it "returns RDF::Literal::TRUE if the terms are the same" do
         @same_term.evaluate(RDF::Literal(true), RDF::Literal::TRUE).should eql RDF::Literal::TRUE
@@ -621,6 +660,7 @@ describe SPARQL::Algebra do
       it "returns RDF::Literal::FALSE if the terms are not the same" do
         @same_term.evaluate(RDF::Literal(true), RDF::Literal::FALSE).should eql RDF::Literal::FALSE
         @same_term.evaluate(RDF::Literal('a'), RDF::Literal('b')).should eql RDF::Literal::FALSE
+        #@same_term.evaluate(RDF::Literal(1), RDF::Literal(1.0)).should eql RDF::Literal::FALSE # FIXME
       end
     end
 
@@ -660,7 +700,6 @@ describe SPARQL::Algebra do
       ['de-Deva', 'de-de']    => false,
       ['de-Latn-DE', 'de-de'] => false,
     }
-
     examples.each do |input, output|
       describe ".evaluate(RDF::Literal(#{input[0].inspect}), RDF::Literal(#{input[1].inspect}))" do
         it "returns RDF::Literal::#{output.to_s.upcase}" do
