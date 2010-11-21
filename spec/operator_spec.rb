@@ -22,6 +22,7 @@ describe SPARQL::Algebra do
     # TODO: Binary operators
     @or         = SPARQL::Algebra::Operator::Or
     @and        = SPARQL::Algebra::Operator::And
+    @same_term  = SPARQL::Algebra::Operator::SameTerm
     # TODO: Ternary operators
   end
 
@@ -586,11 +587,11 @@ describe SPARQL::Algebra do
   context "Operator::Equal" do
     describe ".evaluate(RDF::Term, RDF::Term)" do
       it "returns RDF::Literal::TRUE if the terms are equal" do
-        pending # TODO
+        #pending # TODO
       end
 
       it "returns RDF::Literal::FALSE if the terms are not equal" do
-        pending # TODO
+        #pending # TODO
       end
     end
   end
@@ -599,11 +600,11 @@ describe SPARQL::Algebra do
   context "Operator::NotEqual" do
     describe ".evaluate(RDF::Term, RDF::Term)" do
       it "returns RDF::Literal::FALSE if the terms are equal" do
-        pending # TODO
+        #pending # TODO
       end
 
       it "returns RDF::Literal::TRUE if the terms are not equal" do
-        pending # TODO
+        #pending # TODO
       end
     end
   end
@@ -612,11 +613,29 @@ describe SPARQL::Algebra do
   context "Operator::SameTerm" do
     describe ".evaluate(RDF::Term, RDF::Term)" do
       it "returns RDF::Literal::TRUE if the terms are the same" do
-        pending # TODO
+        @same_term.evaluate(RDF::Literal(true), RDF::Literal::TRUE).should eql RDF::Literal::TRUE
+        @same_term.evaluate(RDF::Literal('a'), RDF::Literal('a')).should eql RDF::Literal::TRUE
       end
 
       it "returns RDF::Literal::FALSE if the terms are not the same" do
-        pending # TODO
+        @same_term.evaluate(RDF::Literal(true), RDF::Literal::FALSE).should eql RDF::Literal::FALSE
+        @same_term.evaluate(RDF::Literal('a'), RDF::Literal('b')).should eql RDF::Literal::FALSE
+      end
+    end
+
+    describe ".evaluate(RDF::Term, nil)" do
+      it "raises a TypeError" do
+        pending do
+          lambda { @same_term.evaluate(RDF::Literal::TRUE, nil) }.should raise_error TypeError # FIXME
+        end
+      end
+    end
+
+    describe ".evaluate(nil, RDF::Term)" do
+      it "raises a TypeError" do
+        pending do
+          lambda { @same_term.evaluate(nil, RDF::Literal::TRUE) }.should raise_error TypeError # FIXME
+        end
       end
     end
   end

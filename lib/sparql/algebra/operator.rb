@@ -21,6 +21,7 @@ module SPARQL; module Algebra
     # Binary operators
     autoload :Or,        'sparql/algebra/operator/or'
     autoload :And,       'sparql/algebra/operator/and'
+    autoload :SameTerm,  'sparql/algebra/operator/same_term'
 
     ##
     # Returns an operator class for the given operator `name`.
@@ -44,6 +45,7 @@ module SPARQL; module Algebra
         when :datatype   then Datatype
         when :or, :'||'  then Or
         when :and, :'&&' then And
+        when :sameterm   then SameTerm
         else nil # not found
       end
     end
