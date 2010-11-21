@@ -24,6 +24,7 @@ module SPARQL; module Algebra
     autoload :And,         'sparql/algebra/operator/and'
     autoload :SameTerm,    'sparql/algebra/operator/same_term'
     autoload :LangMatches, 'sparql/algebra/operator/lang_matches'
+    autoload :Regex,       'sparql/algebra/operator/regex'
 
     ##
     # Returns an operator class for the given operator `name`.
@@ -34,20 +35,22 @@ module SPARQL; module Algebra
     def self.for(name, arity = nil)
       # TODO: refactor this to dynamically introspect loaded operator classes.
       case (name.to_s.downcase.to_sym rescue nil)
-        when :not, :'!'  then Not
-        when :plus, :+   then Plus
-        when :minus, :-  then Minus
-        when :bound      then Bound
-        when :isblank    then IsBlank
-        when :isiri      then IsIRI
-        when :isuri      then IsIRI # alias
-        when :isliteral  then IsLiteral
-        when :str        then Str
-        when :lang       then Lang
-        when :datatype   then Datatype
-        when :or, :'||'  then Or
-        when :and, :'&&' then And
-        when :sameterm   then SameTerm
+        when :not, :'!'   then Not
+        when :plus, :+    then Plus
+        when :minus, :-   then Minus
+        when :bound       then Bound
+        when :isblank     then IsBlank
+        when :isiri       then IsIRI
+        when :isuri       then IsIRI # alias
+        when :isliteral   then IsLiteral
+        when :str         then Str
+        when :lang        then Lang
+        when :datatype    then Datatype
+        when :or, :'||'   then Or
+        when :and, :'&&'  then And
+        when :sameterm    then SameTerm
+        when :langmatches then LangMatches
+        when :regex       then Regex
         else nil # not found
       end
     end

@@ -19,12 +19,14 @@ describe SPARQL::Algebra do
     @str          = SPARQL::Algebra::Operator::Str
     @lang         = SPARQL::Algebra::Operator::Lang
     @datatype     = SPARQL::Algebra::Operator::Datatype
-    # TODO: Binary operators
+    # Binary operators
     @or           = SPARQL::Algebra::Operator::Or
     @and          = SPARQL::Algebra::Operator::And
+    # TODO: missing binary operators
     @same_term    = SPARQL::Algebra::Operator::SameTerm
     @lang_matches = SPARQL::Algebra::Operator::LangMatches
-    # TODO: Ternary operators
+    # Ternary operators
+    @regex        = SPARQL::Algebra::Operator::Regex
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#ebv
@@ -735,15 +737,44 @@ describe SPARQL::Algebra do
   ##########################################################################
   # TERNARY OPERATORS
 
-  # @see http://www.w3.org/TR/rdf-sparql-query/#rRegexExpression
+  # @see http://www.w3.org/TR/rdf-sparql-query/#funcex-regex
   # @see http://www.w3.org/TR/xpath-functions/#func-matches
   context "Operator::Regex" do
-    describe ".evaluate(string, pattern)" do
-      # TODO
+    examples = {
+      # @see http://www.w3.org/TR/rdf-sparql-query/#restrictString
+      ["SPARQL Tutorial", '^SPARQL', '']                   => true,
+      ["The Semantic Web", '^SPARQL', '']                  => false,
+      ["SPARQL Tutorial", 'web', 'i']                      => false,
+      ["The Semantic Web", 'web', 'i'  ]                   => true,
+      # @see http://www.w3.org/TR/rdf-sparql-query/#func-str
+      ["<mailto:alice@work.example>", '@work.example', ''] => true,
+      ["<mailto:bob@home.example>", '@work.example', '']   => false,
+      # @see http://www.w3.org/TR/rdf-sparql-query/#funcex-regex
+      ["Alice", '^ali', 'i']                               => true,
+      ["Bob", '^ali', 'i']                                 => false,
+      # @see http://www.w3.org/TR/xpath-functions/#func-matches
+      ["abracadabra", 'bra', '']                           => true,
+      ["abracadabra", '^a.*a$', '']                        => true,
+      ["abracadabra", '^bra', '']                          => false,
+      # @see http://www.w3.org/TR/xpath-functions/#flags
+      ["helloworld", 'hello world', 'x']                   => true,
+      ["helloworld", 'hello[ ]world', 'x']                 => false,
+      #["hello world", 'hello\ sworld', 'x']                => true, # FIXME
+      ["hello world", 'hello world', 'x']                  => false,
+    }
+    examples.each do |input, output|
+      describe ".evaluate(RDF::Literal(#{input[0].inspect}), RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @regex.evaluate(RDF::Literal(input[0]), RDF::Literal(input[1]), RDF::Literal(input[2])).should eql RDF::Literal(output)
+        end
+      end
     end
 
-    describe ".evaluate(string, pattern, flags)" do
-      # TODO
+    describe ".evaluate(RDF::Term, RDF::Term, RDF::Term)" do
+      it "raises a TypeError" do
+        lambda { @regex.evaluate(*([RDF::Node.new] * 3)) }.should raise_error TypeError
+        lambda { @regex.evaluate(*([RDF::DC.title] * 3)) }.should raise_error TypeError
+      end
     end
   end
 end
