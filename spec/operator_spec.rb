@@ -20,6 +20,8 @@ describe SPARQL::Algebra do
     @lang       = SPARQL::Algebra::Operator::Lang
     @datatype   = SPARQL::Algebra::Operator::Datatype
     # TODO: Binary operators
+    @or         = SPARQL::Algebra::Operator::Or
+    @and        = SPARQL::Algebra::Operator::And
     # TODO: Ternary operators
   end
 
@@ -435,14 +437,64 @@ describe SPARQL::Algebra do
   # BINARY OPERATORS
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-logical-or
+  # @see http://www.w3.org/TR/rdf-sparql-query/#evaluation
   context "Operator::Or" do
+    describe ".evaluate(RDF::Literal::TRUE, RDF::Literal::TRUE)" do
+      it "returns RDF::Literal::TRUE" do
+        @or.evaluate(RDF::Literal::TRUE, RDF::Literal::TRUE).should eql RDF::Literal::TRUE
+      end
+    end
+
+    describe ".evaluate(RDF::Literal::TRUE, RDF::Literal::FALSE)" do
+      it "returns RDF::Literal::TRUE" do
+        @or.evaluate(RDF::Literal::TRUE, RDF::Literal::FALSE).should eql RDF::Literal::TRUE
+      end
+    end
+
+    describe ".evaluate(RDF::Literal::FALSE, RDF::Literal::TRUE)" do
+      it "returns RDF::Literal::TRUE" do
+        @or.evaluate(RDF::Literal::FALSE, RDF::Literal::TRUE).should eql RDF::Literal::TRUE
+      end
+    end
+
+    describe ".evaluate(RDF::Literal::FALSE, RDF::Literal::FALSE)" do
+      it "returns RDF::Literal::FALSE" do
+        @or.evaluate(RDF::Literal::FALSE, RDF::Literal::FALSE).should eql RDF::Literal::FALSE
+      end
+    end
+
     describe ".evaluate(lhs, rhs)" do
       # TODO
     end
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-logical-and
+  # @see http://www.w3.org/TR/rdf-sparql-query/#evaluation
   context "Operator::And" do
+    describe ".evaluate(RDF::Literal::TRUE, RDF::Literal::TRUE)" do
+      it "returns RDF::Literal::TRUE" do
+        @and.evaluate(RDF::Literal::TRUE, RDF::Literal::TRUE).should eql RDF::Literal::TRUE
+      end
+    end
+
+    describe ".evaluate(RDF::Literal::TRUE, RDF::Literal::FALSE)" do
+      it "returns RDF::Literal::FALSE" do
+        @and.evaluate(RDF::Literal::TRUE, RDF::Literal::FALSE).should eql RDF::Literal::FALSE
+      end
+    end
+
+    describe ".evaluate(RDF::Literal::FALSE, RDF::Literal::TRUE)" do
+      it "returns RDF::Literal::FALSE" do
+        @and.evaluate(RDF::Literal::FALSE, RDF::Literal::TRUE).should eql RDF::Literal::FALSE
+      end
+    end
+
+    describe ".evaluate(RDF::Literal::FALSE, RDF::Literal::FALSE)" do
+      it "returns RDF::Literal::FALSE" do
+        @or.evaluate(RDF::Literal::FALSE, RDF::Literal::FALSE).should eql RDF::Literal::FALSE
+      end
+    end
+
     describe ".evaluate(lhs, rhs)" do
       # TODO
     end

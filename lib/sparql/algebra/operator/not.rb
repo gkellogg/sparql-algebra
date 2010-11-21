@@ -1,18 +1,17 @@
 module SPARQL; module Algebra
   class Operator
     ##
-    # The SPARQL unary `!` operator.
+    # The SPARQL logical `not` operator.
     #
     # @see http://www.w3.org/TR/xpath-functions/#func-not
     class Not < Operator::Unary
       NAME = [:not, :'!']
 
       ##
-      # Returns `true` if the effective boolean value of the operand is
-      # `false`, and `false` otherwise.
+      # Returns the logical `NOT` (inverse) of the operand.
       #
-      # If the operand is not an `xsd:boolean`, it is coerced to one by
-      # evaluating the effective boolean value (EBV) of the operand.
+      # Note that this operator operates on the effective boolean value
+      # (EBV) of its operand.
       #
       # @param  [RDF::Query::Solution] solution
       # @return [RDF::Literal::Boolean]
