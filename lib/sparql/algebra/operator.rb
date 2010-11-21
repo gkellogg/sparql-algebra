@@ -132,6 +132,14 @@ module SPARQL; module Algebra
       [operator, *(operands || [])]
     end
 
+    ##
+    # Returns a developer-friendly representation of this operator.
+    #
+    # @return [String]
+    def inspect
+      sprintf("#<%s:%#0x(%s)>", self.class.name, __id__, operands.map(&:inspect).join(', '))
+    end
+
   protected
 
     ##
