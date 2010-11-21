@@ -7,21 +7,22 @@ module SPARQL; module Algebra
     include Expression
 
     # Unary operators
-    autoload :Not,       'sparql/algebra/operator/not'
-    autoload :Plus,      'sparql/algebra/operator/plus'
-    autoload :Minus,     'sparql/algebra/operator/minus'
-    autoload :Bound,     'sparql/algebra/operator/bound'
-    autoload :IsBlank,   'sparql/algebra/operator/is_blank'
-    autoload :IsIRI,     'sparql/algebra/operator/is_iri'
-    autoload :IsLiteral, 'sparql/algebra/operator/is_literal'
-    autoload :Str,       'sparql/algebra/operator/str'
-    autoload :Lang,      'sparql/algebra/operator/lang'
-    autoload :Datatype,  'sparql/algebra/operator/datatype'
+    autoload :Not,         'sparql/algebra/operator/not'
+    autoload :Plus,        'sparql/algebra/operator/plus'
+    autoload :Minus,       'sparql/algebra/operator/minus'
+    autoload :Bound,       'sparql/algebra/operator/bound'
+    autoload :IsBlank,     'sparql/algebra/operator/is_blank'
+    autoload :IsIRI,       'sparql/algebra/operator/is_iri'
+    autoload :IsLiteral,   'sparql/algebra/operator/is_literal'
+    autoload :Str,         'sparql/algebra/operator/str'
+    autoload :Lang,        'sparql/algebra/operator/lang'
+    autoload :Datatype,    'sparql/algebra/operator/datatype'
 
     # Binary operators
-    autoload :Or,        'sparql/algebra/operator/or'
-    autoload :And,       'sparql/algebra/operator/and'
-    autoload :SameTerm,  'sparql/algebra/operator/same_term'
+    autoload :Or,          'sparql/algebra/operator/or'
+    autoload :And,         'sparql/algebra/operator/and'
+    autoload :SameTerm,    'sparql/algebra/operator/same_term'
+    autoload :LangMatches, 'sparql/algebra/operator/lang_matches'
 
     ##
     # Returns an operator class for the given operator `name`.

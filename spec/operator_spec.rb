@@ -3,26 +3,27 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   before :all do
-    @op         = SPARQL::Algebra::Operator
-    @op0        = SPARQL::Algebra::Operator::Nullary
-    @op1        = SPARQL::Algebra::Operator::Unary
-    @op2        = SPARQL::Algebra::Operator::Binary
-    @op3        = SPARQL::Algebra::Operator::Ternary
+    @op           = SPARQL::Algebra::Operator
+    @op0          = SPARQL::Algebra::Operator::Nullary
+    @op1          = SPARQL::Algebra::Operator::Unary
+    @op2          = SPARQL::Algebra::Operator::Binary
+    @op3          = SPARQL::Algebra::Operator::Ternary
     # Unary operators:
-    @not        = SPARQL::Algebra::Operator::Not
-    @plus       = SPARQL::Algebra::Operator::Plus
-    @minus      = SPARQL::Algebra::Operator::Minus
-    @bound      = SPARQL::Algebra::Operator::Bound
-    @is_iri     = SPARQL::Algebra::Operator::IsIRI
-    @is_blank   = SPARQL::Algebra::Operator::IsBlank
-    @is_literal = SPARQL::Algebra::Operator::IsLiteral
-    @str        = SPARQL::Algebra::Operator::Str
-    @lang       = SPARQL::Algebra::Operator::Lang
-    @datatype   = SPARQL::Algebra::Operator::Datatype
+    @not          = SPARQL::Algebra::Operator::Not
+    @plus         = SPARQL::Algebra::Operator::Plus
+    @minus        = SPARQL::Algebra::Operator::Minus
+    @bound        = SPARQL::Algebra::Operator::Bound
+    @is_iri       = SPARQL::Algebra::Operator::IsIRI
+    @is_blank     = SPARQL::Algebra::Operator::IsBlank
+    @is_literal   = SPARQL::Algebra::Operator::IsLiteral
+    @str          = SPARQL::Algebra::Operator::Str
+    @lang         = SPARQL::Algebra::Operator::Lang
+    @datatype     = SPARQL::Algebra::Operator::Datatype
     # TODO: Binary operators
-    @or         = SPARQL::Algebra::Operator::Or
-    @and        = SPARQL::Algebra::Operator::And
-    @same_term  = SPARQL::Algebra::Operator::SameTerm
+    @or           = SPARQL::Algebra::Operator::Or
+    @and          = SPARQL::Algebra::Operator::And
+    @same_term    = SPARQL::Algebra::Operator::SameTerm
+    @lang_matches = SPARQL::Algebra::Operator::LangMatches
     # TODO: Ternary operators
   end
 
@@ -642,8 +643,53 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-langMatches
   context "Operator::LangMatches" do
-    describe ".evaluate(language_tag, language_range)" do
-      # TODO
+    examples = {
+      ['', '*']               => false,
+      ['en', '*']             => true,
+      ['en', 'en']            => true,
+      ['en', 'EN']            => true,
+      ['EN', 'en']            => true,
+      ['en-US', 'en']         => true,
+      # @see http://www.w3.org/TR/rdf-sparql-query/#func-langMatches
+      ['en', 'FR']            => false,
+      ['fr', 'FR']            => true,
+      ['fr-BE', 'FR']         => true,
+      ['', 'FR']              => false,
+      # @see http://tools.ietf.org/html/rfc4647#section-3.3.1
+      ['de-DE-1996', 'de-de'] => true,
+      ['de-Deva', 'de-de']    => false,
+      ['de-Latn-DE', 'de-de'] => false,
+    }
+
+    examples.each do |input, output|
+      describe ".evaluate(RDF::Literal(#{input[0].inspect}), RDF::Literal(#{input[1].inspect}))" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @lang_matches.evaluate(RDF::Literal(input[0]), RDF::Literal(input[1])).should eql RDF::Literal(output)
+        end
+      end
+    end
+
+    describe ".evaluate(RDF::Literal, nil)" do
+      it "raises a TypeError" do
+        pending do
+          lambda { @lang_matches.evaluate(RDF::Literal('en'), nil) }.should raise_error TypeError # FIXME
+        end
+      end
+    end
+
+    describe ".evaluate(nil, RDF::Literal)" do
+      it "raises a TypeError" do
+        pending do
+          lambda { @lang_matches.evaluate(nil, RDF::Literal('en')) }.should raise_error TypeError # FIXME
+        end
+      end
+    end
+
+    describe ".evaluate(RDF::Term, RDF::Term)" do
+      it "raises a TypeError" do
+        lambda { @lang_matches.evaluate(RDF::Node.new, RDF::Node.new) }.should raise_error TypeError
+        lambda { @lang_matches.evaluate(RDF::DC.title, RDF::DC.title) }.should raise_error TypeError
+      end
     end
   end
 
