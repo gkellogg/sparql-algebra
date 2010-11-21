@@ -14,12 +14,12 @@ module SPARQL; module Algebra
       # Note that this operator operates on the effective boolean value
       # (EBV) of its operands.
       #
-      # @param  [RDF::Query::Solution] solution
+      # @param  [RDF::Query::Solution, #[]] bindings
       # @return [RDF::Literal::Boolean]
       # @raise  [TypeError] if the operands could not be coerced to `RDF::Literal::Boolean`
-      def evaluate(solution)
-        lhs = lambda { boolean(operand(0, solution)).true? }
-        rhs = lambda { boolean(operand(1, solution)).true? }
+      def evaluate(bindings = {})
+        lhs = lambda { boolean(operand(0).evaluate(bindings)).true? }
+        rhs = lambda { boolean(operand(1).evaluate(bindings)).true? }
         RDF::Literal(lhs.call || rhs.call) # FIXME: error handling
       end
     end # Or

@@ -13,11 +13,11 @@ module SPARQL; module Algebra
       # If the operand is a simple literal, returns a datatype of
       # `xsd:string`.
       #
-      # @param  [RDF::Query::Solution] solution
+      # @param  [RDF::Query::Solution, #[]] bindings
       # @return [RDF::URI] the datatype IRI, or `xsd:string` for simple literals
       # @raise  [TypeError] if the operand is not a typed or simple `RDF::Literal`
-      def evaluate(solution)
-        case literal = operand(0, solution)
+      def evaluate(bindings = {})
+        case literal = operand.evaluate(bindings)
           when RDF::Literal then case
             when literal.typed?  then RDF::URI(literal.datatype)
             when literal.simple? then RDF::XSD.string

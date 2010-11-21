@@ -10,11 +10,11 @@ module SPARQL; module Algebra
       ##
       # Returns `true` if the operand is an `RDF::URI`, `false` otherwise.
       #
-      # @param  [RDF::Query::Solution] solution
+      # @param  [RDF::Query::Solution, #[]] bindings
       # @return [RDF::Literal::Boolean] `true` or `false`
       # @raise  [TypeError] if the operand is not an `RDF::Term`
-      def evaluate(solution)
-        case term = operand(0, solution)
+      def evaluate(bindings = {})
+        case term = operand.evaluate(bindings)
           when RDF::URI  then RDF::Literal::TRUE
           when RDF::Term then RDF::Literal::FALSE
           else raise TypeError, "expected an RDF::Term, but got #{term.inspect}"

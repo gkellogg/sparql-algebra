@@ -10,11 +10,11 @@ module SPARQL; module Algebra
       ##
       # Returns the string form of the operand.
       #
-      # @param  [RDF::Query::Solution] solution
+      # @param  [RDF::Query::Solution, #[]] bindings
       # @return [RDF::Literal] a simple literal
       # @raise  [TypeError] if the operand is not an `RDF::Literal` or `RDF::URI`
-      def evaluate(solution)
-        case term = operand(0, solution)
+      def evaluate(bindings = {})
+        case term = operand.evaluate(bindings)
           when RDF::Literal then RDF::Literal(term.value)
           when RDF::URI     then RDF::Literal(term.to_s)
           else raise TypeError, "expected an RDF::Literal or RDF::URI, but got #{term.inspect}"

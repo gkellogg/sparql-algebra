@@ -27,28 +27,32 @@ Examples
     Operator(:isBlank).new(RDF::Node(:foobar))
     Operator(:isIRI).new(RDF::URI('http://rdf.rubyforge.org/'))
     Operator(:isLiteral).new(RDF::Literal(3.1415))
+    Operator(:str).new(Operator(:datatype).new(RDF::Literal(3.1415)))
 
 ### Constructing operator expressions using SSE forms
 
     Expression(:isBlank, RDF::Node(:foobar))
     Expression(:isIRI, RDF::URI('http://rdf.rubyforge.org/'))
     Expression(:isLiteral, RDF::Literal(3.1415))
+    Expression(:str, [:datatype, RDF::Literal(3.1415)])
 
 ### Constructing operator expressions using SSE strings
 
     Expression.parse('(isBlank _:foobar)')
     Expression.parse('(isIRI <http://rdf.rubyforge.org/>)')
     Expression.parse('(isLiteral 3.1415)')
+    Expression.parse('(str (datatype 3.1415))')
 
 ### Evaluating operators standalone
 
-    Operator(:isBlank).evaluate(RDF::Node(:foobar))      #=> RDF::Literal(true)
-    Operator(:isIRI).evaluate(RDF::DC.title)             #=> RDF::Literal(true)
-    Operator(:isLiteral).evaluate(RDF::Literal(3.1415))  #=> RDF::Literal(true)
+    Operator(:isBlank).evaluate(RDF::Node(:foobar))       #=> RDF::Literal::TRUE
+    Operator(:isIRI).evaluate(RDF::DC.title)              #=> RDF::Literal::TRUE
+    Operator(:isLiteral).evaluate(RDF::Literal(3.1415))   #=> RDF::Literal::TRUE
 
-### Evaluating expressions with a solution sequence
+### Evaluating expressions on a solution sequence
 
-    expression = Expression(:bound, Variable(:email))
+    expression = Expression(:bound, Variable(:email))     # ...or...
+    expression = Expression.parse('(bound ?email)')
     solutions  = query.execute(...) # see RDF::Query and RDF::Query::Solutions
     solutions.filter! { |solution| expression.evaluate(solution).true? }
 

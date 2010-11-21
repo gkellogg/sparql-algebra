@@ -80,17 +80,11 @@ module SPARQL; module Algebra
     ##
     # Returns the operand at the given `index`.
     #
-    # If the optional `bindings` argument is provided, it is used for
-    # performing variable lookup in case the operand is a variable.
-    #
     # @param  [Integer] index
     #   an operand index in the range `(0...(operands.count))`
-    # @param  [RDF::Query::Solution, #[]] bindings
-    #   optional bindings for looking up variable values
     # @return [RDF::Term]
-    def operand(index, bindings = {})
-      operand = operands[index]
-      operand.is_a?(Variable) ? bindings[operand.to_sym] : operand
+    def operand(index = 0)
+      operands[index]
     end
 
     ##
@@ -114,11 +108,11 @@ module SPARQL; module Algebra
     end
 
     ##
-    # @param  [RDF::Query::Solution] solution
+    # @param  [RDF::Query::Solution, #[]] bindings
     #   a query solution containing zero or more variable bindings
     # @return [RDF::Term]
     # @abstract
-    def evaluate(solution)
+    def evaluate(bindings = {})
       raise NotImplementedError, "#{self.class}#evaluate"
     end
 
