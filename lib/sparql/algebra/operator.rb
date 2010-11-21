@@ -16,6 +16,8 @@ module SPARQL; module Algebra
     autoload :Lang,      'sparql/algebra/operator/lang'
     autoload :Datatype,  'sparql/algebra/operator/datatype'
 
+    include Expression
+
     ##
     # Returns an operator class for the given operator `name`.
     #

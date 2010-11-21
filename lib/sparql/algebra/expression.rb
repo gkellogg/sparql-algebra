@@ -10,7 +10,7 @@ module SPARQL; module Algebra
     #
     # @param  [String] sse
     #   a SPARQL S-Expression (SSE) string
-    # @return [Operator]
+    # @return [Expression]
     def self.parse(sse)
       begin
         require 'sxp' # @see http://rubygems.org/gems/sxp
@@ -26,7 +26,7 @@ module SPARQL; module Algebra
     #
     # @param  [Array] sse
     #   a SPARQL S-Expression (SSE) form
-    # @return [Operator]
+    # @return [Expression]
     def self.for(*sse)
       self.new(sse)
     end
@@ -38,7 +38,7 @@ module SPARQL; module Algebra
     # @param  [Array] sse
     #   a SPARQL S-Expression (SSE) form
     # @param  [Hash{Symbol => Object}] options
-    # @return [Operator]
+    # @return [Expression]
     def self.new(sse, options = {})
       raise ArgumentError, "invalid SPARQL::Algebra::Expression form: #{sse.inspect}" unless sse.is_a?(Array)
 

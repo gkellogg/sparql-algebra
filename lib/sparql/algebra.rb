@@ -16,7 +16,7 @@ module SPARQL
     #
     # @param  [Array] sse
     #   a SPARQL S-Expression (SSE) form
-    # @return [Operator]
+    # @return [Expression]
     def Expression(*sse)
       Expression.for(*sse)
     end
