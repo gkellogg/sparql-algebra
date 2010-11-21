@@ -4,6 +4,11 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   before :all do
     @op         = SPARQL::Algebra::Operator
+    @op0        = SPARQL::Algebra::Operator::Nullary
+    @op1        = SPARQL::Algebra::Operator::Unary
+    @op2        = SPARQL::Algebra::Operator::Binary
+    @op3        = SPARQL::Algebra::Operator::Ternary
+    # Unary operators:
     @not        = SPARQL::Algebra::Operator::Not
     @plus       = SPARQL::Algebra::Operator::Plus
     @minus      = SPARQL::Algebra::Operator::Minus
@@ -14,77 +19,115 @@ describe SPARQL::Algebra do
     @str        = SPARQL::Algebra::Operator::Str
     @lang       = SPARQL::Algebra::Operator::Lang
     @datatype   = SPARQL::Algebra::Operator::Datatype
+    # TODO: Binary operators
+    # TODO: Ternary operators
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#ebv
   context "Operator" do
+    describe "#operands" do
+      it "returns an Array" do
+        @op0.new.operands.should be_an Array
+      end
+    end
+
+    describe "#operand" do
+      # TODO
+    end
+
+    describe "#variable?" do
+      it "returns true if any of the operands are variables" do
+        @op1.new(RDF::Query::Variable.new(:foo)).should be_variable
+      end
+
+      it "returns false if none of the operands are variables" do
+        @op1.new(RDF::Node.new).should_not be_variable
+      end
+    end
+
+    describe "#constant?" do
+      it "returns true if none of the operands are variables" do
+        @op1.new(RDF::Node.new).should be_constant
+      end
+
+      it "returns false if any of the operands are variables" do
+        @op1.new(RDF::Query::Variable.new(:foo)).should_not be_constant
+      end
+    end
+
+    describe "#evaluate" do
+      it "raises a NotImplementedError" do
+        lambda { @op.new.evaluate(nil) }.should raise_error NotImplementedError
+      end
+    end
+
     describe "#boolean(true)" do
-      it "returns RDF::Literal(true)" do
-        @op.new.send(:boolean, true).should eql RDF::Literal(true)
+      it "returns RDF::Literal::TRUE" do
+        @op.new.send(:boolean, true).should eql RDF::Literal::TRUE
       end
     end
 
     describe "#boolean(false)" do
-      it "returns RDF::Literal(false)" do
-        @op.new.send(:boolean, false).should eql RDF::Literal(false)
+      it "returns RDF::Literal::FALSE" do
+        @op.new.send(:boolean, false).should eql RDF::Literal::FALSE
       end
     end
 
     describe "#boolean(RDF::Literal::Boolean)" do
-      it "returns RDF::Literal(false) if the operand's lexical form is not valid" do
-        @op.new.send(:boolean, RDF::Literal::Boolean.new('t')).should eql RDF::Literal(false)
-        @op.new.send(:boolean, RDF::Literal::Boolean.new('f')).should eql RDF::Literal(false)
+      it "returns RDF::Literal::FALSE if the operand's lexical form is not valid" do
+        @op.new.send(:boolean, RDF::Literal::Boolean.new('t')).should eql RDF::Literal::FALSE
+        @op.new.send(:boolean, RDF::Literal::Boolean.new('f')).should eql RDF::Literal::FALSE
       end
     end
 
     describe "#boolean(RDF::Literal::TRUE)" do
-      it "returns RDF::Literal(true)" do
-        @op.new.send(:boolean, RDF::Literal(true)).should eql RDF::Literal(true)
+      it "returns RDF::Literal::TRUE" do
+        @op.new.send(:boolean, RDF::Literal::TRUE).should eql RDF::Literal::TRUE
       end
     end
 
     describe "#boolean(RDF::Literal::FALSE)" do
-      it "returns RDF::Literal(false)" do
-        @op.new.send(:boolean, RDF::Literal(false)).should eql RDF::Literal(false)
+      it "returns RDF::Literal::FALSE" do
+        @op.new.send(:boolean, RDF::Literal::FALSE).should eql RDF::Literal::FALSE
       end
     end
 
     describe "#boolean(RDF::Literal::Numeric)" do
-      it "returns RDF::Literal(false) if the operand's lexical form is not valid" do
-        @op.new.send(:boolean, RDF::Literal::Integer.new('abc')).should eql RDF::Literal(false)
+      it "returns RDF::Literal::FALSE if the operand's lexical form is not valid" do
+        @op.new.send(:boolean, RDF::Literal::Integer.new('abc')).should eql RDF::Literal::FALSE
       end
 
-      it "returns RDF::Literal(false) if the operand is NaN" do
-        @op.new.send(:boolean, RDF::Literal(0/0.0)).should eql RDF::Literal(false)
+      it "returns RDF::Literal::FALSE if the operand is NaN" do
+        @op.new.send(:boolean, RDF::Literal(0/0.0)).should eql RDF::Literal::FALSE
       end
 
-      it "returns RDF::Literal(false) if the operand is numerically equal to zero" do
-        @op.new.send(:boolean, RDF::Literal(0)).should eql RDF::Literal(false)
-        @op.new.send(:boolean, RDF::Literal(0.0)).should eql RDF::Literal(false)
+      it "returns RDF::Literal::FALSE if the operand is numerically equal to zero" do
+        @op.new.send(:boolean, RDF::Literal(0)).should eql RDF::Literal::FALSE
+        @op.new.send(:boolean, RDF::Literal(0.0)).should eql RDF::Literal::FALSE
       end
 
-      it "returns RDF::Literal(true) otherwise" do
-        @op.new.send(:boolean, RDF::Literal(42)).should eql RDF::Literal(true)
+      it "returns RDF::Literal::TRUE otherwise" do
+        @op.new.send(:boolean, RDF::Literal(42)).should eql RDF::Literal::TRUE
       end
     end
 
     describe "#boolean(RDF::Literal) with a plain literal" do
-      it "returns RDF::Literal(false) if the operand has zero length" do
-        @op.new.send(:boolean, RDF::Literal("")).should eql RDF::Literal(false)
+      it "returns RDF::Literal::FALSE if the operand has zero length" do
+        @op.new.send(:boolean, RDF::Literal("")).should eql RDF::Literal::FALSE
       end
 
-      it "returns RDF::Literal(true) otherwise" do
-        @op.new.send(:boolean, RDF::Literal("Hello")).should eql RDF::Literal(true)
+      it "returns RDF::Literal::TRUE otherwise" do
+        @op.new.send(:boolean, RDF::Literal("Hello")).should eql RDF::Literal::TRUE
       end
     end
 
     describe "#boolean(RDF::Literal) with a typed literal of datatype xsd:string" do
-      it "returns RDF::Literal(false) if the operand has zero length" do
-        @op.new.send(:boolean, RDF::Literal("", :datatype => RDF::XSD.string)).should eql RDF::Literal(false)
+      it "returns RDF::Literal::FALSE if the operand has zero length" do
+        @op.new.send(:boolean, RDF::Literal("", :datatype => RDF::XSD.string)).should eql RDF::Literal::FALSE
       end
 
-      it "returns RDF::Literal(true) otherwise" do
-        @op.new.send(:boolean, RDF::Literal("Hello", :datatype => RDF::XSD.string)).should eql RDF::Literal(true)
+      it "returns RDF::Literal::TRUE otherwise" do
+        @op.new.send(:boolean, RDF::Literal("Hello", :datatype => RDF::XSD.string)).should eql RDF::Literal::TRUE
       end
     end
 
@@ -102,29 +145,56 @@ describe SPARQL::Algebra do
     end
   end
 
+  context "Operator::Nullary" do
+    # TODO
+  end
+
+  context "Operator::Unary" do
+    # TODO
+  end
+
+  context "Operator::Binary" do
+    # TODO
+  end
+
+  context "Operator::Ternary" do
+    # TODO
+  end
+
+  ##########################################################################
+  # UNARY OPERATORS
+
   # @see http://www.w3.org/TR/xpath-functions/#func-not
   context "Operator::Not" do
-    describe ".evaluate(RDF::Literal(true))" do
-      it "returns RDF::Literal(false)" do
-        @not.evaluate(RDF::Literal(true)).should eql RDF::Literal(false)
+    describe ".evaluate(RDF::Literal::TRUE)" do
+      it "returns RDF::Literal::FALSE" do
+        @not.evaluate(RDF::Literal::TRUE).should eql RDF::Literal::FALSE
       end
     end
 
-    describe ".evaluate(RDF::Literal(false))" do
-      it "returns RDF::Literal(true)" do
-        @not.evaluate(RDF::Literal(false)).should eql RDF::Literal(true)
+    describe ".evaluate(RDF::Literal::FALSE)" do
+      it "returns RDF::Literal::TRUE" do
+        @not.evaluate(RDF::Literal::FALSE).should eql RDF::Literal::TRUE
       end
     end
 
-    describe ".evaluate(term)" do
-      it "returns an RDF::Literal::Boolean" do
-        pending # TODO
+    describe ".evaluate(RDF::Term)" do
+      it "returns the inverse of the operand's effective boolean value (EBV)" do
+        @not.evaluate(RDF::Literal(0/0.0)).should eql RDF::Literal::TRUE
+        @not.evaluate(RDF::Literal(0)).should eql RDF::Literal::TRUE
+        @not.evaluate(RDF::Literal(0.0)).should eql RDF::Literal::TRUE
+        @not.evaluate(RDF::Literal("")).should eql RDF::Literal::TRUE
+        @not.evaluate(RDF::Literal(""), :datatype => RDF::XSD.string).should eql RDF::Literal::TRUE
+        @not.evaluate(RDF::Literal(42)).should eql RDF::Literal::FALSE
+        @not.evaluate(RDF::Literal(3.1415)).should eql RDF::Literal::FALSE
+        @not.evaluate(RDF::Literal("Hello")).should eql RDF::Literal::FALSE
+        @not.evaluate(RDF::Literal("Hello"), :datatype => RDF::XSD.string).should eql RDF::Literal::FALSE
       end
     end
 
     describe "#to_sse" do
       it "returns the correct SSE form" do
-        @not.new(RDF::Literal(true)).to_sse.should == [:not, RDF::Literal(true)]
+        @not.new(RDF::Literal::TRUE).to_sse.should == [:not, RDF::Literal::TRUE]
       end
     end
   end
@@ -134,6 +204,8 @@ describe SPARQL::Algebra do
     describe ".evaluate(RDF::Literal::Numeric)" do
       it "returns the operand incremented by one" do
         @plus.evaluate(RDF::Literal(41)).should eql RDF::Literal(42)
+        @plus.evaluate(RDF::Literal(41.0)).should eql RDF::Literal(42.0)
+        @plus.evaluate(RDF::Literal(BigDecimal('41.0'))).should eql RDF::Literal(BigDecimal('42.0'))
       end
     end
 
@@ -155,6 +227,8 @@ describe SPARQL::Algebra do
     describe ".evaluate(RDF::Literal::Numeric)" do
       it "returns the operand decremented by one" do
         @minus.evaluate(RDF::Literal(43)).should eql RDF::Literal(42)
+        @minus.evaluate(RDF::Literal(43.0)).should eql RDF::Literal(42.0)
+        @minus.evaluate(RDF::Literal(BigDecimal('43.0'))).should eql RDF::Literal(BigDecimal('42.0'))
       end
     end
 
@@ -179,9 +253,14 @@ describe SPARQL::Algebra do
       end
     end
 
-    describe ".evaluate(term)" do
+    # TODO: tests with actual solution sequences.
+
+    describe ".evaluate(RDF::Term)" do
       it "raises a TypeError" do
         lambda { @bound.evaluate(nil) }.should raise_error TypeError
+        lambda { @bound.evaluate(RDF::Node.new) }.should raise_error TypeError
+        lambda { @bound.evaluate(RDF::DC.title) }.should raise_error TypeError
+        lambda { @bound.evaluate(RDF::Literal::TRUE) }.should raise_error TypeError
       end
     end
 
@@ -195,20 +274,15 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-isIRI
   context "Operator::IsIRI" do
     describe ".evaluate(RDF::URI)" do
-      it "returns RDF::Literal(true)" do
-        @is_iri.evaluate(RDF::URI('http://rdf.rubyforge.org/')).should eql RDF::Literal(true)
+      it "returns RDF::Literal::TRUE" do
+        @is_iri.evaluate(RDF::URI('http://rdf.rubyforge.org/')).should eql RDF::Literal::TRUE
       end
     end
 
-    describe ".evaluate(RDF::Node)" do
-      it "returns RDF::Literal(false)" do
-        @is_iri.evaluate(RDF::Node.new).should eql RDF::Literal(false)
-      end
-    end
-
-    describe ".evaluate(RDF::Literal)" do
-      it "returns RDF::Literal(false)" do
-        @is_iri.evaluate(RDF::Literal(42)).should eql RDF::Literal(false)
+    describe ".evaluate(RDF::Term)" do
+      it "returns RDF::Literal::FALSE" do
+        @is_iri.evaluate(RDF::Node.new).should eql RDF::Literal::FALSE
+        @is_iri.evaluate(RDF::Literal(42)).should eql RDF::Literal::FALSE
       end
     end
 
@@ -222,20 +296,15 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-isBlank
   context "Operator::IsBlank" do
     describe ".evaluate(RDF::Node)" do
-      it "returns RDF::Literal(true)" do
-        @is_blank.evaluate(RDF::Node.new).should eql RDF::Literal(true)
+      it "returns RDF::Literal::TRUE" do
+        @is_blank.evaluate(RDF::Node.new).should eql RDF::Literal::TRUE
       end
     end
 
-    describe ".evaluate(RDF::URI)" do
-      it "returns RDF::Literal(false)" do
-        @is_blank.evaluate(RDF::URI('http://rdf.rubyforge.org/')).should eql RDF::Literal(false)
-      end
-    end
-
-    describe ".evaluate(RDF::Literal)" do
-      it "returns RDF::Literal(false)" do
-        @is_blank.evaluate(RDF::Literal(42)).should eql RDF::Literal(false)
+    describe ".evaluate(RDF::Term)" do
+      it "returns RDF::Literal::FALSE" do
+        @is_blank.evaluate(RDF::URI('http://rdf.rubyforge.org/')).should eql RDF::Literal::FALSE
+        @is_blank.evaluate(RDF::Literal(42)).should eql RDF::Literal::FALSE
       end
     end
 
@@ -249,20 +318,15 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-isLiteral
   context "Operator::IsLiteral" do
     describe ".evaluate(RDF::Literal)" do
-      it "returns RDF::Literal(true)" do
-        @is_literal.evaluate(RDF::Literal("Hello")).should eql RDF::Literal(true)
+      it "returns RDF::Literal::TRUE" do
+        @is_literal.evaluate(RDF::Literal("Hello")).should eql RDF::Literal::TRUE
       end
     end
 
-    describe ".evaluate(RDF::Node)" do
-      it "returns RDF::Literal(false)" do
-        @is_literal.evaluate(RDF::Node.new).should eql RDF::Literal(false)
-      end
-    end
-
-    describe ".evaluate(RDF::URI)" do
-      it "returns RDF::Literal(false)" do
-        @is_literal.evaluate(RDF::DC.title).should eql RDF::Literal(false)
+    describe ".evaluate(RDF::Term)" do
+      it "returns RDF::Literal::FALSE" do
+        @is_literal.evaluate(RDF::Node.new).should eql RDF::Literal::FALSE
+        @is_literal.evaluate(RDF::DC.title).should eql RDF::Literal::FALSE
       end
     end
 
@@ -276,15 +340,21 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-str
   context "Operator::Str" do
     describe ".evaluate(RDF::Literal)" do
-      it "returns the lexical value as a simple literal" do
+      it "returns the operand's lexical value as a simple literal" do
         @str.evaluate(RDF::Literal("Hello")).should eql RDF::Literal("Hello")
         @str.evaluate(RDF::Literal(3.1415)).should eql RDF::Literal("3.1415")
       end
     end
 
     describe ".evaluate(RDF::URI)" do
-      it "returns the IRI string as a simple literal" do
+      it "returns the operand IRI string as a simple literal" do
         @str.evaluate(RDF::DC.title).should eql RDF::Literal(RDF::DC.title.to_s)
+      end
+    end
+
+    describe ".evaluate(RDF::Term)" do
+      it "raises a TypeError" do
+        lambda { @str.evaluate(RDF::Node.new) }.should raise_error TypeError
       end
     end
 
@@ -361,16 +431,19 @@ describe SPARQL::Algebra do
     end
   end
 
+  ##########################################################################
+  # BINARY OPERATORS
+
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-logical-or
-  context "Operator::LogicalOr" do
-    describe ".evaluate(a, b)" do
+  context "Operator::Or" do
+    describe ".evaluate(lhs, rhs)" do
       # TODO
     end
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-logical-and
-  context "Operator::LogicalAnd" do
-    describe ".evaluate(a, b)" do
+  context "Operator::And" do
+    describe ".evaluate(lhs, rhs)" do
       # TODO
     end
   end
@@ -460,11 +533,11 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
   context "Operator::Equal" do
     describe ".evaluate(RDF::Term, RDF::Term)" do
-      it "returns RDF::Literal(true) if the terms are equal" do
+      it "returns RDF::Literal::TRUE if the terms are equal" do
         pending # TODO
       end
 
-      it "returns RDF::Literal(false) if the terms are not equal" do
+      it "returns RDF::Literal::FALSE if the terms are not equal" do
         pending # TODO
       end
     end
@@ -473,11 +546,11 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
   context "Operator::NotEqual" do
     describe ".evaluate(RDF::Term, RDF::Term)" do
-      it "returns RDF::Literal(false) if the terms are equal" do
+      it "returns RDF::Literal::FALSE if the terms are equal" do
         pending # TODO
       end
 
-      it "returns RDF::Literal(true) if the terms are not equal" do
+      it "returns RDF::Literal::TRUE if the terms are not equal" do
         pending # TODO
       end
     end
@@ -486,11 +559,11 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-sameTerm
   context "Operator::SameTerm" do
     describe ".evaluate(RDF::Term, RDF::Term)" do
-      it "returns RDF::Literal(true) if the terms are the same" do
+      it "returns RDF::Literal::TRUE if the terms are the same" do
         pending # TODO
       end
 
-      it "returns RDF::Literal(false) if the terms are not the same" do
+      it "returns RDF::Literal::FALSE if the terms are not the same" do
         pending # TODO
       end
     end
@@ -502,6 +575,9 @@ describe SPARQL::Algebra do
       # TODO
     end
   end
+
+  ##########################################################################
+  # TERNARY OPERATORS
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#rRegexExpression
   # @see http://www.w3.org/TR/xpath-functions/#func-matches

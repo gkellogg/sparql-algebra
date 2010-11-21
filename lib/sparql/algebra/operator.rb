@@ -29,7 +29,8 @@ module SPARQL; module Algebra
     #   any additional options
     def initialize(options = {})
       raise ArgumentError, "expected Hash, but got #{options.inspect}" unless options.is_a?(Hash)
-      @options = options.dup
+      @options  = options.dup
+      @operands = [] unless @operands
     end
 
     ##
@@ -151,7 +152,6 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(options = {})
-        @operands = []
         super(options)
       end
     end # Nullary
