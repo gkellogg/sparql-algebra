@@ -37,7 +37,7 @@ module SPARQL; module Algebra
             RDF::Literal(operand)
           when Symbol then case
               when operand.to_s[0] == ?? # for convenience
-                RDF::Query::Variable.new(operand.to_s[1..-1])
+                Variable.new(operand.to_s[1..-1])
               else
                 RDF::Literal(operand)
             end

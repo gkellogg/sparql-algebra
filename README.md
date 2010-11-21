@@ -10,7 +10,7 @@ Features
 --------
 
 * 100% free and unencumbered [public domain](http://unlicense.org/) software.
-* Currently implements all of SPARQL 1.0's unary operators (binary and
+* Currently implements all of [SPARQL 1.0][]'s unary operators (binary and
   ternary operators are in the works).
 * Implements SPARQL's [effective boolean value (EBV)][EBV] evaluation.
 * Compatible with Ruby 1.8.7+, Ruby 1.9.x, and JRuby 1.4/1.5.
@@ -22,15 +22,27 @@ Examples
     
     include SPARQL::Algebra
 
+### Constructing operator expressions manually
+
+    Operator(:isBlank).new(RDF::Node(:foobar))
+    Operator(:isIRI).new(RDF::URI('http://rdf.rubyforge.org/'))
+    Operator(:isLiteral).new(RDF::Literal(3.1415))
+
+### Constructing operator expressions using SSE forms
+
+    Expression(:isBlank, RDF::Node(:foobar))
+    Expression(:isIRI, RDF::URI('http://rdf.rubyforge.org/'))
+    Expression(:isLiteral, RDF::Literal(3.1415))
+
 ### Evaluating operators without a solution sequence
 
-    Operator::IsBlank.evaluate(RDF::Node.new)           #=> RDF::Literal(true)
-    Operator::IsIRI.evaluate(RDF::DC.title)             #=> RDF::Literal(true)
-    Operator::IsLiteral.evaluate(RDF::Literal(3.1415))  #=> RDF::Literal(true)
+    Operator(:isBlank).evaluate(RDF::Node(:foobar))      #=> RDF::Literal(true)
+    Operator(:isIRI).evaluate(RDF::DC.title)             #=> RDF::Literal(true)
+    Operator(:isLiteral).evaluate(RDF::Literal(3.1415))  #=> RDF::Literal(true)
 
 ### Evaluating operators with a solution sequence
 
-    expression = Operator::Bound.new(RDF::Query::Variable.new(:email))
+    expression = Expression(:bound, Variable(:email))
     solutions  = query.execute(...) # see RDF::Query and RDF::Query::Solutions
     solutions.filter! { |solution| expression.evaluate(solution).true? }
 
@@ -40,6 +52,7 @@ Documentation
 <http://sparql.rubyforge.org/algebra/>
 
 * {SPARQL::Algebra}
+  * {SPARQL::Algebra::Expression}
   * {SPARQL::Algebra::Operator}
 
 Dependencies

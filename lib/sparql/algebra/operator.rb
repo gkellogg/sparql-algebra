@@ -82,7 +82,7 @@ module SPARQL; module Algebra
     # @return [RDF::Term]
     def operand(index, bindings = {})
       operand = operands[index]
-      operand.is_a?(RDF::Query::Variable) ? bindings[operand.to_sym] : operand
+      operand.is_a?(Variable) ? bindings[operand.to_sym] : operand
     end
 
     ##
@@ -92,7 +92,7 @@ module SPARQL; module Algebra
     # @return [Boolean] `true` or `false`
     # @see    #constant?
     def variable?
-      operands.any? { |operand| operand.is_a?(RDF::Query::Variable) }
+      operands.any? { |operand| operand.is_a?(Variable) }
     end
 
     ##
