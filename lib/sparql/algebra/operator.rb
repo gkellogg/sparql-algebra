@@ -123,7 +123,7 @@ module SPARQL; module Algebra
     # @see    http://openjena.org/wiki/SSE
     def to_sse
       operator = [self.class.const_get(:NAME)].flatten.first
-      [operator, *(operands || [])]
+      [operator, *(operands || []).map(&:to_sse)]
     end
 
     ##
