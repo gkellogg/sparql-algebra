@@ -130,7 +130,7 @@ module SPARQL; module Algebra
         # datatype of `xsd:string`, the EBV is false if the operand value
         # has zero length; otherwise the EBV is true.
         else case
-          when literal.plain? || literal.datatype.eql?(RDF::XSD.string)
+          when literal.is_a?(RDF::Literal) && (literal.plain? || literal.datatype.eql?(RDF::XSD.string))
             RDF::Literal(!(literal.value.empty?))
         # All other arguments, including unbound arguments, produce a type error.
           else raise TypeError, "could not coerce #{literal.inspect} to an RDF::Literal::Boolean"

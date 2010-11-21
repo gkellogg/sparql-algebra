@@ -12,6 +12,7 @@ Features
 * 100% free and unencumbered [public domain](http://unlicense.org/) software.
 * Currently implements all of SPARQL 1.0's unary operators (binary and
   ternary operators are in the works).
+* Implements SPARQL's [effective boolean value (EBV)][EBV] evaluation.
 * Compatible with Ruby 1.8.7+, Ruby 1.9.x, and JRuby 1.4/1.5.
 
 Examples
@@ -109,6 +110,7 @@ see <http://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 [SPARQL 1.0]: http://www.w3.org/TR/rdf-sparql-query/
 [SPARQL 1.1]: http://www.w3.org/TR/sparql11-query/
 [algebra]:    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
+[EBV]:        http://www.w3.org/TR/rdf-sparql-query/#ebv
 [RDF.rb]:     http://rdf.rubyforge.org/
 [YARD]:       http://yardoc.org/
 [YARD-GS]:    http://rubydoc.info/docs/yard/file/docs/GettingStarted.md
