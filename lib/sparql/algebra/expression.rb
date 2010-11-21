@@ -6,6 +6,22 @@ module SPARQL; module Algebra
   module Expression
     ##
     # @example
+    #   Expression.parse('(isLiteral 3.1415)')
+    #
+    # @param  [String] sse
+    #   a SPARQL S-Expression (SSE) string
+    # @return [Operator]
+    def self.parse(sse)
+      begin
+        require 'sxp' # @see http://rubygems.org/gems/sxp
+      rescue LoadError
+        abort "SPARQL::Algebra::Expression.parse requires the SXP gem (hint: `gem install sxp')."
+      end
+      self.new(SXP::Reader::SPARQL.read(sse))
+    end
+
+    ##
+    # @example
     #   Expression.for(:isLiteral, RDF::Literal(3.1415))
     #
     # @param  [Array] sse
@@ -24,7 +40,11 @@ module SPARQL; module Algebra
     # @param  [Hash{Symbol => Object}] options
     # @return [Operator]
     def self.new(sse, options = {})
+      raise ArgumentError, "invalid SPARQL::Algebra::Expression form: #{sse.inspect}" unless sse.is_a?(Array)
+
       operator = Operator.for(sse.first)
+      raise ArgumentError, "invalid SPARQL::Algebra::Expression operator: #{sse.first.inspect}" unless operator
+
       operands = sse[1..-1].map do |operand|
         case operand
           when Operator
@@ -36,15 +56,15 @@ module SPARQL; module Algebra
           when TrueClass, FalseClass, Numeric, String, DateTime, Date, Time
             RDF::Literal(operand)
           when Symbol then case
-              when operand.to_s[0] == ?? # for convenience
-                Variable.new(operand.to_s[1..-1])
-              else
-                RDF::Literal(operand)
-            end
-          else
-            raise ArgumentError, "invalid SPARQL::Algebra::Expression operand: #{operand.inspect}"
+            when operand.to_s[0] == ?? # for convenience
+              Variable.new(operand.to_s[1..-1])
+            else
+              RDF::Literal(operand)
+          end
+          else raise ArgumentError, "invalid SPARQL::Algebra::Expression operand: #{operand.inspect}"
         end
       end
+
       operator.new(*operands)
     end
   end # Expression

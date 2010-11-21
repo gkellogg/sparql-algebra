@@ -24,7 +24,7 @@ module SPARQL; module Algebra
     # @return [Class] an operator class, or `nil` if an operator was not found
     def self.for(name, arity = nil)
       # TODO: refactor this to dynamically introspect loaded operator classes.
-      case name.to_s.downcase.to_sym
+      case (name.to_s.downcase.to_sym rescue nil)
         when :not, :'!' then Not
         when :plus, :+  then Plus
         when :minus, :- then Minus

@@ -34,13 +34,19 @@ Examples
     Expression(:isIRI, RDF::URI('http://rdf.rubyforge.org/'))
     Expression(:isLiteral, RDF::Literal(3.1415))
 
-### Evaluating operators without a solution sequence
+### Constructing operator expressions using SSE strings
+
+    Expression.parse('(isBlank _:foobar)')
+    Expression.parse('(isIRI <http://rdf.rubyforge.org/>)')
+    Expression.parse('(isLiteral 3.1415)')
+
+### Evaluating operators standalone
 
     Operator(:isBlank).evaluate(RDF::Node(:foobar))      #=> RDF::Literal(true)
     Operator(:isIRI).evaluate(RDF::DC.title)             #=> RDF::Literal(true)
     Operator(:isLiteral).evaluate(RDF::Literal(3.1415))  #=> RDF::Literal(true)
 
-### Evaluating operators with a solution sequence
+### Evaluating expressions with a solution sequence
 
     expression = Expression(:bound, Variable(:email))
     solutions  = query.execute(...) # see RDF::Query and RDF::Query::Solutions
@@ -60,6 +66,7 @@ Dependencies
 
 * [Ruby](http://ruby-lang.org/) (>= 1.8.7) or (>= 1.8.1 with [Backports][])
 * [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.3.0)
+* [SXP](http://rubygems.org/gems/sxp) (>= 0.0.12) for [SSE][] parsing only
 
 Installation
 ------------
@@ -124,6 +131,7 @@ see <http://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 [SPARQL 1.1]: http://www.w3.org/TR/sparql11-query/
 [algebra]:    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
 [EBV]:        http://www.w3.org/TR/rdf-sparql-query/#ebv
+[SSE]:        http://openjena.org/wiki/SSE
 [RDF.rb]:     http://rdf.rubyforge.org/
 [YARD]:       http://yardoc.org/
 [YARD-GS]:    http://rubydoc.info/docs/yard/file/docs/GettingStarted.md
