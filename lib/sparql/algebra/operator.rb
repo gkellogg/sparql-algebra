@@ -17,6 +17,30 @@ module SPARQL; module Algebra
     autoload :Datatype,  'sparql/algebra/operator/datatype'
 
     ##
+    # Returns an operator class for the given operator `name`.
+    #
+    # @param  [Symbol, #to_s]  name
+    # @param  [Integer, #to_i] arity
+    # @return [Class] an operator class, or `nil` if an operator was not found
+    def self.for(name, arity = nil)
+      # TODO: refactor this to dynamically introspect loaded operator classes.
+      case name.to_s.downcase.to_sym
+        when :not, :'!' then Not
+        when :plus, :+  then Plus
+        when :minus, :- then Minus
+        when :bound     then Bound
+        when :isblank   then IsBlank
+        when :isiri     then IsIRI
+        when :isuri     then IsIRI # alias
+        when :isliteral then IsLiteral
+        when :str       then Str
+        when :lang      then Lang
+        when :datatype  then Datatype
+        else nil # not found
+      end
+    end
+
+    ##
     # @param  [Array<RDF::Term>] args
     # @return [RDF::Term]
     # @see    Operator#evaluate
@@ -137,6 +161,18 @@ module SPARQL; module Algebra
           else raise TypeError, "could not coerce #{literal.inspect} to an RDF::Literal::Boolean"
         end
       end
+    end
+
+  private
+
+    @@subclasses = [] # @private
+
+    ##
+    # @private
+    # @return [void]
+    def self.inherited(child)
+      @@subclasses << child unless child.superclass.equal?(Operator) # grandchildren only
+      super
     end
 
     ##

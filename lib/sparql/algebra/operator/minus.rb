@@ -5,7 +5,7 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-minus
     class Minus < Operator::Unary
-      NAME = :-
+      NAME = [:-, :minus]
 
       ##
       # Returns the operand decremented by one.

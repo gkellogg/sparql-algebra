@@ -5,7 +5,7 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-plus
     class Plus < Operator::Unary
-      NAME = :+
+      NAME = [:+, :plus]
 
       ##
       # Returns the operand incremented by one.
