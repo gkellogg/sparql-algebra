@@ -31,10 +31,10 @@ Examples
 
 ### Constructing operator expressions using SSE forms
 
-    Expression(:isBlank, RDF::Node(:foobar))
-    Expression(:isIRI, RDF::URI('http://rdf.rubyforge.org/'))
-    Expression(:isLiteral, RDF::Literal(3.1415))
-    Expression(:str, [:datatype, RDF::Literal(3.1415)])
+    Expression[:isBlank, RDF::Node(:foobar)]
+    Expression[:isIRI, RDF::URI('http://rdf.rubyforge.org/')]
+    Expression[:isLiteral, RDF::Literal(3.1415)]
+    Expression[:str, [:datatype, RDF::Literal(3.1415)]]
 
 ### Constructing operator expressions using SSE strings
 

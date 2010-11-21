@@ -23,6 +23,7 @@ module SPARQL; module Algebra
     ##
     # @example
     #   Expression.for(:isLiteral, RDF::Literal(3.1415))
+    #   Expression[:isLiteral, RDF::Literal(3.1415)]
     #
     # @param  [Array] sse
     #   a SPARQL S-Expression (SSE) form
@@ -30,6 +31,7 @@ module SPARQL; module Algebra
     def self.for(*sse)
       self.new(sse)
     end
+    class << self; alias_method :[], :for; end
 
     ##
     # @example
