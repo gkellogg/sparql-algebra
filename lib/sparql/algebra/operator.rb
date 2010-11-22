@@ -71,9 +71,18 @@ module SPARQL; module Algebra
     # @param  [Array<RDF::Term>] operands
     # @param  [Hash{Symbol => Object}] options
     #   any additional options
+    # @raise  [TypeError] if any of the operands is invalid
     def initialize(*operands)
       @options  = operands.last.is_a?(Hash) ? operands.pop.dup : {}
-      @operands = operands
+      @operands = operands.map! do |operand|
+        case operand
+          when Operator, Variable, RDF::Term
+            operand
+          when TrueClass, FalseClass, Numeric, String, DateTime, Date, Time, Symbol
+            RDF::Literal(operand)
+          else raise TypeError, "invalid SPARQL::Algebra::Operator operand: #{operand.inspect}"
+        end
+      end
     end
 
     ##

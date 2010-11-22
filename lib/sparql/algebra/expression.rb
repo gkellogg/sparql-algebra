@@ -41,6 +41,7 @@ module SPARQL; module Algebra
     #   a SPARQL S-Expression (SSE) form
     # @param  [Hash{Symbol => Object}] options
     # @return [Expression]
+    # @raise  [TypeError] if any of the operands is invalid
     def self.new(sse, options = {})
       raise ArgumentError, "invalid SPARQL::Algebra::Expression form: #{sse.inspect}" unless sse.is_a?(Array)
 
@@ -49,21 +50,13 @@ module SPARQL; module Algebra
 
       operands = sse[1..-1].map do |operand|
         case operand
-          when Operator
-            operand
           when Array
             self.new(operand, options)
-          when RDF::Term
+          when Operator, Variable, RDF::Term
             operand
-          when TrueClass, FalseClass, Numeric, String, DateTime, Date, Time
+          when TrueClass, FalseClass, Numeric, String, DateTime, Date, Time, Symbol
             RDF::Literal(operand)
-          when Symbol then case
-            when operand.to_s[0] == ?? # for convenience
-              Variable.new(operand.to_s[1..-1])
-            else
-              RDF::Literal(operand)
-          end
-          else raise ArgumentError, "invalid SPARQL::Algebra::Expression operand: #{operand.inspect}"
+          else raise TypeError, "invalid SPARQL::Algebra::Expression operand: #{operand.inspect}"
         end
       end
 

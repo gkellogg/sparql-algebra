@@ -668,17 +668,13 @@ describe SPARQL::Algebra do
 
     describe ".evaluate(RDF::Term, nil)" do
       it "raises a TypeError" do
-        pending do
-          lambda { @same_term.evaluate(RDF::Literal::TRUE, nil) }.should raise_error TypeError # FIXME
-        end
+        lambda { @same_term.evaluate(RDF::Literal::TRUE, nil) }.should raise_error TypeError
       end
     end
 
     describe ".evaluate(nil, RDF::Term)" do
       it "raises a TypeError" do
-        pending do
-          lambda { @same_term.evaluate(nil, RDF::Literal::TRUE) }.should raise_error TypeError # FIXME
-        end
+        lambda { @same_term.evaluate(nil, RDF::Literal::TRUE) }.should raise_error TypeError
       end
     end
   end
@@ -712,17 +708,13 @@ describe SPARQL::Algebra do
 
     describe ".evaluate(RDF::Literal, nil)" do
       it "raises a TypeError" do
-        pending do
-          lambda { @lang_matches.evaluate(RDF::Literal('en'), nil) }.should raise_error TypeError # FIXME
-        end
+        lambda { @lang_matches.evaluate(RDF::Literal('en'), nil) }.should raise_error TypeError
       end
     end
 
     describe ".evaluate(nil, RDF::Literal)" do
       it "raises a TypeError" do
-        pending do
-          lambda { @lang_matches.evaluate(nil, RDF::Literal('en')) }.should raise_error TypeError # FIXME
-        end
+        lambda { @lang_matches.evaluate(nil, RDF::Literal('en')) }.should raise_error TypeError
       end
     end
 
