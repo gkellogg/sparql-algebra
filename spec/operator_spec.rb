@@ -23,6 +23,7 @@ describe SPARQL::Algebra do
     @or           = SPARQL::Algebra::Operator::Or
     @and          = SPARQL::Algebra::Operator::And
     @add          = SPARQL::Algebra::Operator::Add
+    @subtract     = SPARQL::Algebra::Operator::Subtract
     # TODO: missing binary operators
     @same_term    = SPARQL::Algebra::Operator::SameTerm
     @lang_matches = SPARQL::Algebra::Operator::LangMatches
@@ -632,16 +633,19 @@ describe SPARQL::Algebra do
     # and the other is -INF, NaN is returned.
     inf, nan = 1/0.0, 0/0.0
     examples = {
-      [0.0, inf]   => inf,
-      [0.0, -inf]  => -inf,
-      [inf, inf]   => inf,
-      [-inf, -inf] => -inf,
-      [inf, -inf]  => nan,
+      [:+, 0.0, inf]   => inf,
+      [:+, 0.0, -inf]  => -inf,
+      [:+, inf, 0.0]   => inf,
+      [:+, -inf, 0.0]  => -inf,
+      [:+, inf, inf]   => inf,
+      [:+, -inf, -inf] => -inf,
+      [:+, inf, -inf]  => nan,
+      [:+, -inf, inf]  => nan,
     }
     examples.each do |input, output|
-      describe ".evaluate(RDF::Literal(#{input[0].inspect}), RDF::Literal(#{input[1].inspect}))" do
+      describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
         it "returns RDF::Literal(#{output.inspect})" do
-          @add.evaluate(RDF::Literal(input[0]), RDF::Literal(input[1])).should eql RDF::Literal(output)
+          @add.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2])).should eql RDF::Literal(output)
         end
       end
     end
@@ -656,7 +660,41 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-subtract
   context "Operator::Subtract" do
     describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
-      # TODO
+      it "returns the arithmetic difference of the operands" do
+        @subtract.evaluate(RDF::Literal(2), RDF::Literal(1)).should eql RDF::Literal(1)
+        @subtract.evaluate(RDF::Literal(2.0), RDF::Literal(1.0)).should eql RDF::Literal(1.0)
+        @subtract.evaluate(RDF::Literal(BigDecimal('2')), RDF::Literal(BigDecimal('1'))).should eql RDF::Literal(BigDecimal('1'))
+      end
+    end
+
+    # For xsd:float or xsd:double values, if one of the operands is a zero
+    # or a finite number and the other is INF or -INF, an infinity of the
+    # appropriate sign is returned. If both operands are INF or -INF, NaN
+    # is returned. If one of the operands is INF and the other is -INF, an
+    # infinity of the appropriate sign is returned.
+    inf, nan = 1/0.0, 0/0.0
+    examples = {
+      [:-, 0.0, inf]   => -inf,
+      [:-, 0.0, -inf]  => inf,
+      [:-, inf, 0.0]   => inf,
+      [:-, -inf, 0.0]  => -inf,
+      [:-, inf, inf]   => nan,
+      [:-, -inf, -inf] => nan,
+      [:-, inf, -inf]  => inf,
+      [:-, -inf, inf]  => -inf,
+    }
+    examples.each do |input, output|
+      describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
+        it "returns RDF::Literal(#{output.inspect})" do
+          @subtract.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2])).should eql RDF::Literal(output)
+        end
+      end
+    end
+
+    describe ".evaluate(RDF::Term, RDF::Term)" do
+      it "raises a TypeError" do
+        lambda { @subtract.evaluate(RDF::Literal::TRUE, RDF::Literal::FALSE) }.should raise_error TypeError
+      end
     end
   end
 
