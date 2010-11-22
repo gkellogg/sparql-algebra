@@ -234,7 +234,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(options = {})
-        super(options)
+        super
       end
     end # Nullary
 
@@ -253,7 +253,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg, options = {})
-        super(arg, options)
+        super
       end
     end # Unary
 
@@ -274,7 +274,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg1, arg2, options = {})
-        super(arg1, arg2, options)
+        super
       end
     end # Binary
 
@@ -297,7 +297,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg1, arg2, arg3, options = {})
-        super(arg1, arg2, arg3, options)
+        super
       end
     end # Ternary
   end # Operator

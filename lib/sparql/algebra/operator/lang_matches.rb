@@ -20,7 +20,7 @@ module SPARQL; module Algebra
       #   any additional options (see {Operator#initialize})
       # @raise  [TypeError] if any operand is invalid
       def initialize(language_tag, language_range, options = {})
-        super(language_tag, language_range, options)
+        super
       end
 
       ##

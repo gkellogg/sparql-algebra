@@ -21,7 +21,7 @@ module SPARQL; module Algebra
       #   any additional options (see {Operator#initialize})
       # @raise  [TypeError] if any operand is invalid
       def initialize(text, pattern, flags = RDF::Literal(''), options = {})
-        super(text, pattern, flags, options)
+        super
       end
 
       ##
