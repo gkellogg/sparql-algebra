@@ -56,20 +56,24 @@ module SPARQL; module Algebra
     end
 
     ##
-    # @param  [Array<RDF::Term>] args
+    # @param  [Array<RDF::Term>] operands
     # @return [RDF::Term]
     # @see    Operator#evaluate
-    def self.evaluate(*args)
-      self.new(*args).evaluate(RDF::Query::Solution.new)
+    def self.evaluate(*operands)
+      self.new(*operands).evaluate(RDF::Query::Solution.new)
     end
 
+    ARITY = -1 # variable arity
+
     ##
+    # Initializes a new operator instance.
+    #
+    # @param  [Array<RDF::Term>] operands
     # @param  [Hash{Symbol => Object}] options
     #   any additional options
-    def initialize(options = {})
-      raise ArgumentError, "expected Hash, but got #{options.inspect}" unless options.is_a?(Hash)
-      @options  = options.dup
-      @operands = [] unless @operands
+    def initialize(*operands)
+      @options  = operands.last.is_a?(Hash) ? operands.pop.dup : {}
+      @operands = operands
     end
 
     ##
@@ -224,8 +228,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg, options = {})
-        @operands = [arg]
-        super(options)
+        super(arg, options)
       end
     end # Unary
 
@@ -246,8 +249,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg1, arg2, options = {})
-        @operands = [arg1, arg2]
-        super(options)
+        super(arg1, arg2, options)
       end
     end # Binary
 
@@ -270,8 +272,7 @@ module SPARQL; module Algebra
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
       def initialize(arg1, arg2, arg3, options = {})
-        @operands = [arg1, arg2, arg3]
-        super(options)
+        super(arg1, arg2, arg3, options)
       end
     end # Ternary
   end # Operator
