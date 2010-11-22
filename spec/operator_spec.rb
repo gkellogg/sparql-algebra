@@ -257,7 +257,7 @@ describe SPARQL::Algebra do
 
     describe ".evaluate(RDF::Literal(NaN))" do
       it "returns the operand" do
-        @minus.evaluate(RDF::Literal(0/0.0)).should eql RDF::Literal(0/0.0) # FIXME
+        @minus.evaluate(RDF::Literal(nan = 0/0.0)).should be_nan
       end
     end
 
@@ -637,7 +637,12 @@ describe SPARQL::Algebra do
     examples.each do |input, output|
       describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
         it "returns RDF::Literal(#{output.inspect})" do
-          @multiply.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2])).should eql RDF::Literal(output)
+          result = @multiply.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2]))
+          if output.nan?
+            result.should be_nan
+          else
+            result.should eql RDF::Literal(output)
+          end
         end
       end
     end
@@ -705,7 +710,12 @@ describe SPARQL::Algebra do
     examples.each do |input, output|
       describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
         it "returns RDF::Literal(#{output.inspect})" do
-          @divide.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2])).should eql RDF::Literal(output)
+          result = @divide.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2]))
+          if output.nan?
+            result.should be_nan
+          else
+            result.should eql RDF::Literal(output)
+          end
         end
       end
     end
@@ -746,7 +756,12 @@ describe SPARQL::Algebra do
     examples.each do |input, output|
       describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
         it "returns RDF::Literal(#{output.inspect})" do
-          @add.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2])).should eql RDF::Literal(output)
+          result = @add.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2]))
+          if output.nan?
+            result.should be_nan
+          else
+            result.should eql RDF::Literal(output)
+          end
         end
       end
     end
@@ -787,7 +802,12 @@ describe SPARQL::Algebra do
     examples.each do |input, output|
       describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
         it "returns RDF::Literal(#{output.inspect})" do
-          @subtract.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2])).should eql RDF::Literal(output)
+          result = @subtract.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2]))
+          if output.nan?
+            result.should be_nan
+          else
+            result.should eql RDF::Literal(output)
+          end
         end
       end
     end
