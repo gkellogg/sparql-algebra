@@ -22,6 +22,7 @@ module SPARQL; module Algebra
     # Binary operators
     autoload :Or,          'sparql/algebra/operator/or'
     autoload :And,         'sparql/algebra/operator/and'
+    autoload :Add,         'sparql/algebra/operator/add'
     autoload :SameTerm,    'sparql/algebra/operator/same_term'
     autoload :LangMatches, 'sparql/algebra/operator/lang_matches'
     autoload :Regex,       'sparql/algebra/operator/regex'
@@ -36,8 +37,8 @@ module SPARQL; module Algebra
       # TODO: refactor this to dynamically introspect loaded operator classes.
       case (name.to_s.downcase.to_sym rescue nil)
         when :not, :'!'   then Not
-        when :plus, :+    then Plus
-        when :minus, :-   then Minus
+        when :plus, :+    then Plus  # FIXME
+        when :minus, :-   then Minus # FIXME
         when :bound       then Bound
         when :isblank     then IsBlank
         when :isiri       then IsIRI
@@ -48,6 +49,7 @@ module SPARQL; module Algebra
         when :datatype    then Datatype
         when :or, :'||'   then Or
         when :and, :'&&'  then And
+        when :add, :+     then Add   # FIXME
         when :sameterm    then SameTerm
         when :langmatches then LangMatches
         when :regex       then Regex

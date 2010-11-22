@@ -22,6 +22,7 @@ describe SPARQL::Algebra do
     # Binary operators
     @or           = SPARQL::Algebra::Operator::Or
     @and          = SPARQL::Algebra::Operator::And
+    @add          = SPARQL::Algebra::Operator::Add
     # TODO: missing binary operators
     @same_term    = SPARQL::Algebra::Operator::SameTerm
     @lang_matches = SPARQL::Algebra::Operator::LangMatches
@@ -268,14 +269,14 @@ describe SPARQL::Algebra do
       end
     end
 
-    describe ".evaluate(RDF::Literal(INF))" do
-      it "returns RDF::Literal(-INF)" do
+    describe ".evaluate(RDF::Literal(Infinity))" do
+      it "returns RDF::Literal(-Infinity)" do
         @minus.evaluate(RDF::Literal(1/0.0)).should eql RDF::Literal(-1/0.0)
       end
     end
 
-    describe ".evaluate(RDF::Literal(-INF))" do
-      it "returns RDF::Literal(INF)" do
+    describe ".evaluate(RDF::Literal(-Infinity))" do
+      it "returns RDF::Literal(Infinity)" do
         @minus.evaluate(RDF::Literal(-1/0.0)).should eql RDF::Literal(1/0.0)
       end
     end
@@ -602,28 +603,59 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-multiply
   context "Operator::Multiply" do
-    describe ".evaluate(a, b)" do
+    describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
       # TODO
     end
   end
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-divide
   context "Operator::Divide" do
-    describe ".evaluate(a, b)" do
+    describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
       # TODO
     end
   end
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-add
   context "Operator::Add" do
-    describe ".evaluate(a, b)" do
-      # TODO
+    describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
+      it "returns the arithmetic sum of the operands" do
+        @add.evaluate(RDF::Literal(1), RDF::Literal(1)).should eql RDF::Literal(2)
+        @add.evaluate(RDF::Literal(1.0), RDF::Literal(1.0)).should eql RDF::Literal(2.0)
+        @add.evaluate(RDF::Literal(BigDecimal('1')), RDF::Literal(BigDecimal('1'))).should eql RDF::Literal(BigDecimal('2'))
+      end
+    end
+
+    # For xsd:float or xsd:double values, if one of the operands is a zero
+    # or a finite number and the other is INF or -INF, INF or -INF is
+    # returned. If both operands are INF, INF is returned. If both
+    # operands are -INF, -INF is returned. If one of the operands is INF
+    # and the other is -INF, NaN is returned.
+    inf, nan = 1/0.0, 0/0.0
+    examples = {
+      [0.0, inf]   => inf,
+      [0.0, -inf]  => -inf,
+      [inf, inf]   => inf,
+      [-inf, -inf] => -inf,
+      [inf, -inf]  => nan,
+    }
+    examples.each do |input, output|
+      describe ".evaluate(RDF::Literal(#{input[0].inspect}), RDF::Literal(#{input[1].inspect}))" do
+        it "returns RDF::Literal(#{output.inspect})" do
+          @add.evaluate(RDF::Literal(input[0]), RDF::Literal(input[1])).should eql RDF::Literal(output)
+        end
+      end
+    end
+
+    describe ".evaluate(RDF::Term, RDF::Term)" do
+      it "raises a TypeError" do
+        lambda { @add.evaluate(RDF::Literal::TRUE, RDF::Literal::FALSE) }.should raise_error TypeError
+      end
     end
   end
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-subtract
   context "Operator::Subtract" do
-    describe ".evaluate(a, b)" do
+    describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
       # TODO
     end
   end
