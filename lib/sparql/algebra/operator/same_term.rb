@@ -29,9 +29,8 @@ module SPARQL; module Algebra
       # @return [RDF::Literal::Boolean]
       # @raise  [TypeError] if either operand is unbound
       def evaluate(bindings = {})
-        term1 = operand(0).evaluate(bindings)
-        term2 = operand(1).evaluate(bindings)
-        RDF::Literal(term1.eql?(term2)) # FIXME
+        term1, term2 = operand(0).evaluate(bindings), operand(1).evaluate(bindings)
+        RDF::Literal(term1.eql?(term2))
       end
     end # SameTerm
   end # Operator
