@@ -1,11 +1,12 @@
 module SPARQL; module Algebra
   class Operator
     ##
-    # The SPARQL `sameTerm` operator.
+    # The SPARQL relational `!=` (not equal) comparison operator.
     #
-    # @see http://www.w3.org/TR/rdf-sparql-query/#func-sameTerm
-    class SameTerm < Operator::Binary
-      NAME = :sameTerm
+    # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
+    # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
+    class NotEqual < Equal
+      NAME = :'!='
 
       ##
       # Initializes a new operator instance.
@@ -22,16 +23,15 @@ module SPARQL; module Algebra
       end
 
       ##
-      # Returns `true` if the operands are the same RDF term;
+      # Returns `true` if the operands are not equal;
       # returns `false` otherwise.
       #
       # @param  [RDF::Query::Solution, #[]] bindings
       # @return [RDF::Literal::Boolean]
-      # @raise  [TypeError] if either operand is unbound
+      # @raise  [TypeError] if either operand is not an RDF term
       def evaluate(bindings = {})
-        term1, term2 = operand(0).evaluate(bindings), operand(1).evaluate(bindings)
-        RDF::Literal(term1.eql?(term2))
+        RDF::Literal(super.false?)
       end
-    end # SameTerm
+    end # NotEqual
   end # Operator
 end; end # SPARQL::Algebra

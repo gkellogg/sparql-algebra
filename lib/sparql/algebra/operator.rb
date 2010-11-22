@@ -23,6 +23,7 @@ module SPARQL; module Algebra
     autoload :Or,          'sparql/algebra/operator/or'
     autoload :And,         'sparql/algebra/operator/and'
     autoload :Equal,       'sparql/algebra/operator/equal'
+    autoload :NotEqual,    'sparql/algebra/operator/not_equal'
     autoload :Multiply,    'sparql/algebra/operator/multiply'
     autoload :Divide,      'sparql/algebra/operator/divide'
     autoload :Add,         'sparql/algebra/operator/add'
@@ -41,6 +42,7 @@ module SPARQL; module Algebra
       # TODO: refactor this to dynamically introspect loaded operator classes.
       case (name.to_s.downcase.to_sym rescue nil)
         when :'='         then Equal
+        when :'!='        then NotEqual
         when :*           then Multiply
         when :'/'         then Divide
         when :+           then arity.eql?(1) ? Plus  : Add

@@ -23,6 +23,7 @@ describe SPARQL::Algebra do
     @or           = SPARQL::Algebra::Operator::Or
     @and          = SPARQL::Algebra::Operator::And
     @eq           = SPARQL::Algebra::Operator::Equal
+    @ne           = SPARQL::Algebra::Operator::NotEqual
     # TODO: missing binary operators
     @multiply     = SPARQL::Algebra::Operator::Multiply
     @divide       = SPARQL::Algebra::Operator::Divide
@@ -567,24 +568,26 @@ describe SPARQL::Algebra do
 
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
     describe ".evaluate(RDF::Literal::String, RDF::Literal::String)" do
+      options = {:datatype => RDF::XSD.string}
+
       it "returns RDF::Literal::TRUE if the operands are equal" do
-        @eq.evaluate(RDF::Literal('foo', :datatype => RDF::XSD.string), RDF::Literal('foo', :datatype => RDF::XSD.string)).should eql RDF::Literal::TRUE
+        @eq.evaluate(RDF::Literal('foo', options), RDF::Literal('foo', options)).should eql RDF::Literal::TRUE
       end
 
       it "returns RDF::Literal::FALSE if the operands are not equal" do
-        @eq.evaluate(RDF::Literal('foo', :datatype => RDF::XSD.string), RDF::Literal('bar', :datatype => RDF::XSD.string)).should eql RDF::Literal::FALSE
+        @eq.evaluate(RDF::Literal('foo', options), RDF::Literal('bar', options)).should eql RDF::Literal::FALSE
       end
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-equal
     describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
-      it "returns RDF::Literal::TRUE if the operands are identical" do
+      it "returns RDF::Literal::TRUE if the operands are equal" do
         @eq.evaluate(RDF::Literal(1), RDF::Literal(1)).should eql RDF::Literal::TRUE
         @eq.evaluate(RDF::Literal(1.0), RDF::Literal(1.0)).should eql RDF::Literal::TRUE
         @eq.evaluate(RDF::Literal(BigDecimal('1')), RDF::Literal(BigDecimal('1'))).should eql RDF::Literal::TRUE
       end
 
-      it "returns RDF::Literal::TRUE if the operands are equal" do
+      it "returns RDF::Literal::TRUE if the operands are equivalent" do
         @eq.evaluate(RDF::Literal(1), RDF::Literal(1.0)).should eql RDF::Literal::TRUE
         @eq.evaluate(RDF::Literal(1), RDF::Literal(BigDecimal('1'))).should eql RDF::Literal::TRUE
         @eq.evaluate(RDF::Literal(1), RDF::Literal(1, :datatype => RDF::XSD.int)).should eql RDF::Literal::TRUE
@@ -636,12 +639,14 @@ describe SPARQL::Algebra do
 
     # @see http://www.w3.org/TR/xpath-functions/#func-dateTime-equal
     describe ".evaluate(RDF::Literal::DateTime, RDF::Literal::DateTime)" do
+      options = {:datatype => RDF::XSD.dateTime}
+
       it "returns RDF::Literal::TRUE if the operands are equal" do
-        @eq.evaluate(RDF::Literal('2010-12-31T12:34:56Z', :datatype => RDF::XSD.dateTime), RDF::Literal('2010-12-31T12:34:56Z', :datatype => RDF::XSD.dateTime)).should eql RDF::Literal::TRUE
+        @eq.evaluate(RDF::Literal('2010-12-31T12:34:56Z', options), RDF::Literal('2010-12-31T12:34:56Z', options)).should eql RDF::Literal::TRUE
       end
 
       it "returns RDF::Literal::FALSE if the operands are not equal" do
-        @eq.evaluate(RDF::Literal('2010-12-31T12:34:56Z', :datatype => RDF::XSD.dateTime), RDF::Literal('2010-12-31T12:34:56+01:00', :datatype => RDF::XSD.dateTime)).should eql RDF::Literal::FALSE
+        @eq.evaluate(RDF::Literal('2010-12-31T12:34:56Z', options), RDF::Literal('2010-12-31T12:34:56+01:00', options)).should eql RDF::Literal::FALSE
       end
     end
 
@@ -683,30 +688,86 @@ describe SPARQL::Algebra do
   context "Operator::NotEqual" do
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
     describe ".evaluate(RDF::Literal::Simple, RDF::Literal::Simple)" do
-      # TODO
+      it "returns RDF::Literal::FALSE if the operands are equal" do
+        @ne.evaluate(RDF::Literal('foo'), RDF::Literal('foo')).should eql RDF::Literal::FALSE
+      end
+
+      it "returns RDF::Literal::TRUE if the operands are not equal" do
+        @ne.evaluate(RDF::Literal('foo'), RDF::Literal('bar')).should eql RDF::Literal::TRUE
+      end
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
     describe ".evaluate(RDF::Literal::String, RDF::Literal::String)" do
-      # TODO
+      options = {:datatype => RDF::XSD.string}
+
+      it "returns RDF::Literal::FALSE if the operands are equal" do
+        @ne.evaluate(RDF::Literal('foo', options), RDF::Literal('foo', options)).should eql RDF::Literal::FALSE
+      end
+
+      it "returns RDF::Literal::TRUE if the operands are not equal" do
+        @ne.evaluate(RDF::Literal('foo', options), RDF::Literal('bar', options)).should eql RDF::Literal::TRUE
+      end
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-not
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-equal
     describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
-      # TODO
+      it "returns RDF::Literal::FALSE if the operands are equal" do
+        @ne.evaluate(RDF::Literal(1), RDF::Literal(1)).should eql RDF::Literal::FALSE
+        @ne.evaluate(RDF::Literal(1.0), RDF::Literal(1.0)).should eql RDF::Literal::FALSE
+        @ne.evaluate(RDF::Literal(BigDecimal('1')), RDF::Literal(BigDecimal('1'))).should eql RDF::Literal::FALSE
+      end
+
+      # @see Equal.evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric) for equivalency tests
+
+      it "returns RDF::Literal::TRUE if the operands are not equal" do
+        @ne.evaluate(RDF::Literal(1), RDF::Literal(2)).should eql RDF::Literal::TRUE
+        @ne.evaluate(RDF::Literal(1.0), RDF::Literal(2.0)).should eql RDF::Literal::TRUE
+        @ne.evaluate(RDF::Literal(BigDecimal('1')), RDF::Literal(BigDecimal('2'))).should eql RDF::Literal::TRUE
+      end
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-not
     # @see http://www.w3.org/TR/xpath-functions/#func-boolean-equal
     describe ".evaluate(RDF::Literal::Boolean, RDF::Literal::Boolean)" do
-      # TODO
+      it "returns RDF::Literal::FALSE if the operands are equal" do
+        @ne.evaluate(RDF::Literal::TRUE, RDF::Literal::TRUE).should eql RDF::Literal::FALSE
+        @ne.evaluate(RDF::Literal::FALSE, RDF::Literal::FALSE).should eql RDF::Literal::FALSE
+      end
+
+      it "returns RDF::Literal::TRUE if the operands are not equal" do
+        @ne.evaluate(RDF::Literal::TRUE, RDF::Literal::FALSE).should eql RDF::Literal::TRUE
+      end
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-not
     # @see http://www.w3.org/TR/xpath-functions/#func-dateTime-equal
     describe ".evaluate(RDF::Literal::DateTime, RDF::Literal::DateTime)" do
-      # TODO
+      options = {:datatype => RDF::XSD.dateTime}
+
+      it "returns RDF::Literal::FALSE if the operands are equal" do
+        @ne.evaluate(RDF::Literal('2010-12-31T12:34:56Z', options), RDF::Literal('2010-12-31T12:34:56Z', options)).should eql RDF::Literal::FALSE
+      end
+
+      it "returns RDF::Literal::TRUE if the operands are not equal" do
+        @ne.evaluate(RDF::Literal('2010-12-31T12:34:56Z', options), RDF::Literal('2010-12-31T12:34:56+01:00', options)).should eql RDF::Literal::TRUE
+      end
+    end
+
+    # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
+    describe ".evaluate(RDF::Literal, RDF::Literal)" do
+      it "returns RDF::Literal::FALSE if the operands are equal" do
+        @ne.evaluate(*([RDF::Literal('Hello', :language => :en)] * 2)).should eql RDF::Literal::FALSE
+        @ne.evaluate(RDF::Literal(:Hello), RDF::Literal(:Hello)).should eql RDF::Literal::FALSE
+      end
+
+      it "raises a TypeError if the operands are not equal" do
+        lambda { @ne.evaluate(RDF::Literal('Hello'), RDF::Literal('Hello', :language => :en)) }.should raise_error TypeError
+        lambda { @ne.evaluate(RDF::Literal('Hello'), RDF::Literal(:Hello)) }.should raise_error TypeError
+        lambda { @ne.evaluate(RDF::Literal('Hello'), RDF::Literal::TRUE) }.should raise_error TypeError
+        lambda { @ne.evaluate(RDF::Literal('Hello'), RDF::Literal::ZERO) }.should raise_error TypeError
+      end
     end
   end
 
@@ -1061,11 +1122,13 @@ describe SPARQL::Algebra do
   context "Operator::NotEqual" do
     describe ".evaluate(RDF::Term, RDF::Term)" do
       it "returns RDF::Literal::FALSE if the terms are equal" do
-        #pending # TODO
+        @ne.evaluate(iri = RDF::URI('mailto:alice@example.org'), iri).should eql RDF::Literal::FALSE
+        @ne.evaluate(RDF::Node(:foo), RDF::Node(:foo)).should eql RDF::Literal::FALSE
       end
 
       it "returns RDF::Literal::TRUE if the terms are not equal" do
-        #pending # TODO
+        @ne.evaluate(iri = RDF::URI('mailto:alice@example.org'), RDF::URI(iri.to_s.sub('alice', 'bob'))).should eql RDF::Literal::TRUE
+        @ne.evaluate(RDF::Node(:foo), RDF::Node(:bar)).should eql RDF::Literal::TRUE
       end
     end
   end
