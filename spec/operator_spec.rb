@@ -208,10 +208,10 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-plus
   context "Operator::Plus" do
     describe ".evaluate(RDF::Literal::Numeric)" do
-      it "returns the operand incremented by one" do
-        @plus.evaluate(RDF::Literal(41)).should eql RDF::Literal(42)
-        @plus.evaluate(RDF::Literal(41.0)).should eql RDF::Literal(42.0)
-        @plus.evaluate(RDF::Literal(BigDecimal('41.0'))).should eql RDF::Literal(BigDecimal('42.0'))
+      it "returns the operand with its sign unchanged" do
+        @plus.evaluate(RDF::Literal(42)).should eql RDF::Literal(42)
+        @plus.evaluate(RDF::Literal(42.0)).should eql RDF::Literal(42.0)
+        @plus.evaluate(RDF::Literal(BigDecimal('42.0'))).should eql RDF::Literal(BigDecimal('42.0'))
       end
     end
 
@@ -231,10 +231,52 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-minus
   context "Operator::Minus" do
     describe ".evaluate(RDF::Literal::Numeric)" do
-      it "returns the operand decremented by one" do
-        @minus.evaluate(RDF::Literal(43)).should eql RDF::Literal(42)
-        @minus.evaluate(RDF::Literal(43.0)).should eql RDF::Literal(42.0)
-        @minus.evaluate(RDF::Literal(BigDecimal('43.0'))).should eql RDF::Literal(BigDecimal('42.0'))
+      it "returns the operand with its sign reversed" do
+        @minus.evaluate(RDF::Literal(42)).should eql RDF::Literal(-42)
+        @minus.evaluate(RDF::Literal(-42.0)).should eql RDF::Literal(42.0)
+        @minus.evaluate(RDF::Literal(BigDecimal('42.0'))).should eql RDF::Literal(BigDecimal('-42.0'))
+      end
+    end
+
+    describe ".evaluate(RDF::Literal(0))" do
+      it "returns the operand" do
+        @minus.evaluate(RDF::Literal(0)).should eql RDF::Literal(0)
+      end
+    end
+
+    describe ".evaluate(RDF::Literal(BigDecimal('0.0')))" do
+      it "returns the operand" do
+        @minus.evaluate(RDF::Literal(BigDecimal('0.0'))).should eql RDF::Literal(BigDecimal('0.0'))
+      end
+    end
+
+    describe ".evaluate(RDF::Literal(NaN))" do
+      it "returns the operand" do
+        @minus.evaluate(RDF::Literal(0/0.0)).should eql RDF::Literal(0/0.0) # FIXME
+      end
+    end
+
+    describe ".evaluate(RDF::Literal(0.0E0))" do
+      it "returns RDF::Literal(-0.0E0)" do
+        @minus.evaluate(RDF::Literal(0.0E0)).should eql RDF::Literal(-0.0E0)
+      end
+    end
+
+    describe ".evaluate(RDF::Literal(-0.0E0))" do
+      it "returns RDF::Literal(0.0E0)" do
+        @minus.evaluate(RDF::Literal(-0.0E0)).should eql RDF::Literal(0.0E0)
+      end
+    end
+
+    describe ".evaluate(RDF::Literal(INF))" do
+      it "returns RDF::Literal(-INF)" do
+        @minus.evaluate(RDF::Literal(1/0.0)).should eql RDF::Literal(-1/0.0)
+      end
+    end
+
+    describe ".evaluate(RDF::Literal(-INF))" do
+      it "returns RDF::Literal(INF)" do
+        @minus.evaluate(RDF::Literal(-1/0.0)).should eql RDF::Literal(1/0.0)
       end
     end
 
