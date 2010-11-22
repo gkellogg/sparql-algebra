@@ -71,7 +71,7 @@ module SPARQL; module Algebra
     # @param  [Array<RDF::Term>] operands
     # @param  [Hash{Symbol => Object}] options
     #   any additional options
-    # @raise  [TypeError] if any of the operands is invalid
+    # @raise  [TypeError] if any operand is invalid
     def initialize(*operands)
       @options  = operands.last.is_a?(Hash) ? operands.pop.dup : {}
       @operands = operands.map! do |operand|

@@ -17,6 +17,7 @@ module SPARQL; module Algebra
       #   the right operand
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
+      # @raise  [TypeError] if any operand is invalid
       def initialize(left, right, options = {})
         super(left, right, options)
       end

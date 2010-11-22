@@ -14,6 +14,7 @@ module SPARQL; module Algebra
       #   an RDF term
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
+      # @raise  [TypeError] if any operand is invalid
       def initialize(term, options = {})
         super(term, options)
       end

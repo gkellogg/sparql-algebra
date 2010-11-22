@@ -18,6 +18,7 @@ module SPARQL; module Algebra
       #   [RFC 4647 section 2.1](http://tools.ietf.org/html/rfc4647#section-2.1)
       # @param  [Hash{Symbol => Object}] options
       #   any additional options (see {Operator#initialize})
+      # @raise  [TypeError] if any operand is invalid
       def initialize(language_tag, language_range, options = {})
         super(language_tag, language_range, options)
       end
