@@ -22,6 +22,7 @@ module SPARQL; module Algebra
     # Binary operators
     autoload :Or,          'sparql/algebra/operator/or'
     autoload :And,         'sparql/algebra/operator/and'
+    autoload :Multiply,    'sparql/algebra/operator/multiply'
     autoload :Add,         'sparql/algebra/operator/add'
     autoload :Subtract,    'sparql/algebra/operator/subtract'
     autoload :SameTerm,    'sparql/algebra/operator/same_term'
@@ -37,6 +38,7 @@ module SPARQL; module Algebra
     def self.for(name, arity = nil)
       # TODO: refactor this to dynamically introspect loaded operator classes.
       case (name.to_s.downcase.to_sym rescue nil)
+        when :*           then Multiply
         when :+           then arity.eql?(1) ? Plus  : Add
         when :-           then arity.eql?(1) ? Minus : Subtract
         when :not, :'!'   then Not
@@ -52,6 +54,7 @@ module SPARQL; module Algebra
         when :datatype    then Datatype
         when :or, :'||'   then Or
         when :and, :'&&'  then And
+        when :multiply    then Multiply
         when :add         then Add
         when :subtract    then Subtract
         when :sameterm    then SameTerm

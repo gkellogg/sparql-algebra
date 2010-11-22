@@ -22,6 +22,7 @@ describe SPARQL::Algebra do
     # Binary operators
     @or           = SPARQL::Algebra::Operator::Or
     @and          = SPARQL::Algebra::Operator::And
+    @multiply     = SPARQL::Algebra::Operator::Multiply
     @add          = SPARQL::Algebra::Operator::Add
     @subtract     = SPARQL::Algebra::Operator::Subtract
     # TODO: missing binary operators
@@ -605,7 +606,44 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-multiply
   context "Operator::Multiply" do
     describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
-      # TODO
+      it "returns the arithmetic product of the operands" do
+        @multiply.evaluate(RDF::Literal(2), RDF::Literal(1)).should eql RDF::Literal(2)
+        @multiply.evaluate(RDF::Literal(2.0), RDF::Literal(1.0)).should eql RDF::Literal(2.0)
+        @multiply.evaluate(RDF::Literal(BigDecimal('2')), RDF::Literal(BigDecimal('1'))).should eql RDF::Literal(BigDecimal('2'))
+      end
+    end
+
+    # For xsd:float or xsd:double values, if one of the operands is a zero
+    # and the other is an infinity, NaN is returned. If one of the operands
+    # is a non-zero number and the other is an infinity, an infinity with
+    # the appropriate sign is returned.
+    inf, nan = 1/0.0, 0/0.0
+    examples = {
+      [:*, 0.0, inf]   => nan,
+      [:*, 0.0, -inf]  => nan,
+      [:*, inf, 0.0]   => nan,
+      [:*, -inf, 0.0]  => nan,
+      [:*, 1.0, inf]   => inf,
+      [:*, 1.0, -inf]  => -inf,
+      [:*, inf, 1.0]   => inf,
+      [:*, -inf, 1.0]  => -inf,
+      [:*, inf, inf]   => inf,
+      [:*, -inf, -inf] => inf,
+      [:*, inf, -inf]  => -inf,
+      [:*, -inf, inf]  => -inf,
+    }
+    examples.each do |input, output|
+      describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
+        it "returns RDF::Literal(#{output.inspect})" do
+          @multiply.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2])).should eql RDF::Literal(output)
+        end
+      end
+    end
+
+    describe ".evaluate(RDF::Term, RDF::Term)" do
+      it "raises a TypeError" do
+        lambda { @multiply.evaluate(RDF::Literal::TRUE, RDF::Literal::FALSE) }.should raise_error TypeError
+      end
     end
   end
 
