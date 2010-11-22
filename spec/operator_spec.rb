@@ -22,7 +22,9 @@ describe SPARQL::Algebra do
     # Binary operators
     @or           = SPARQL::Algebra::Operator::Or
     @and          = SPARQL::Algebra::Operator::And
+    # TODO: missing binary operators
     @multiply     = SPARQL::Algebra::Operator::Multiply
+    @divide       = SPARQL::Algebra::Operator::Divide
     @add          = SPARQL::Algebra::Operator::Add
     @subtract     = SPARQL::Algebra::Operator::Subtract
     # TODO: missing binary operators
@@ -650,7 +652,68 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-divide
   context "Operator::Divide" do
     describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
-      # TODO
+      it "returns the arithmetic quotient of the operands" do
+        @divide.evaluate(RDF::Literal(1), RDF::Literal(2)).should eql RDF::Literal(BigDecimal('0.5'))
+        @divide.evaluate(RDF::Literal(1.0), RDF::Literal(2.0)).should eql RDF::Literal(0.5)
+        @divide.evaluate(RDF::Literal(BigDecimal('1')), RDF::Literal(BigDecimal('2'))).should eql RDF::Literal(BigDecimal('0.5'))
+      end
+    end
+
+    # For xsd:decimal and xsd:integer operands, if the divisor is (positive
+    # or negative) zero, an error is raised.
+    # @see http://www.w3.org/TR/xpath-functions/#ERRFOAR0001
+    examples = {
+      [:/, 1, +0]      => ZeroDivisionError,
+      [:/, 1, +0.0]    => ZeroDivisionError,
+      [:x, 1, -0.0]    => ZeroDivisionError, # overwrites the previous hash key if :/
+    }
+    examples.each do |input, output|
+      describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
+        it "raises #{output.inspect}" do
+          lambda { @divide.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2])) }.should raise_error(output)
+        end
+      end
+
+      describe ".evaluate(RDF::Literal(BigDecimal(#{input[1].inspect})), RDF::Literal(#{input[2].inspect}))" do
+        it "raises #{output.inspect}" do
+          lambda { @divide.evaluate(RDF::Literal(BigDecimal(input[1].to_s)), RDF::Literal(input[2])) }.should raise_error(output)
+        end
+      end
+    end
+
+    # For xsd:float or xsd:double values, a positive number divided by
+    # positive zero returns INF. A negative number divided by positive zero
+    # returns -INF. Division by negative zero returns -INF and INF,
+    # respectively. Positive or negative zero divided by positive or
+    # negative zero returns NaN. Also, INF or -INF divided by INF or -INF
+    # returns NaN.
+    inf, nan = 1/0.0, 0/0.0
+    examples = {
+      [:/, +1.0, +0.0] => inf,
+      [:x, +1.0, -0.0] => -inf, # overwrites the previous hash key if :/
+      [:/, -1.0, +0.0] => -inf,
+      [:x, -1.0, -0.0] => inf,  # overwrites the previous hash key if :/
+      [:/, +0.0, +0.0] => nan,
+      [:/, +0.0, -0.0] => nan,
+      [:/, -0.0, +0.0] => nan,
+      [:/, -0.0, -0.0] => nan,
+      [:/, +inf, +inf] => nan,
+      [:/, +inf, -inf] => nan,
+      [:/, -inf, +inf] => nan,
+      [:/, -inf, -inf] => nan,
+    }
+    examples.each do |input, output|
+      describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
+        it "returns RDF::Literal(#{output.inspect})" do
+          @divide.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2])).should eql RDF::Literal(output)
+        end
+      end
+    end
+
+    describe ".evaluate(RDF::Term, RDF::Term)" do
+      it "raises a TypeError" do
+        lambda { @divide.evaluate(RDF::Literal::TRUE, RDF::Literal::FALSE) }.should raise_error TypeError
+      end
     end
   end
 
