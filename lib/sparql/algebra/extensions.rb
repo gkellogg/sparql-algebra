@@ -31,3 +31,31 @@ class RDF::Query::Variable
     bindings[name.to_sym]
   end
 end # RDF::Query::Variable
+
+##
+# Extensions for `RDF::Query::Solutions`.
+class RDF::Query::Solutions
+  alias_method :filter_without_expression, :filter
+
+  ##
+  # Filters this solution sequence by the given `criteria`.
+  #
+  # @param  [SPARQL::Algebra::Expression] expression
+  # @yield  [solution]
+  #   each solution
+  # @yieldparam  [RDF::Query::Solution] solution
+  # @yieldreturn [Boolean]
+  # @return [void] `self`
+  def filter(expression = {}, &block)
+    case expression
+      when SPARQL::Algebra::Expression
+        filter_without_expression do |solution|
+          expression.evaluate(solution).true?
+        end
+        filter_without_expression(&block) if block_given?
+        self
+      else filter_without_expression(expression, &block)
+    end
+  end
+  alias_method :filter!, :filter
+end # RDF::Query::Solutions

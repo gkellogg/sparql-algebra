@@ -45,16 +45,25 @@ Examples
 
 ### Evaluating operators standalone
 
-    Operator(:isBlank).evaluate(RDF::Node(:foobar))       #=> RDF::Literal::TRUE
-    Operator(:isIRI).evaluate(RDF::DC.title)              #=> RDF::Literal::TRUE
-    Operator(:isLiteral).evaluate(RDF::Literal(3.1415))   #=> RDF::Literal::TRUE
+    Operator(:isBlank).evaluate(RDF::Node(:foobar))            #=> RDF::Literal::TRUE
+    Operator(:isIRI).evaluate(RDF::DC.title)                   #=> RDF::Literal::TRUE
+    Operator(:isLiteral).evaluate(RDF::Literal(3.1415))        #=> RDF::Literal::TRUE
 
 ### Evaluating expressions on a solution sequence
 
-    expression = Expression(:bound, Variable(:email))     # ...or...
-    expression = Expression.parse('(bound ?email)')
-    solutions  = query.execute(...) # see RDF::Query and RDF::Query::Solutions
-    solutions.filter! { |solution| expression.evaluate(solution).true? }
+    require 'rdf/triples'
+    
+    # Find all people and their names & e-mail addresses:
+    solutions = RDF::Query.execute(RDF::Graph.load('etc/doap.nt')) do |query|
+      query.pattern [:person, RDF.type,  FOAF.Person]
+      query.pattern [:person, FOAF.name, :name]
+      query.pattern [:person, FOAF.mbox, :email], :optional => true
+    end
+    
+    # Find people who have a name but don't have a known e-mail address:
+    expression = Expression[:not, [:bound, Variable(:email)]]  # ...or just...
+    expression = Expression.parse('(not (bound ?email))')
+    solutions.filter!(expression)
 
 Documentation
 -------------

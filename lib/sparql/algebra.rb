@@ -6,6 +6,8 @@ module SPARQL
   #
   # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
   module Algebra
+    include RDF
+
     autoload :Expression, 'sparql/algebra/expression'
     autoload :Operator,   'sparql/algebra/operator'
     autoload :VERSION,    'sparql/algebra/version'
