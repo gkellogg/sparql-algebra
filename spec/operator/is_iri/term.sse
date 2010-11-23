@@ -3,3 +3,9 @@
 #
 # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
 # @see http://www.w3.org/TR/rdf-sparql-query/#func-isIRI
+
+(equal (isIRI <mailto:alice@example.org>) true)
+
+(equal (isIRI _:foobar) false)
+(equal (isIRI 42) false)
+(equal (isIRI "foobar") false)

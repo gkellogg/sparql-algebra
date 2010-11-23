@@ -29,3 +29,6 @@
 (equal (regex "helloworld" "hello[ ]world" "x")                 false)
 #(equal (regex "hello world" "hello\ sworld" "x")                true) # FIXME
 (equal (regex "hello world" "hello world" "x")                  false)
+
+(error (regex _:a _:b _:c) TypeError)
+(error (regex <mailto:alice@example.org> "example" "") TypeError)

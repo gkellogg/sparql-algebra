@@ -4,3 +4,8 @@
 # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
 # @see http://www.w3.org/TR/xpath-functions/#func-boolean-equal
 # @see http://www.w3.org/TR/xpath-functions/#func-not
+
+(equal (!= true true)   false)
+(equal (!= true false)  true)
+(equal (!= false true)  true)
+(equal (!= false false) false)

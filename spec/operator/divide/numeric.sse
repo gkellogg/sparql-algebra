@@ -1,6 +1,8 @@
 ##
 # op:numeric-divide(A, B)
 #
+# Returns the arithmetic quotient of the operands.
+#
 # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
 # @see http://www.w3.org/TR/xpath-functions/#func-numeric-divide
 
@@ -20,3 +22,9 @@
 (equal (/ +INF -INF) NaN)
 (equal (/ -INF +INF) NaN)
 (equal (/ -INF -INF) NaN)
+
+(equal (/ 42 7) "6"^^xsd:decimal) # promoted to xsd:decimal
+(equal (/ 42.0 7.0) 6.0)
+(equal (/ "42"^^xsd:decimal "7"^^xsd:decimal) "6"^^xsd:decimal)
+
+(error (/ true false) TypeError)

@@ -6,3 +6,9 @@
 # @see http://www.w3.org/TR/xpath-functions/#func-compare
 # @see http://www.w3.org/TR/xpath-functions/#func-numeric-equal
 # @see http://www.w3.org/TR/xpath-functions/#func-not
+
+(equal (!= "foo" "foo") false)
+(equal (!= "foo" "bar") true)
+
+(equal (!= "foo"^^xsd:string "foo"^^xsd:string) false)
+(equal (!= "foo"^^xsd:string "bar"^^xsd:string) true)

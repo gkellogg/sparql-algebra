@@ -16,3 +16,9 @@
 (equal (* -INF -INF) +INF)
 (equal (* +INF -INF) -INF)
 (equal (* -INF +INF) -INF)
+
+(equal (* 6 7) 42)
+(equal (* 6.0 7.0) 42.0)
+(equal (* "6"^^xsd:decimal "7"^^xsd:decimal) "42"^^xsd:decimal)
+
+(error (* true false) TypeError)

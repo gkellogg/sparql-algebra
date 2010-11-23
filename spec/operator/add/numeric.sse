@@ -12,3 +12,9 @@
 (equal (+ -INF -INF) -INF)
 (equal (+ +INF -INF) NaN)
 (equal (+ -INF +INF) NaN)
+
+(equal (+ 29 13) 42)
+(equal (+ 29.0 13.0) 42.0)
+(equal (+ "29"^^xsd:decimal "13"^^xsd:decimal) "42"^^xsd:decimal)
+
+(error (+ true false) TypeError)

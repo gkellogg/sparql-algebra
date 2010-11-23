@@ -21,3 +21,10 @@
 (equal (langMatches "de-DE-1996" "de-de") true)
 (equal (langMatches "de-Deva" "de-de")    false)
 (equal (langMatches "de-Latn-DE" "de-de") false)
+
+(error (langMatches "en" _:foobar) TypeError)
+(error (langMatches "en" "*"@en) TypeError)
+(error (langMatches "en" "*"^^xsd:token) TypeError)
+(error (langMatches "en" 42) TypeError)
+(error (langMatches _:foobar "*") TypeError)
+(error (langMatches <mailto:alice@example.org> "*") TypeError)

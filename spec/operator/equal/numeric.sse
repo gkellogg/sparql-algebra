@@ -4,18 +4,33 @@
 # Returns `true` if and only if the value of `A` is equal to the value of
 # `B`.
 #
-# For `xsd:float` and `xsd:double` values, positive zero and negative zero
-# compare equal. `INF` equals `INF` and `-INF` equals `-INF`. `NaN` does
-# not equal itself.
-#
 # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
 # @see http://www.w3.org/TR/xpath-functions/#func-numeric-equal
 
+# Equal
+(equal (= 1 1) true)
+(equal (= 1.0 1.0) true)
+(equal (= "1"^^xsd:decimal "1"^^xsd:decimal) true)
+
+# Equivalent
+(equal (= 1 1.0) true)
+(equal (= 1 "1"^^xsd:decimal) true)
+(equal (= "1"^^xsd:decimal 1) true)
+(equal (= 1 "1"^^xsd:int) true)
+(equal (= "1"^^xsd:int 1) true)
+
+# Not equal
+(equal (= 1 2) false)
+(equal (= 1.0 2.0) false)
+(equal (= "1"^^xsd:decimal "2"^^xsd:decimal) false)
+
+# For `xsd:float` and `xsd:double` values, positive zero and negative zero
+# compare equal. `INF` equals `INF` and `-INF` equals `-INF`. `NaN` does
+# not equal itself.
 (equal (= +0.0 +0.0) true)
 (equal (= +0.0 -0.0) true)
 (equal (= -0.0 +0.0) true)
 (equal (= -0.0 -0.0) true)
-
 (equal (= +INF +INF) true)
 (equal (= +INF -INF) false)
 (equal (= -INF +INF) false)

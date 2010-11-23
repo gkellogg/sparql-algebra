@@ -15,3 +15,6 @@
 # @see http://www.w3.org/TR/rdf-concepts/#section-Literal-Equality
 (equal (sameTerm "foo" "foo") true)
 (equal (sameTerm "foo" "bar") false)
+(equal (sameTerm true true) true)
+(equal (sameTerm true false) false)
+(equal (sameTerm 1 1.0) false)
