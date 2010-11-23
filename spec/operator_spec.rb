@@ -1,39 +1,12 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe SPARQL::Algebra do
-  # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   before :all do
-    @op           = SPARQL::Algebra::Operator
-    @op0          = SPARQL::Algebra::Operator::Nullary
-    @op1          = SPARQL::Algebra::Operator::Unary
-    @op2          = SPARQL::Algebra::Operator::Binary
-    @op3          = SPARQL::Algebra::Operator::Ternary
-    # Unary operators:
-    @not          = SPARQL::Algebra::Operator::Not
-    @plus         = SPARQL::Algebra::Operator::Plus
-    @minus        = SPARQL::Algebra::Operator::Minus
-    @bound        = SPARQL::Algebra::Operator::Bound
-    @is_iri       = SPARQL::Algebra::Operator::IsIRI
-    @is_blank     = SPARQL::Algebra::Operator::IsBlank
-    @is_literal   = SPARQL::Algebra::Operator::IsLiteral
-    @str          = SPARQL::Algebra::Operator::Str
-    @lang         = SPARQL::Algebra::Operator::Lang
-    @datatype     = SPARQL::Algebra::Operator::Datatype
-    # Binary operators
-    @or           = SPARQL::Algebra::Operator::Or
-    @and          = SPARQL::Algebra::Operator::And
-    @eq           = SPARQL::Algebra::Operator::Equal
-    @ne           = SPARQL::Algebra::Operator::NotEqual
-    # TODO: missing binary operators
-    @multiply     = SPARQL::Algebra::Operator::Multiply
-    @divide       = SPARQL::Algebra::Operator::Divide
-    @add          = SPARQL::Algebra::Operator::Add
-    @subtract     = SPARQL::Algebra::Operator::Subtract
-    # TODO: missing binary operators
-    @same_term    = SPARQL::Algebra::Operator::SameTerm
-    @lang_matches = SPARQL::Algebra::Operator::LangMatches
-    # Ternary operators
-    @regex        = SPARQL::Algebra::Operator::Regex
+    @op  = SPARQL::Algebra::Operator
+    @op0 = SPARQL::Algebra::Operator::Nullary
+    @op1 = SPARQL::Algebra::Operator::Unary
+    @op2 = SPARQL::Algebra::Operator::Binary
+    @op3 = SPARQL::Algebra::Operator::Ternary
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#ebv
@@ -71,6 +44,12 @@ describe SPARQL::Algebra do
     describe "#evaluate" do
       it "raises a NotImplementedError" do
         lambda { @op.new.evaluate(nil) }.should raise_error NotImplementedError
+      end
+    end
+
+    describe "#apply" do
+      it "raises a NotImplementedError" do
+        lambda { @op.new.apply }.should raise_error NotImplementedError
       end
     end
 
@@ -179,6 +158,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/xpath-functions/#func-not
   context "Operator::Not" do
+    before :all do
+      @not = SPARQL::Algebra::Operator::Not
+    end
+
     describe ".evaluate(RDF::Literal::TRUE)" do
       it "returns RDF::Literal::FALSE" do
         @not.evaluate(RDF::Literal::TRUE).should eql RDF::Literal::FALSE
@@ -214,6 +197,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-plus
   context "Operator::Plus" do
+    before :all do
+      @plus = SPARQL::Algebra::Operator::Plus
+    end
+
     describe ".evaluate(RDF::Literal::Numeric)" do
       it "returns the operand with its sign unchanged" do
         @plus.evaluate(RDF::Literal(42)).should eql RDF::Literal(42)
@@ -237,6 +224,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-minus
   context "Operator::Minus" do
+    before :all do
+      @minus = SPARQL::Algebra::Operator::Minus
+    end
+
     describe ".evaluate(RDF::Literal::Numeric)" do
       it "returns the operand with its sign reversed" do
         @minus.evaluate(RDF::Literal(42)).should eql RDF::Literal(-42)
@@ -302,6 +293,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-bound
   context "Operator::Bound" do
+    before :all do
+      @bound = SPARQL::Algebra::Operator::Bound
+    end
+
     describe ".evaluate(RDF::Query::Variable)" do
       it "returns an RDF::Literal::Boolean" do
         @bound.evaluate(RDF::Query::Variable.new(:foo)).should be_an(RDF::Literal::Boolean)
@@ -328,6 +323,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-isIRI
   context "Operator::IsIRI" do
+    before :all do
+      @is_iri = SPARQL::Algebra::Operator::IsIRI
+    end
+
     describe ".evaluate(RDF::URI)" do
       it "returns RDF::Literal::TRUE" do
         @is_iri.evaluate(RDF::URI('http://rdf.rubyforge.org/')).should eql RDF::Literal::TRUE
@@ -350,6 +349,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-isBlank
   context "Operator::IsBlank" do
+    before :all do
+      @is_blank = SPARQL::Algebra::Operator::IsBlank
+    end
+
     describe ".evaluate(RDF::Node)" do
       it "returns RDF::Literal::TRUE" do
         @is_blank.evaluate(RDF::Node.new).should eql RDF::Literal::TRUE
@@ -372,6 +375,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-isLiteral
   context "Operator::IsLiteral" do
+    before :all do
+      @is_literal = SPARQL::Algebra::Operator::IsLiteral
+    end
+
     describe ".evaluate(RDF::Literal)" do
       it "returns RDF::Literal::TRUE" do
         @is_literal.evaluate(RDF::Literal("Hello")).should eql RDF::Literal::TRUE
@@ -394,6 +401,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-str
   context "Operator::Str" do
+    before :all do
+      @str = SPARQL::Algebra::Operator::Str
+    end
+
     describe ".evaluate(RDF::Literal)" do
       it "returns the operand's lexical value as a simple literal" do
         @str.evaluate(RDF::Literal("Hello")).should eql RDF::Literal("Hello")
@@ -422,6 +433,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-lang
   context "Operator::Lang" do
+    before :all do
+      @lang = SPARQL::Algebra::Operator::Lang
+    end
+
     describe ".evaluate(RDF::Literal) with a simple literal" do
       it "returns an empty string as a simple literal" do
         @lang.evaluate(RDF::Literal('Hello')).should eql RDF::Literal('')
@@ -452,6 +467,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-datatype
   context "Operator::Datatype" do
+    before :all do
+      @datatype = SPARQL::Algebra::Operator::Datatype
+    end
+
     describe ".evaluate(RDF::Literal) with a simple literal" do
       it "returns the datatype IRI of xsd:string" do
         @datatype.evaluate(RDF::Literal('Hello')).should eql RDF::XSD.string
@@ -492,6 +511,10 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-logical-or
   # @see http://www.w3.org/TR/rdf-sparql-query/#evaluation
   context "Operator::Or" do
+    before :all do
+      @or = SPARQL::Algebra::Operator::Or
+    end
+
     describe ".evaluate(RDF::Literal::TRUE, RDF::Literal::TRUE)" do
       it "returns RDF::Literal::TRUE" do
         @or.evaluate(RDF::Literal::TRUE, RDF::Literal::TRUE).should eql RDF::Literal::TRUE
@@ -524,6 +547,10 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-logical-and
   # @see http://www.w3.org/TR/rdf-sparql-query/#evaluation
   context "Operator::And" do
+    before :all do
+      @and = SPARQL::Algebra::Operator::And
+    end
+
     describe ".evaluate(RDF::Literal::TRUE, RDF::Literal::TRUE)" do
       it "returns RDF::Literal::TRUE" do
         @and.evaluate(RDF::Literal::TRUE, RDF::Literal::TRUE).should eql RDF::Literal::TRUE
@@ -544,7 +571,7 @@ describe SPARQL::Algebra do
 
     describe ".evaluate(RDF::Literal::FALSE, RDF::Literal::FALSE)" do
       it "returns RDF::Literal::FALSE" do
-        @or.evaluate(RDF::Literal::FALSE, RDF::Literal::FALSE).should eql RDF::Literal::FALSE
+        @and.evaluate(RDF::Literal::FALSE, RDF::Literal::FALSE).should eql RDF::Literal::FALSE
       end
     end
 
@@ -555,6 +582,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   context "Operator::Equal" do
+    before :all do
+      @eq = SPARQL::Algebra::Operator::Equal
+    end
+
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
     describe ".evaluate(RDF::Literal::Simple, RDF::Literal::Simple)" do
       it "returns RDF::Literal::TRUE if the operands are equal" do
@@ -686,6 +717,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   context "Operator::NotEqual" do
+    before :all do
+      @ne = SPARQL::Algebra::Operator::NotEqual
+    end
+
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
     describe ".evaluate(RDF::Literal::Simple, RDF::Literal::Simple)" do
       it "returns RDF::Literal::FALSE if the operands are equal" do
@@ -773,6 +808,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   context "Operator::LessThan" do
+    before :all do
+      #@lt = SPARQL::Algebra::Operator::LessThan
+    end
+
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
     describe ".evaluate(RDF::Literal::Simple, RDF::Literal::Simple)" do
       # TODO
@@ -801,6 +840,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   context "Operator::GreaterThan" do
+    before :all do
+      #@gt = SPARQL::Algebra::Operator::GreaterThan
+    end
+
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
     describe ".evaluate(RDF::Literal::Simple, RDF::Literal::Simple)" do
       # TODO
@@ -829,6 +872,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   context "Operator::LessThanOrEqual" do
+    before :all do
+      #@le = SPARQL::Algebra::Operator::LessThanOrEqual
+    end
+
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
     describe ".evaluate(RDF::Literal::Simple, RDF::Literal::Simple)" do
       # TODO
@@ -860,6 +907,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   context "Operator::GreaterThanOrEqual" do
+    before :all do
+      #@ge = SPARQL::Algebra::Operator::GreaterThanOrEqual
+    end
+
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
     describe ".evaluate(RDF::Literal::Simple, RDF::Literal::Simple)" do
       # TODO
@@ -891,6 +942,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-multiply
   context "Operator::Multiply" do
+    before :all do
+      @multiply = SPARQL::Algebra::Operator::Multiply
+    end
+
     describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
       it "returns the arithmetic product of the operands" do
         @multiply.evaluate(RDF::Literal(2), RDF::Literal(1)).should eql RDF::Literal(2)
@@ -940,6 +995,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-divide
   context "Operator::Divide" do
+    before :all do
+      @divide = SPARQL::Algebra::Operator::Divide
+    end
+
     describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
       it "returns the arithmetic quotient of the operands" do
         @divide.evaluate(RDF::Literal(1), RDF::Literal(2)).should eql RDF::Literal(BigDecimal('0.5'))
@@ -1013,6 +1072,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-add
   context "Operator::Add" do
+    before :all do
+      @add = SPARQL::Algebra::Operator::Add
+    end
+
     describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
       it "returns the arithmetic sum of the operands" do
         @add.evaluate(RDF::Literal(1), RDF::Literal(1)).should eql RDF::Literal(2)
@@ -1059,6 +1122,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-subtract
   context "Operator::Subtract" do
+    before :all do
+      @subtract = SPARQL::Algebra::Operator::Subtract
+    end
+
     describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
       it "returns the arithmetic difference of the operands" do
         @subtract.evaluate(RDF::Literal(2), RDF::Literal(1)).should eql RDF::Literal(1)
@@ -1105,6 +1172,11 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
   context "Operator::Equal" do
+    before :all do
+      @eq = SPARQL::Algebra::Operator::Equal
+    end
+
+
     describe ".evaluate(RDF::Term, RDF::Term)" do
       it "returns RDF::Literal::TRUE if the terms are equal" do
         @eq.evaluate(iri = RDF::URI('mailto:alice@example.org'), iri).should eql RDF::Literal::TRUE
@@ -1120,6 +1192,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
   context "Operator::NotEqual" do
+    before :all do
+      @ne = SPARQL::Algebra::Operator::NotEqual
+    end
+
     describe ".evaluate(RDF::Term, RDF::Term)" do
       it "returns RDF::Literal::FALSE if the terms are equal" do
         @ne.evaluate(iri = RDF::URI('mailto:alice@example.org'), iri).should eql RDF::Literal::FALSE
@@ -1135,6 +1211,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-sameTerm
   context "Operator::SameTerm" do
+    before :all do
+      @same_term = SPARQL::Algebra::Operator::SameTerm
+    end
+
     # @see http://www.w3.org/TR/rdf-concepts/#section-blank-nodes
     examples = {
       [RDF::Node(:foo), RDF::Node(:foo)] => true,
@@ -1203,6 +1283,10 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-langMatches
   context "Operator::LangMatches" do
+    before :all do
+      @lang_matches = SPARQL::Algebra::Operator::LangMatches
+    end
+
     examples = {
       ['', '*']               => false,
       ['en', '*']             => true,
@@ -1254,6 +1338,10 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#funcex-regex
   # @see http://www.w3.org/TR/xpath-functions/#func-matches
   context "Operator::Regex" do
+    before :all do
+      @regex = SPARQL::Algebra::Operator::Regex
+    end
+
     examples = {
       # @see http://www.w3.org/TR/rdf-sparql-query/#restrictString
       ["SPARQL Tutorial", '^SPARQL', '']                   => true,
