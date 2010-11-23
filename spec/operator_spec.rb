@@ -11,6 +11,12 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#ebv
   context "Operator" do
+    describe ".arity" do
+      it "returns -1" do
+        @op.arity.should == -1
+      end
+    end
+
     describe "#operands" do
       it "returns an Array" do
         @op0.new.operands.should be_an Array
@@ -138,19 +144,35 @@ describe SPARQL::Algebra do
   end
 
   context "Operator::Nullary" do
-    # TODO
+    describe ".arity" do
+      it "returns 0" do
+        @op0.arity.should == 0
+      end
+    end
   end
 
   context "Operator::Unary" do
-    # TODO
+    describe ".arity" do
+      it "returns 1" do
+        @op1.arity.should == 1
+      end
+    end
   end
 
   context "Operator::Binary" do
-    # TODO
+    describe ".arity" do
+      it "returns 2" do
+        @op2.arity.should == 2
+      end
+    end
   end
 
   context "Operator::Ternary" do
-    # TODO
+    describe ".arity" do
+      it "returns 3" do
+        @op3.arity.should == 3
+      end
+    end
   end
 
   ##########################################################################

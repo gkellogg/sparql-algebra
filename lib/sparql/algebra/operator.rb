@@ -89,6 +89,21 @@ module SPARQL; module Algebra
       self.new(*operands).evaluate(RDF::Query::Solution.new)
     end
 
+    ##
+    # Returns the arity of this operator class.
+    #
+    # @example
+    #   Operator.arity           #=> -1
+    #   Operator::Nullary.arity  #=> 0
+    #   Operator::Unary.arity    #=> 1
+    #   Operator::Binary.arity   #=> 2
+    #   Operator::Ternary.arity  #=> 3
+    #
+    # @return [Integer] an integer in the range `(-1..3)`
+    def self.arity
+      self.const_get(:ARITY)
+    end
+
     ARITY = -1 # variable arity
 
     ##
