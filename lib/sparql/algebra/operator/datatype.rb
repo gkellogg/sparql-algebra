@@ -8,28 +8,17 @@ module SPARQL; module Algebra
       NAME = :datatype
 
       ##
-      # Initializes a new operator instance.
-      #
-      # @param  [RDF::Literal] literal
-      #   a typed or simple RDF literal
-      # @param  [Hash{Symbol => Object}] options
-      #   any additional options (see {Operator#initialize})
-      # @raise  [TypeError] if any operand is invalid
-      def initialize(literal, options = {})
-        super
-      end
-
-      ##
       # Returns the datatype IRI of the operand.
       #
       # If the operand is a simple literal, returns a datatype of
       # `xsd:string`.
       #
-      # @param  [RDF::Query::Solution, #[]] bindings
+      # @param  [RDF::Literal] literal
+      #   a typed or simple literal
       # @return [RDF::URI] the datatype IRI, or `xsd:string` for simple literals
-      # @raise  [TypeError] if the operand is not a typed or simple `RDF::Literal`
-      def evaluate(bindings = {})
-        case literal = operand.evaluate(bindings)
+      # @raise  [TypeError] if the operand is not a typed or simple literal
+      def apply(literal)
+        case literal
           when RDF::Literal then case
             when literal.typed?  then RDF::URI(literal.datatype)
             when literal.simple? then RDF::XSD.string

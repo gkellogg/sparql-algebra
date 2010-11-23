@@ -151,7 +151,16 @@ module SPARQL; module Algebra
     # @return [RDF::Term]
     # @abstract
     def evaluate(bindings = {})
-      raise NotImplementedError, "#{self.class}#evaluate"
+      apply(*operands.map { |operand| operand.evaluate(bindings) })
+    end
+
+    ##
+    # @param  [Array<RDF::Term>] operands
+    #   evaluated operands
+    # @return [RDF::Term]
+    # @abstract
+    def apply(*operands)
+      raise NotImplementedError, "#{self.class}#apply(#{operands.map(&:class).join(', ')})"
     end
 
     ##

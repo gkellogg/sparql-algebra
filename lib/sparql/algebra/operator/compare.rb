@@ -9,29 +9,17 @@ module SPARQL; module Algebra
       NAME = :<=>
 
       ##
-      # Initializes a new operator instance.
-      #
-      # @param  [RDF::Literal] left
-      #   an RDF literal
-      # @param  [RDF::Literal] right
-      #   an RDF literal
-      # @param  [Hash{Symbol => Object}] options
-      #   any additional options (see {Operator#initialize})
-      # @raise  [TypeError] if any operand is invalid
-      def initialize(left, right, options = {})
-        super
-      end
-
-      ##
       # Returns -1, 0, or 1, depending on whether the first operand is
       # respectively less than, equal to, or greater than the second
       # operand.
       #
-      # @param  [RDF::Query::Solution, #[]] bindings
+      # @param  [RDF::Literal] left
+      #   a literal
+      # @param  [RDF::Literal] right
+      #   a literal
       # @return [RDF::Literal::Integer] `-1`, `0`, or `1`
-      # @raise  [TypeError] if either operand is not an RDF literal
-      def evaluate(bindings = {})
-        left, right = operand(0).evaluate(bindings), operand(1).evaluate(bindings)
+      # @raise  [TypeError] if either operand is not a literal
+      def apply(left, right)
         case
           # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
           when left.is_a?(RDF::Literal) && right.is_a?(RDF::Literal) then case

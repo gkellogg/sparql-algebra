@@ -8,28 +8,15 @@ module SPARQL; module Algebra
       NAME = [:'/', :divide]
 
       ##
-      # Initializes a new operator instance.
-      #
-      # @param  [RDF::Literal::Numeric] left
-      #   a numeric RDF literal
-      # @param  [RDF::Literal::Numeric] right
-      #   a numeric RDF literal
-      # @param  [Hash{Symbol => Object}] options
-      #   any additional options (see {Operator#initialize})
-      # @raise  [TypeError] if any operand is invalid
-      def initialize(left, right, options = {})
-        super
-      end
-
-      ##
       # Returns the arithmetic quotient of the operands.
       #
-      # @param  [RDF::Query::Solution, #[]] bindings
+      # @param  [RDF::Literal::Numeric] left
+      #   a numeric literal
+      # @param  [RDF::Literal::Numeric] right
+      #   a numeric literal
       # @return [RDF::Literal::Numeric]
-      # @raise  [TypeError] if either operand is not an `RDF::Literal::Numeric`
-      def evaluate(bindings = {})
-        left  = operand(0).evaluate(bindings)
-        right = operand(1).evaluate(bindings)
+      # @raise  [TypeError] if either operand is not a numeric literal
+      def apply(left, right)
         case
           when left.is_a?(RDF::Literal::Numeric) && right.is_a?(RDF::Literal::Numeric)
             # For xsd:decimal and xsd:integer operands, if the divisor is

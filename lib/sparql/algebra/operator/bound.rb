@@ -25,7 +25,7 @@ module SPARQL; module Algebra
       #
       # @param  [RDF::Query::Solution, #[]] bindings
       # @return [RDF::Literal::Boolean] `true` or `false`
-      # @raise  [TypeError] if the operand is not an `RDF::Query::Variable`
+      # @raise  [TypeError] if the operand is not a variable
       def evaluate(bindings = {})
         case var = operand
           when Variable, Symbol

@@ -29,8 +29,8 @@ module SPARQL; module Algebra
       # (EBV) of its operands.
       #
       # @param  [RDF::Query::Solution, #[]] bindings
-      # @return [RDF::Literal::Boolean]
-      # @raise  [TypeError] if the operands could not be coerced to `RDF::Literal::Boolean`
+      # @return [RDF::Literal::Boolean] `true` or `false`
+      # @raise  [TypeError] if the operands could not be coerced to boolean literals
       def evaluate(bindings = {})
         left  = lambda { boolean(operand(0).evaluate(bindings)).true? }
         right = lambda { boolean(operand(1).evaluate(bindings)).true? }

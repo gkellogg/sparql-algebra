@@ -8,25 +8,14 @@ module SPARQL; module Algebra
       NAME = [:-, :minus]
 
       ##
-      # Initializes a new operator instance.
-      #
-      # @param  [RDF::Literal::Numeric] numeric
-      #   a numeric RDF literal
-      # @param  [Hash{Symbol => Object}] options
-      #   any additional options (see {Operator#initialize})
-      # @raise  [TypeError] if any operand is invalid
-      def initialize(numeric, options = {})
-        super
-      end
-
-      ##
       # Returns the operand with its sign reversed.
       #
-      # @param  [RDF::Query::Solution, #[]] bindings
+      # @param  [RDF::Literal::Numeric] numeric
+      #   a numeric literal
       # @return [RDF::Literal::Numeric]
-      # @raise  [TypeError] if the operand is not an `RDF::Literal::Numeric`
-      def evaluate(bindings = {})
-        case term = operand.evaluate(bindings)
+      # @raise  [TypeError] if the operand is not a numeric literal
+      def apply(term)
+        case term
           when RDF::Literal::Numeric then -term
           else raise TypeError, "expected an RDF::Literal::Numeric, but got #{term.inspect}"
         end

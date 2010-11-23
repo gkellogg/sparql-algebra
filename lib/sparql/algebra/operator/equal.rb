@@ -9,27 +9,15 @@ module SPARQL; module Algebra
       NAME = :'='
 
       ##
-      # Initializes a new operator instance.
+      # Returns `true` if the operands are equal; returns `false` otherwise.
       #
       # @param  [RDF::Term] term1
       #   an RDF term
       # @param  [RDF::Term] term2
       #   an RDF term
-      # @param  [Hash{Symbol => Object}] options
-      #   any additional options (see {Operator#initialize})
-      # @raise  [TypeError] if any operand is invalid
-      def initialize(term1, term2, options = {})
-        super
-      end
-
-      ##
-      # Returns `true` if the operands are equal; returns `false` otherwise.
-      #
-      # @param  [RDF::Query::Solution, #[]] bindings
       # @return [RDF::Literal::Boolean] `true` or `false`
       # @raise  [TypeError] if either operand is not an RDF term
-      def evaluate(bindings = {})
-        term1, term2 = operand(0).evaluate(bindings), operand(1).evaluate(bindings)
+      def apply(term1, term2)
         case
           # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
           when term1.is_a?(RDF::Literal) && term2.is_a?(RDF::Literal) then case
