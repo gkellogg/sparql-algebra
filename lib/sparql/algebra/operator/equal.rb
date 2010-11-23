@@ -5,7 +5,7 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
-    class Equal < Operator::Binary
+    class Equal < Compare
       NAME = :'='
 
       ##
@@ -26,7 +26,7 @@ module SPARQL; module Algebra
       # Returns `true` if the operands are equal; returns `false` otherwise.
       #
       # @param  [RDF::Query::Solution, #[]] bindings
-      # @return [RDF::Literal::Boolean]
+      # @return [RDF::Literal::Boolean] `true` or `false`
       # @raise  [TypeError] if either operand is not an RDF term
       def evaluate(bindings = {})
         term1, term2 = operand(0).evaluate(bindings), operand(1).evaluate(bindings)
@@ -39,8 +39,8 @@ module SPARQL; module Algebra
             # @see http://www.w3.org/TR/xpath-functions/#func-dateTime-equal
             when (term1.simple? && term2.simple?) ||
                  (term1.datatype.eql?(RDF::XSD.string) && term2.datatype.eql?(RDF::XSD.string)) ||
-                 (term1.is_a?(RDF::Literal::Numeric)   && term2.is_a?(RDF::Literal::Numeric)) ||
-                 (term1.is_a?(RDF::Literal::Boolean)   && term2.is_a?(RDF::Literal::Boolean)) ||
+                 (term1.is_a?(RDF::Literal::Numeric)   && term2.is_a?(RDF::Literal::Numeric))   ||
+                 (term1.is_a?(RDF::Literal::Boolean)   && term2.is_a?(RDF::Literal::Boolean))   ||
                  (term1.is_a?(RDF::Literal::DateTime)  && term2.is_a?(RDF::Literal::DateTime))
               RDF::Literal(!!(term1 == term2))
 
