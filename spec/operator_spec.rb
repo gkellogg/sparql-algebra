@@ -190,7 +190,7 @@ describe SPARQL::Algebra do
 
     describe "#to_sse" do
       it "returns the correct SSE form" do
-        @not.new(RDF::Literal::TRUE).to_sse.should == [:not, RDF::Literal::TRUE]
+        @not.new(true).to_sse.should == [:not, RDF::Literal::TRUE]
       end
     end
   end
@@ -217,7 +217,7 @@ describe SPARQL::Algebra do
 
     describe "#to_sse" do
       it "returns the correct SSE form" do
-        @plus.new(RDF::Literal(42)).to_sse.should == [:+, RDF::Literal(42)]
+        @plus.new(42).to_sse.should == [:+, RDF::Literal(42)]
       end
     end
   end
@@ -286,7 +286,7 @@ describe SPARQL::Algebra do
 
     describe "#to_sse" do
       it "returns the correct SSE form" do
-        @minus.new(RDF::Literal(42)).to_sse.should == [:-, RDF::Literal(42)]
+        @minus.new(42).to_sse.should == [:-, RDF::Literal(42)]
       end
     end
   end
@@ -394,7 +394,7 @@ describe SPARQL::Algebra do
 
     describe "#to_sse" do
       it "returns the correct SSE form" do
-        @is_literal.new(RDF::Literal("Hello")).to_sse.should == [:isLiteral, RDF::Literal("Hello")]
+        @is_literal.new("Hello").to_sse.should == [:isLiteral, RDF::Literal("Hello")]
       end
     end
   end
@@ -459,7 +459,7 @@ describe SPARQL::Algebra do
 
     describe "#to_sse" do
       it "returns the correct SSE form" do
-        @lang.new(RDF::Literal('Hello')).to_sse.should == [:lang, RDF::Literal('Hello')]
+        @lang.new('Hello').to_sse.should == [:lang, RDF::Literal('Hello')]
         @lang.new(RDF::Literal('Hello', :language => :en)).to_sse.should == [:lang, RDF::Literal('Hello', :language => :en)]
       end
     end
@@ -499,7 +499,7 @@ describe SPARQL::Algebra do
 
     describe "#to_sse" do
       it "returns the correct SSE form" do
-        @datatype.new(RDF::Literal('Hello')).to_sse.should == [:datatype, RDF::Literal('Hello')]
+        @datatype.new('Hello').to_sse.should == [:datatype, RDF::Literal('Hello')]
         @datatype.new(RDF::Literal('Hello', :datatype => RDF::XSD.string)).to_sse.should == [:datatype, RDF::Literal('Hello', :datatype => RDF::XSD.string)]
       end
     end
@@ -542,6 +542,12 @@ describe SPARQL::Algebra do
     describe ".evaluate(lhs, rhs)" do
       # TODO
     end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @or.new(true, false).to_sse.should == [:or, RDF::Literal::TRUE, RDF::Literal::FALSE]
+      end
+    end
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-logical-and
@@ -577,6 +583,12 @@ describe SPARQL::Algebra do
 
     describe ".evaluate(lhs, rhs)" do
       # TODO
+    end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @and.new(true, false).to_sse.should == [:and, RDF::Literal::TRUE, RDF::Literal::FALSE]
+      end
     end
   end
 
@@ -713,6 +725,12 @@ describe SPARQL::Algebra do
         lambda { @eq.evaluate(RDF::Literal('Hello'), RDF::Literal::ZERO) }.should raise_error TypeError
       end
     end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @eq.new(true, false).to_sse.should == [:'=', RDF::Literal::TRUE, RDF::Literal::FALSE]
+      end
+    end
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
@@ -802,6 +820,12 @@ describe SPARQL::Algebra do
         lambda { @ne.evaluate(RDF::Literal('Hello'), RDF::Literal(:Hello)) }.should raise_error TypeError
         lambda { @ne.evaluate(RDF::Literal('Hello'), RDF::Literal::TRUE) }.should raise_error TypeError
         lambda { @ne.evaluate(RDF::Literal('Hello'), RDF::Literal::ZERO) }.should raise_error TypeError
+      end
+    end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @ne.new(true, false).to_sse.should == [:'!=', RDF::Literal::TRUE, RDF::Literal::FALSE]
       end
     end
   end
@@ -925,6 +949,12 @@ describe SPARQL::Algebra do
         # TODO: pending bug fixes to RDF.rb 0.3.x.
       end
     end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @lt.new(true, false).to_sse.should == [:<, RDF::Literal::TRUE, RDF::Literal::FALSE]
+      end
+    end
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
@@ -1046,6 +1076,12 @@ describe SPARQL::Algebra do
         # TODO: pending bug fixes to RDF.rb 0.3.x.
       end
     end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @gt.new(true, false).to_sse.should == [:>, RDF::Literal::TRUE, RDF::Literal::FALSE]
+      end
+    end
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
@@ -1094,6 +1130,12 @@ describe SPARQL::Algebra do
         # TODO: pending bug fixes to RDF.rb 0.3.x.
       end
     end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @le.new(true, false).to_sse.should == [:<=, RDF::Literal::TRUE, RDF::Literal::FALSE]
+      end
+    end
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
@@ -1140,6 +1182,12 @@ describe SPARQL::Algebra do
     datetime_examples.each do |input, output|
       describe ".evaluate(RDF::Literal::DateTime, RDF::Literal::DateTime)" do
         # TODO: pending bug fixes to RDF.rb 0.3.x.
+      end
+    end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @ge.new(true, false).to_sse.should == [:>=, RDF::Literal::TRUE, RDF::Literal::FALSE]
       end
     end
   end
@@ -1193,6 +1241,12 @@ describe SPARQL::Algebra do
     describe ".evaluate(RDF::Term, RDF::Term)" do
       it "raises a TypeError" do
         lambda { @multiply.evaluate(RDF::Literal::TRUE, RDF::Literal::FALSE) }.should raise_error TypeError
+      end
+    end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @multiply.new(6, 7).to_sse.should == [:*, RDF::Literal(6), RDF::Literal(7)]
       end
     end
   end
@@ -1272,6 +1326,12 @@ describe SPARQL::Algebra do
         lambda { @divide.evaluate(RDF::Literal::TRUE, RDF::Literal::FALSE) }.should raise_error TypeError
       end
     end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @divide.new(42, 7).to_sse.should == [:'/', RDF::Literal(42), RDF::Literal(7)]
+      end
+    end
   end
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-add
@@ -1320,6 +1380,12 @@ describe SPARQL::Algebra do
     describe ".evaluate(RDF::Term, RDF::Term)" do
       it "raises a TypeError" do
         lambda { @add.evaluate(RDF::Literal::TRUE, RDF::Literal::FALSE) }.should raise_error TypeError
+      end
+    end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @add.new(22, 20).to_sse.should == [:+, RDF::Literal(22), RDF::Literal(20)]
       end
     end
   end
@@ -1372,6 +1438,12 @@ describe SPARQL::Algebra do
         lambda { @subtract.evaluate(RDF::Literal::TRUE, RDF::Literal::FALSE) }.should raise_error TypeError
       end
     end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @subtract.new(42, 20).to_sse.should == [:-, RDF::Literal(42), RDF::Literal(20)]
+      end
+    end
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
@@ -1379,7 +1451,6 @@ describe SPARQL::Algebra do
     before :all do
       @eq = SPARQL::Algebra::Operator::Equal
     end
-
 
     describe ".evaluate(RDF::Term, RDF::Term)" do
       it "returns RDF::Literal::TRUE if the terms are equal" do
@@ -1390,6 +1461,12 @@ describe SPARQL::Algebra do
       it "returns RDF::Literal::FALSE if the terms are not equal" do
         @eq.evaluate(iri = RDF::URI('mailto:alice@example.org'), RDF::URI(iri.to_s.sub('alice', 'bob'))).should eql RDF::Literal::FALSE
         @eq.evaluate(RDF::Node(:foo), RDF::Node(:bar)).should eql RDF::Literal::FALSE
+      end
+    end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @eq.new(RDF::Node(:foo), RDF::Node(:bar)).to_sse.should == [:'=', RDF::Node(:foo), RDF::Node(:bar)]
       end
     end
   end
@@ -1409,6 +1486,12 @@ describe SPARQL::Algebra do
       it "returns RDF::Literal::TRUE if the terms are not equal" do
         @ne.evaluate(iri = RDF::URI('mailto:alice@example.org'), RDF::URI(iri.to_s.sub('alice', 'bob'))).should eql RDF::Literal::TRUE
         @ne.evaluate(RDF::Node(:foo), RDF::Node(:bar)).should eql RDF::Literal::TRUE
+      end
+    end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @ne.new(RDF::Node(:foo), RDF::Node(:bar)).to_sse.should == [:'!=', RDF::Node(:foo), RDF::Node(:bar)]
       end
     end
   end
@@ -1483,6 +1566,12 @@ describe SPARQL::Algebra do
         lambda { @same_term.evaluate(nil, RDF::Literal::TRUE) }.should raise_error TypeError
       end
     end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @same_term.new(RDF::Node(:foo), RDF::Node(:bar)).to_sse.should == [:sameTerm, RDF::Node(:foo), RDF::Node(:bar)]
+      end
+    end
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-langMatches
@@ -1534,6 +1623,12 @@ describe SPARQL::Algebra do
         lambda { @lang_matches.evaluate(RDF::DC.title, RDF::DC.title) }.should raise_error TypeError
       end
     end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @lang_matches.new('en-US', '*').to_sse.should == [:langMatches, RDF::Literal('en-US'), RDF::Literal('*')]
+      end
+    end
   end
 
   ##########################################################################
@@ -1580,6 +1675,12 @@ describe SPARQL::Algebra do
       it "raises a TypeError" do
         lambda { @regex.evaluate(*([RDF::Node.new] * 3)) }.should raise_error TypeError
         lambda { @regex.evaluate(*([RDF::DC.title] * 3)) }.should raise_error TypeError
+      end
+    end
+
+    describe "#to_sse" do
+      it "returns the correct SSE form" do
+        @regex.new('Alice', '^ali', 'i').to_sse.should == [:regex, RDF::Literal('Alice'), RDF::Literal('^ali'), RDF::Literal('i')]
       end
     end
   end
