@@ -632,12 +632,12 @@ describe SPARQL::Algebra do
       end
     end
 
+    # @see http://www.w3.org/TR/xpath-functions/#func-numeric-equal
     # For xsd:float and xsd:double values, positive zero and negative zero
     # compare equal. INF equals INF and -INF equals -INF. NaN does not
     # equal itself.
-    # @see http://www.w3.org/TR/xpath-functions/#func-numeric-equal
     inf, nan = 1/0.0, 0/0.0
-    examples = {
+    numeric_examples = {
       [:'=', +0.0, +0.0] => true,
       [:'=', +0.0, -0.0] => true,
       [:'=', -0.0, +0.0] => true,
@@ -648,7 +648,7 @@ describe SPARQL::Algebra do
       [:'=', -inf, -inf] => true,
       [:'=', nan, nan]   => false,
     }
-    examples.each do |input, output|
+    numeric_examples.each do |input, output|
       describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
         it "returns RDF::Literal::#{output.to_s.upcase}" do
           @eq.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2])).should eql RDF::Literal(output)
@@ -682,7 +682,7 @@ describe SPARQL::Algebra do
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-dateTime-equal
-    examples = {
+    datetime_examples = {
       [:'=', '2002-04-02T12:00:00-01:00', '2002-04-02T17:00:00+04:00'] => true,
       [:'=', '2002-04-02T12:00:00-05:00', '2002-04-02T23:00:00+06:00'] => true,
       [:'=', '2002-04-02T12:00:00-05:00', '2002-04-02T17:00:00-05:00'] => false,
@@ -691,7 +691,7 @@ describe SPARQL::Algebra do
       [:'=', '1999-12-31T24:00:00-05:00', '2000-01-01T00:00:00-05:00'] => true,
       [:'=', '2005-04-04T24:00:00-05:00', '2005-04-04T00:00:00-05:00'] => false,
     }
-    examples.each do |input, output|
+    datetime_examples.each do |input, output|
       describe ".evaluate(RDF::Literal::DateTime(#{input[1].inspect}), RDF::Literal::DateTime(#{input[2].inspect}))" do
         it "returns RDF::Literal::#{output.to_s.upcase}" do
           #@eq.evaluate(RDF::Literal(input[1], :datatype => RDF::XSD.dateTime), RDF::Literal(input[2], :datatype => RDF::XSD.dateTime)).should eql RDF::Literal(output) # FIXME in RDF.rb 0.3.0
@@ -809,64 +809,242 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   context "Operator::LessThan" do
     before :all do
-      #@lt = SPARQL::Algebra::Operator::LessThan
+      @lt = SPARQL::Algebra::Operator::LessThan
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
-    describe ".evaluate(RDF::Literal::Simple, RDF::Literal::Simple)" do
-      # TODO
-    end
-
-    # @see http://www.w3.org/TR/xpath-functions/#func-compare
-    describe ".evaluate(RDF::Literal::String, RDF::Literal::String)" do
-      # TODO
+    string_examples = {
+      [:<, '', 'a']      => true,
+      [:<, 'a', '']      => false,
+      [:<, 'aaa', 'bbb'] => true,
+      [:<, 'bbb', 'aaa'] => false,
+    }
+    %w(Simple String).each do |type|
+      options = {:datatype => (type.eql?('String') ? RDF::XSD.string : nil)}
+      describe ".evaluate(RDF::Literal::#{type}, RDF::Literal::#{type})" do
+        [true, false].each do |expected|
+          it "returns RDF::Literal::#{expected.to_s.upcase} if the left operand #{expected ? 'is' : 'is not'} less than the right operand" do
+            string_examples.each do |input, output|
+              @lt.evaluate(RDF::Literal(input[1], options), RDF::Literal(input[2], options)).should eql RDF::Literal(output) if output.eql?(expected)
+              @lt.evaluate(RDF::Literal(input[2], options), RDF::Literal(input[1], options)).should eql RDF::Literal(!output) if !output.eql?(expected)
+            end
+          end
+        end
+      end
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-less-than
     describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
-      # TODO
+      it "returns RDF::Literal::TRUE if the left operand is less than the right operand" do
+        verify_numeric_operator @lt, [[1, 2]], RDF::Literal::TRUE
+      end
+
+      it "returns RDF::Literal::FALSE if the left operand is not less than the right operand" do
+        verify_numeric_operator @lt, [[2, 1]], RDF::Literal::FALSE
+      end
+
+      it "returns RDF::Literal::FALSE if the operands are equal" do
+        verify_numeric_operator @lt, [[1, 1]], RDF::Literal::FALSE
+      end
+
+      def verify_numeric_operator(op, inputs, output)
+        inputs.each do |input|
+          [input.map(&:to_f), input.map(&:to_i), input.map { |n| BigDecimal(n.to_s) }].each do |input|
+            op.evaluate(*input).should eql output
+          end
+        end
+      end
+    end
+
+    # @see http://www.w3.org/TR/xpath-functions/#func-numeric-less-than
+    # Returns `true` if and only if the left operand is less than the right
+    # operand. For `xsd:float` and `xsd:double` values, positive infinity
+    # is greater than all other non-NaN values; negative infinity is less
+    # than all other non-NaN values. If either operand is NaN, the function
+    # returns false.
+    inf, nan = 1/0.0, 0/0.0
+    numeric_examples = {
+      [:<, -1.0, 0.0] => true,
+      [:<, 0.0, 1.0]  => true,
+      [:<, -inf, 0.0] => true,
+      [:<, 0.0, +inf] => true,
+      #[:<, +inf, nan] => false, # always `false` # FIXME in RDF.rb
+      #[:<, -inf, nan] => false, # always `false` # FIXME in RDF.rb
+      #[:<, nan, nan]  => false, # always `false` # FIXME in RDF.rb
+    }
+    numeric_examples.each do |input, output|
+      invertible = input[1..2].none?(&:nan?)
+      finite     = input[1..2].all?(&:finite?)
+
+      # xsd:double, xsd:float
+      describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @lt.evaluate(input[1], input[2]).should eql RDF::Literal(output)
+          @lt.evaluate(input[2], input[1]).should eql RDF::Literal(!output) if invertible
+        end
+      end
+
+      # xsd:integer
+      describe ".evaluate(RDF::Literal(#{input[1].to_i.inspect}), RDF::Literal(#{input[2].to_i.inspect}))" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @lt.evaluate(input[1].to_i, input[2].to_i).should eql RDF::Literal(output)
+          @lt.evaluate(input[2].to_i, input[1].to_i).should eql RDF::Literal(!output) if invertible
+        end
+      end if finite
+
+      # xsd:decimal
+      describe ".evaluate(RDF::Literal(BigDecimal(#{input[1].inspect})), RDF::Literal(BigDecimal(#{input[2].inspect})))" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @lt.evaluate(BigDecimal(input[1].to_s), BigDecimal(input[2].to_s)).should eql RDF::Literal(output)
+          @lt.evaluate(BigDecimal(input[2].to_s), BigDecimal(input[1].to_s)).should eql RDF::Literal(!output) if invertible
+        end
+      end if finite
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-boolean-less-than
-    describe ".evaluate(RDF::Literal::Boolean, RDF::Literal::Boolean)" do
-      # TODO
+    # Returns `true` if the left operand is `false` and the right operand is
+    # `true`. Otherwise, returns `false`.
+    boolean_examples = {
+      [:<, true,  true]  => false,
+      [:<, true,  false] => false,
+      [:<, false, true]  => true,
+      [:<, false, false] => false,
+    }
+    boolean_examples.each do |input, output|
+      describe ".evaluate(RDF::Literal::#{input[1].to_s.upcase}, RDF::Literal::#{input[2].to_s.upcase})" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @lt.evaluate(input[1], input[2]).should eql RDF::Literal(output)
+        end
+      end
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-dateTime-less-than
-    describe ".evaluate(RDF::Literal::DateTime, RDF::Literal::DateTime)" do
-      # TODO
+    datetime_examples = {}
+    datetime_examples.each do |input, output|
+      describe ".evaluate(RDF::Literal::DateTime, RDF::Literal::DateTime)" do
+        # TODO: pending bug fixes to RDF.rb 0.3.x.
+      end
     end
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   context "Operator::GreaterThan" do
     before :all do
-      #@gt = SPARQL::Algebra::Operator::GreaterThan
+      @gt = SPARQL::Algebra::Operator::GreaterThan
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
-    describe ".evaluate(RDF::Literal::Simple, RDF::Literal::Simple)" do
-      # TODO
-    end
-
-    # @see http://www.w3.org/TR/xpath-functions/#func-compare
-    describe ".evaluate(RDF::Literal::String, RDF::Literal::String)" do
-      # TODO
+    string_examples = {
+      [:>, '', 'a']      => false,
+      [:>, 'a', '']      => true,
+      [:>, 'aaa', 'bbb'] => false,
+      [:>, 'bbb', 'aaa'] => true,
+    }
+    %w(Simple String).each do |type|
+      options = {:datatype => (type.eql?('String') ? RDF::XSD.string : nil)}
+      describe ".evaluate(RDF::Literal::#{type}, RDF::Literal::#{type})" do
+        [true, false].each do |expected|
+          it "returns RDF::Literal::#{expected.to_s.upcase} #{expected ? 'if' : 'unless'} the left operand is greater than the right operand" do
+            string_examples.each do |input, output|
+              @gt.evaluate(RDF::Literal(input[1], options), RDF::Literal(input[2], options)).should eql RDF::Literal(output)  if output.eql?(expected)
+              @gt.evaluate(RDF::Literal(input[2], options), RDF::Literal(input[1], options)).should eql RDF::Literal(!output) if !output.eql?(expected)
+            end
+          end
+        end
+      end
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-greater-than
     describe ".evaluate(RDF::Literal::Numeric, RDF::Literal::Numeric)" do
-      # TODO
+      it "returns RDF::Literal::TRUE if the left operand is less than the right operand" do
+        verify_numeric_operator @gt, [[2, 1]], RDF::Literal::TRUE
+      end
+
+      it "returns RDF::Literal::FALSE if the left operand is not less than the right operand" do
+        verify_numeric_operator @gt, [[1, 2]], RDF::Literal::FALSE
+      end
+
+      it "returns RDF::Literal::FALSE if the operands are equal" do
+        verify_numeric_operator @gt, [[1, 1]], RDF::Literal::FALSE
+      end
+
+      def verify_numeric_operator(op, inputs, output)
+        inputs.each do |input|
+          [input.map(&:to_f), input.map(&:to_i), input.map { |n| BigDecimal(n.to_s) }].each do |input|
+            op.evaluate(*input).should eql output
+          end
+        end
+      end
+    end
+
+    # @see http://www.w3.org/TR/xpath-functions/#func-numeric-greater-than
+    # Returns `true` if and only if the left operand is greater than the
+    # right operand. For `xsd:float` and `xsd:double` values, positive
+    # infinity is greater than all other non-NaN values; negative infinity
+    # is less than all other non-NaN values. If either operand is NaN, the
+    # function returns false.
+    inf, nan = 1/0.0, 0/0.0
+    numeric_examples = {
+      [:>, -1.0, 0.0] => false,
+      [:>, 0.0, 1.0]  => false,
+      [:>, -inf, 0.0] => false,
+      [:>, 0.0, +inf] => false,
+      #[:>, +inf, nan] => false, # always `false` # FIXME in RDF.rb
+      #[:>, -inf, nan] => false, # always `false` # FIXME in RDF.rb
+      #[:>, nan, nan]  => false, # always `false` # FIXME in RDF.rb
+    }
+    numeric_examples.each do |input, output|
+      invertible = input[1..2].none?(&:nan?)
+      finite     = input[1..2].all?(&:finite?)
+
+      # xsd:double, xsd:float
+      describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @gt.evaluate(input[1], input[2]).should eql RDF::Literal(output)
+          @gt.evaluate(input[2], input[1]).should eql RDF::Literal(!output) if invertible
+        end
+      end
+
+      # xsd:decimal
+      describe ".evaluate(RDF::Literal(BigDecimal(#{input[1].inspect})), RDF::Literal(BigDecimal(#{input[2].inspect})))" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @gt.evaluate(BigDecimal(input[1].to_s), BigDecimal(input[2].to_s)).should eql RDF::Literal(output)
+          @gt.evaluate(BigDecimal(input[2].to_s), BigDecimal(input[1].to_s)).should eql RDF::Literal(!output) if invertible
+        end
+      end if finite
+
+      # xsd:integer
+      describe ".evaluate(RDF::Literal(#{input[1].to_i.inspect}), RDF::Literal(#{input[2].to_i.inspect}))" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @gt.evaluate(input[1].to_i, input[2].to_i).should eql RDF::Literal(output)
+          @gt.evaluate(input[2].to_i, input[1].to_i).should eql RDF::Literal(!output) if invertible
+        end
+      end if finite
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-boolean-greater-than
-    describe ".evaluate(RDF::Literal::Boolean, RDF::Literal::Boolean)" do
-      # TODO
+    # Returns `true` if the left operand is `true` and the right operand is
+    # `false`. Otherwise, returns `false`.
+    boolean_examples = {
+      [:>, true,  true]  => false,
+      [:>, true,  false] => true,
+      [:>, false, true]  => false,
+      [:>, false, false] => false,
+    }
+    boolean_examples.each do |input, output|
+      describe ".evaluate(RDF::Literal::#{input[1].to_s.upcase}, RDF::Literal::#{input[2].to_s.upcase})" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @gt.evaluate(input[1], input[2]).should eql RDF::Literal(output)
+        end
+      end
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-dateTime-greater-than
-    describe ".evaluate(RDF::Literal::DateTime, RDF::Literal::DateTime)" do
-      # TODO
+    datetime_examples = {}
+    datetime_examples.each do |input, output|
+      describe ".evaluate(RDF::Literal::DateTime, RDF::Literal::DateTime)" do
+        # TODO: pending bug fixes to RDF.rb 0.3.x.
+      end
     end
   end
 
@@ -900,8 +1078,11 @@ describe SPARQL::Algebra do
 
     # @see http://www.w3.org/TR/xpath-functions/#func-dateTime-less-than
     # @see http://www.w3.org/TR/xpath-functions/#func-dateTime-equal
-    describe ".evaluate(RDF::Literal::DateTime, RDF::Literal::DateTime)" do
-      # TODO
+    datetime_examples = {}
+    datetime_examples.each do |input, output|
+      describe ".evaluate(RDF::Literal::DateTime, RDF::Literal::DateTime)" do
+        # TODO: pending bug fixes to RDF.rb 0.3.x.
+      end
     end
   end
 
@@ -935,8 +1116,11 @@ describe SPARQL::Algebra do
 
     # @see http://www.w3.org/TR/xpath-functions/#func-dateTime-greater-than
     # @see http://www.w3.org/TR/xpath-functions/#func-dateTime-equal
-    describe ".evaluate(RDF::Literal::DateTime, RDF::Literal::DateTime)" do
-      # TODO
+    datetime_examples = {}
+    datetime_examples.each do |input, output|
+      describe ".evaluate(RDF::Literal::DateTime, RDF::Literal::DateTime)" do
+        # TODO: pending bug fixes to RDF.rb 0.3.x.
+      end
     end
   end
 
@@ -959,7 +1143,7 @@ describe SPARQL::Algebra do
     # is a non-zero number and the other is an infinity, an infinity with
     # the appropriate sign is returned.
     inf, nan = 1/0.0, 0/0.0
-    examples = {
+    double_examples = {
       [:*, 0.0, inf]   => nan,
       [:*, 0.0, -inf]  => nan,
       [:*, inf, 0.0]   => nan,
@@ -973,7 +1157,7 @@ describe SPARQL::Algebra do
       [:*, inf, -inf]  => -inf,
       [:*, -inf, inf]  => -inf,
     }
-    examples.each do |input, output|
+    double_examples.each do |input, output|
       describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
         it "returns RDF::Literal(#{output.inspect})" do
           result = @multiply.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2]))
@@ -1010,12 +1194,12 @@ describe SPARQL::Algebra do
     # For xsd:decimal and xsd:integer operands, if the divisor is (positive
     # or negative) zero, an error is raised.
     # @see http://www.w3.org/TR/xpath-functions/#ERRFOAR0001
-    examples = {
+    decimal_examples = {
       [:/, 1, +0]      => ZeroDivisionError,
       [:/, 1, +0.0]    => ZeroDivisionError,
       [:x, 1, -0.0]    => ZeroDivisionError, # overwrites the previous hash key if :/
     }
-    examples.each do |input, output|
+    decimal_examples.each do |input, output|
       describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
         it "raises #{output.inspect}" do
           lambda { @divide.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2])) }.should raise_error(output)
@@ -1036,7 +1220,7 @@ describe SPARQL::Algebra do
     # negative zero returns NaN. Also, INF or -INF divided by INF or -INF
     # returns NaN.
     inf, nan = 1/0.0, 0/0.0
-    examples = {
+    double_examples = {
       [:/, +1.0, +0.0] => inf,
       [:x, +1.0, -0.0] => -inf, # overwrites the previous hash key if :/
       [:/, -1.0, +0.0] => -inf,
@@ -1050,7 +1234,7 @@ describe SPARQL::Algebra do
       [:/, -inf, +inf] => nan,
       [:/, -inf, -inf] => nan,
     }
-    examples.each do |input, output|
+    double_examples.each do |input, output|
       describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
         it "returns RDF::Literal(#{output.inspect})" do
           result = @divide.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2]))
@@ -1090,7 +1274,7 @@ describe SPARQL::Algebra do
     # operands are -INF, -INF is returned. If one of the operands is INF
     # and the other is -INF, NaN is returned.
     inf, nan = 1/0.0, 0/0.0
-    examples = {
+    double_examples = {
       [:+, 0.0, inf]   => inf,
       [:+, 0.0, -inf]  => -inf,
       [:+, inf, 0.0]   => inf,
@@ -1100,7 +1284,7 @@ describe SPARQL::Algebra do
       [:+, inf, -inf]  => nan,
       [:+, -inf, inf]  => nan,
     }
-    examples.each do |input, output|
+    double_examples.each do |input, output|
       describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
         it "returns RDF::Literal(#{output.inspect})" do
           result = @add.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2]))
@@ -1140,7 +1324,7 @@ describe SPARQL::Algebra do
     # is returned. If one of the operands is INF and the other is -INF, an
     # infinity of the appropriate sign is returned.
     inf, nan = 1/0.0, 0/0.0
-    examples = {
+    double_examples = {
       [:-, 0.0, inf]   => -inf,
       [:-, 0.0, -inf]  => inf,
       [:-, inf, 0.0]   => inf,
@@ -1150,7 +1334,7 @@ describe SPARQL::Algebra do
       [:-, inf, -inf]  => inf,
       [:-, -inf, inf]  => -inf,
     }
-    examples.each do |input, output|
+    double_examples.each do |input, output|
       describe ".evaluate(RDF::Literal(#{input[1].inspect}), RDF::Literal(#{input[2].inspect}))" do
         it "returns RDF::Literal(#{output.inspect})" do
           result = @subtract.evaluate(RDF::Literal(input[1]), RDF::Literal(input[2]))
@@ -1216,11 +1400,11 @@ describe SPARQL::Algebra do
     end
 
     # @see http://www.w3.org/TR/rdf-concepts/#section-blank-nodes
-    examples = {
+    node_examples = {
       [RDF::Node(:foo), RDF::Node(:foo)] => true,
       [RDF::Node(:foo), RDF::Node(:bar)] => false,
     }
-    examples.each do |input, output|
+    node_examples.each do |input, output|
       describe ".evaluate(RDF::Node(#{input[0].to_sym.inspect}), RDF::Node(#{input[1].to_sym.inspect}))" do
         it "returns RDF::Literal::#{output.to_s.upcase}" do
           @same_term.evaluate(input[0], input[1]).should eql RDF::Literal(output)
@@ -1229,11 +1413,11 @@ describe SPARQL::Algebra do
     end
 
     # @see http://www.w3.org/TR/rdf-concepts/#section-Graph-URIref
-    examples = {
+    uri_examples = {
       [RDF::DC.title, RDF::DC.title.dup] => true,
       [RDF::DC.title, RDF::DC11.title]   => false,
     }
-    examples.each do |input, output|
+    uri_examples.each do |input, output|
       describe ".evaluate(RDF::URI(#{input[0].to_s.inspect}), RDF::URI(#{input[1].to_s.inspect}))" do
         it "returns RDF::Literal::#{output.to_s.upcase}" do
           @same_term.evaluate(input[0], input[1]).should eql RDF::Literal(output)
@@ -1242,11 +1426,11 @@ describe SPARQL::Algebra do
     end
 
     # @see http://www.w3.org/TR/rdf-concepts/#section-Literal-Equality
-    examples = {
+    literal_examples = {
       [RDF::Literal('foo'), RDF::Literal('foo')] => true,
       [RDF::Literal('foo'), RDF::Literal('bar')] => false,
     }
-    examples.each do |input, output|
+    literal_examples.each do |input, output|
       describe ".evaluate(RDF::Literal(#{input[0].to_s.inspect}), RDF::Literal(#{input[1].to_s.inspect}))" do
         it "returns RDF::Literal::#{output.to_s.upcase}" do
           @same_term.evaluate(input[0], input[1]).should eql RDF::Literal(output)

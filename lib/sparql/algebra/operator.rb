@@ -25,6 +25,8 @@ module SPARQL; module Algebra
     autoload :Compare,     'sparql/algebra/operator/compare'
     autoload :Equal,       'sparql/algebra/operator/equal'
     autoload :NotEqual,    'sparql/algebra/operator/not_equal'
+    autoload :LessThan,    'sparql/algebra/operator/less_than'
+    autoload :GreaterThan, 'sparql/algebra/operator/greater_than'
     autoload :Multiply,    'sparql/algebra/operator/multiply'
     autoload :Divide,      'sparql/algebra/operator/divide'
     autoload :Add,         'sparql/algebra/operator/add'
@@ -45,6 +47,8 @@ module SPARQL; module Algebra
         when :<=>         then Compare # non-standard
         when :'='         then Equal
         when :'!='        then NotEqual
+        when :<           then LessThan
+        when :>           then GreaterThan
         when :*           then Multiply
         when :'/'         then Divide
         when :+           then arity.eql?(1) ? Plus  : Add
