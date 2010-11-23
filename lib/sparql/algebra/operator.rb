@@ -7,33 +7,35 @@ module SPARQL; module Algebra
     include Expression
 
     # Unary operators
-    autoload :Not,         'sparql/algebra/operator/not'
-    autoload :Plus,        'sparql/algebra/operator/plus'
-    autoload :Minus,       'sparql/algebra/operator/minus'
-    autoload :Bound,       'sparql/algebra/operator/bound'
-    autoload :IsBlank,     'sparql/algebra/operator/is_blank'
-    autoload :IsIRI,       'sparql/algebra/operator/is_iri'
-    autoload :IsURI,       'sparql/algebra/operator/is_iri'
-    autoload :IsLiteral,   'sparql/algebra/operator/is_literal'
-    autoload :Str,         'sparql/algebra/operator/str'
-    autoload :Lang,        'sparql/algebra/operator/lang'
-    autoload :Datatype,    'sparql/algebra/operator/datatype'
+    autoload :Not,                'sparql/algebra/operator/not'
+    autoload :Plus,               'sparql/algebra/operator/plus'
+    autoload :Minus,              'sparql/algebra/operator/minus'
+    autoload :Bound,              'sparql/algebra/operator/bound'
+    autoload :IsBlank,            'sparql/algebra/operator/is_blank'
+    autoload :IsIRI,              'sparql/algebra/operator/is_iri'
+    autoload :IsURI,              'sparql/algebra/operator/is_iri'
+    autoload :IsLiteral,          'sparql/algebra/operator/is_literal'
+    autoload :Str,                'sparql/algebra/operator/str'
+    autoload :Lang,               'sparql/algebra/operator/lang'
+    autoload :Datatype,           'sparql/algebra/operator/datatype'
 
     # Binary operators
-    autoload :Or,          'sparql/algebra/operator/or'
-    autoload :And,         'sparql/algebra/operator/and'
-    autoload :Compare,     'sparql/algebra/operator/compare'
-    autoload :Equal,       'sparql/algebra/operator/equal'
-    autoload :NotEqual,    'sparql/algebra/operator/not_equal'
-    autoload :LessThan,    'sparql/algebra/operator/less_than'
-    autoload :GreaterThan, 'sparql/algebra/operator/greater_than'
-    autoload :Multiply,    'sparql/algebra/operator/multiply'
-    autoload :Divide,      'sparql/algebra/operator/divide'
-    autoload :Add,         'sparql/algebra/operator/add'
-    autoload :Subtract,    'sparql/algebra/operator/subtract'
-    autoload :SameTerm,    'sparql/algebra/operator/same_term'
-    autoload :LangMatches, 'sparql/algebra/operator/lang_matches'
-    autoload :Regex,       'sparql/algebra/operator/regex'
+    autoload :Or,                 'sparql/algebra/operator/or'
+    autoload :And,                'sparql/algebra/operator/and'
+    autoload :Compare,            'sparql/algebra/operator/compare'
+    autoload :Equal,              'sparql/algebra/operator/equal'
+    autoload :NotEqual,           'sparql/algebra/operator/not_equal'
+    autoload :LessThan,           'sparql/algebra/operator/less_than'
+    autoload :GreaterThan,        'sparql/algebra/operator/greater_than'
+    autoload :LessThanOrEqual,    'sparql/algebra/operator/less_than_or_equal'
+    autoload :GreaterThanOrEqual, 'sparql/algebra/operator/greater_than_or_equal'
+    autoload :Multiply,           'sparql/algebra/operator/multiply'
+    autoload :Divide,             'sparql/algebra/operator/divide'
+    autoload :Add,                'sparql/algebra/operator/add'
+    autoload :Subtract,           'sparql/algebra/operator/subtract'
+    autoload :SameTerm,           'sparql/algebra/operator/same_term'
+    autoload :LangMatches,        'sparql/algebra/operator/lang_matches'
+    autoload :Regex,              'sparql/algebra/operator/regex'
 
     ##
     # Returns an operator class for the given operator `name`.
@@ -49,6 +51,8 @@ module SPARQL; module Algebra
         when :'!='        then NotEqual
         when :<           then LessThan
         when :>           then GreaterThan
+        when :<=          then LessThanOrEqual
+        when :>=          then GreaterThanOrEqual
         when :*           then Multiply
         when :'/'         then Divide
         when :+           then arity.eql?(1) ? Plus  : Add

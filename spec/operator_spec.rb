@@ -1051,7 +1051,7 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   context "Operator::LessThanOrEqual" do
     before :all do
-      #@le = SPARQL::Algebra::Operator::LessThanOrEqual
+      @le = SPARQL::Algebra::Operator::LessThanOrEqual
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
@@ -1072,8 +1072,18 @@ describe SPARQL::Algebra do
 
     # @see http://www.w3.org/TR/xpath-functions/#func-boolean-less-than
     # @see http://www.w3.org/TR/xpath-functions/#func-boolean-equal
-    describe ".evaluate(RDF::Literal::Boolean, RDF::Literal::Boolean)" do
-      # TODO
+    boolean_examples = {
+      [:<=, true,  true]  => true,
+      [:<=, true,  false] => false,
+      [:<=, false, true]  => true,
+      [:<=, false, false] => true,
+    }
+    boolean_examples.each do |input, output|
+      describe ".evaluate(RDF::Literal::#{input[1].to_s.upcase}, RDF::Literal::#{input[2].to_s.upcase})" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @le.evaluate(input[1], input[2]).should eql RDF::Literal(output)
+        end
+      end
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-dateTime-less-than
@@ -1089,7 +1099,7 @@ describe SPARQL::Algebra do
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
   context "Operator::GreaterThanOrEqual" do
     before :all do
-      #@ge = SPARQL::Algebra::Operator::GreaterThanOrEqual
+      @ge = SPARQL::Algebra::Operator::GreaterThanOrEqual
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
@@ -1110,8 +1120,18 @@ describe SPARQL::Algebra do
 
     # @see http://www.w3.org/TR/xpath-functions/#func-boolean-greater-than
     # @see http://www.w3.org/TR/xpath-functions/#func-boolean-equal
-    describe ".evaluate(RDF::Literal::Boolean, RDF::Literal::Boolean)" do
-      # TODO
+    boolean_examples = {
+      [:>=, true,  true]  => true,
+      [:>=, true,  false] => true,
+      [:>=, false, true]  => false,
+      [:>=, false, false] => true,
+    }
+    boolean_examples.each do |input, output|
+      describe ".evaluate(RDF::Literal::#{input[1].to_s.upcase}, RDF::Literal::#{input[2].to_s.upcase})" do
+        it "returns RDF::Literal::#{output.to_s.upcase}" do
+          @ge.evaluate(input[1], input[2]).should eql RDF::Literal(output)
+        end
+      end
     end
 
     # @see http://www.w3.org/TR/xpath-functions/#func-dateTime-greater-than

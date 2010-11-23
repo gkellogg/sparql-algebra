@@ -10,7 +10,7 @@ Features
 --------
 
 * 100% free and unencumbered [public domain](http://unlicense.org/) software.
-* Currently implements most of [SPARQL 1.0][]'s `FILTER` operators.
+* Implements all of [SPARQL 1.0][]'s `FILTER` operators and functions.
 * Implements `FILTER` expression evaluation on `RDF::Query` solution sequences.
 * Implements SPARQL's [effective boolean value (EBV)][EBV] evaluation.
 * Compatible with Ruby 1.8.7+, Ruby 1.9.x, and JRuby 1.4/1.5.
