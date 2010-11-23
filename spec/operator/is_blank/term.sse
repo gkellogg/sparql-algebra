@@ -1,0 +1,5 @@
+##
+# isBlank(A)
+#
+# @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
+# @see http://www.w3.org/TR/rdf-sparql-query/#func-isBlank

@@ -1,0 +1,22 @@
+##
+# op:numeric-divide(A, B)
+#
+# @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
+# @see http://www.w3.org/TR/xpath-functions/#func-numeric-divide
+
+(error (/ 1 +0)   ZeroDivisionError)
+(error (/ 1 +0.0) ZeroDivisionError)
+(error (/ 1 -0.0) ZeroDivisionError)
+
+(equal (/ +1.0 +0.0) +INF)
+(equal (/ +1.0 -0.0) -INF)
+(equal (/ -1.0 +0.0) -INF)
+(equal (/ -1.0 -0.0) +INF)
+(equal (/ +0.0 +0.0) NaN)
+(equal (/ +0.0 -0.0) NaN)
+(equal (/ -0.0 +0.0) NaN)
+(equal (/ -0.0 -0.0) NaN)
+(equal (/ +INF +INF) NaN)
+(equal (/ +INF -INF) NaN)
+(equal (/ -INF +INF) NaN)
+(equal (/ -INF -INF) NaN)

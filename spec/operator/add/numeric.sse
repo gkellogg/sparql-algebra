@@ -1,0 +1,14 @@
+##
+# op:numeric-add(A, B)
+#
+# @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
+# @see http://www.w3.org/TR/xpath-functions/#func-numeric-add
+
+(equal (+ 0.0 +INF)  +INF)
+(equal (+ 0.0 -INF)  -INF)
+(equal (+ +INF 0.0)  +INF)
+(equal (+ -INF 0.0)  -INF)
+(equal (+ +INF +INF) +INF)
+(equal (+ -INF -INF) -INF)
+(equal (+ +INF -INF) NaN)
+(equal (+ -INF +INF) NaN)

@@ -1,0 +1,5 @@
+##
+# op:numeric-unary-plus(A)
+#
+# @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
+# @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-plus
