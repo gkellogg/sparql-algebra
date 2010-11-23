@@ -242,7 +242,7 @@ describe SPARQL::Algebra do
       end
     end
 
-    describe ".evaluate(RDF::Literal(BigDecimal('0.0')))" do
+    describe ".evaluate(RDF::Literal(BigDecimal(0.0)))" do
       it "returns the operand" do
         @minus.evaluate(RDF::Literal(BigDecimal('0.0'))).should eql RDF::Literal(BigDecimal('0.0'))
       end
@@ -647,8 +647,8 @@ describe SPARQL::Algebra do
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-equal
     numeric_examples = load_sse_examples('operator/equal/numeric.sse')
     numeric_examples.each do |input, output|
-      describe ".evaluate(RDF::Literal(#{input[1].to_f.inspect}), RDF::Literal(#{input[2].to_f.inspect}))" do
-        it "returns RDF::Literal::#{output.to_s.upcase}" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           @eq.evaluate(input[1], input[2]).should eql output
         end
       end
@@ -682,8 +682,8 @@ describe SPARQL::Algebra do
     # @see http://www.w3.org/TR/xpath-functions/#func-dateTime-equal
     datetime_examples = load_sse_examples('operator/equal/datetime.sse')
     datetime_examples.each do |input, output|
-      describe ".evaluate(RDF::Literal::DateTime(#{input[1].to_s.inspect}), RDF::Literal::DateTime(#{input[2].to_s.inspect}))" do
-        it "returns RDF::Literal::#{output.to_s.upcase}" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           #@eq.evaluate(input[1], input[2]).should eql output # FIXME in RDF.rb 0.3.0
         end
       end
@@ -817,8 +817,8 @@ describe SPARQL::Algebra do
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
     string_examples = load_sse_examples('operator/less_than/string.sse')
     string_examples.each do |input, output|
-      describe ".evaluate(RDF::Literal(#{input[1].to_s.inspect}), RDF::Literal(#{input[2].to_s.inspect}))" do
-        it "returns RDF::Literal::#{output.to_s.upcase}" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           @lt.evaluate(input[1], input[2]).should eql output
           @lt.evaluate(input[2], input[1]).should eql RDF::Literal(output.false?) # the inverse
         end
@@ -882,8 +882,8 @@ describe SPARQL::Algebra do
     # @see http://www.w3.org/TR/xpath-functions/#func-boolean-less-than
     boolean_examples = load_sse_examples('operator/less_than/boolean.sse')
     boolean_examples.each do |input, output|
-      describe ".evaluate(RDF::Literal::#{input[1].to_s.upcase}, RDF::Literal::#{input[2].to_s.upcase})" do
-        it "returns RDF::Literal::#{output.to_s.upcase}" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           @lt.evaluate(input[1], input[2]).should eql output
         end
       end
@@ -913,8 +913,8 @@ describe SPARQL::Algebra do
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
     string_examples = load_sse_examples('operator/greater_than/string.sse')
     string_examples.each do |input, output|
-      describe ".evaluate(RDF::Literal(#{input[1].to_s.inspect}), RDF::Literal(#{input[2].to_s.inspect}))" do
-        it "returns RDF::Literal::#{output.to_s.upcase}" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           @gt.evaluate(input[1], input[2]).should eql output
           @gt.evaluate(input[2], input[1]).should eql RDF::Literal(output.false?) # the inverse
         end
@@ -978,8 +978,8 @@ describe SPARQL::Algebra do
     # @see http://www.w3.org/TR/xpath-functions/#func-boolean-greater-than
     boolean_examples = load_sse_examples('operator/greater_than/boolean.sse')
     boolean_examples.each do |input, output|
-      describe ".evaluate(RDF::Literal::#{input[1].to_s.upcase}, RDF::Literal::#{input[2].to_s.upcase})" do
-        it "returns RDF::Literal::#{output.to_s.upcase}" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           @gt.evaluate(input[1], input[2]).should eql output
         end
       end
@@ -1026,8 +1026,8 @@ describe SPARQL::Algebra do
     # @see http://www.w3.org/TR/xpath-functions/#func-boolean-equal
     boolean_examples = load_sse_examples('operator/less_than_or_equal/boolean.sse')
     boolean_examples.each do |input, output|
-      describe ".evaluate(RDF::Literal::#{input[1].to_s.upcase}, RDF::Literal::#{input[2].to_s.upcase})" do
-        it "returns RDF::Literal::#{output.to_s.upcase}" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           @le.evaluate(input[1], input[2]).should eql output
         end
       end
@@ -1075,8 +1075,8 @@ describe SPARQL::Algebra do
     # @see http://www.w3.org/TR/xpath-functions/#func-boolean-equal
     boolean_examples = load_sse_examples('operator/greater_than_or_equal/boolean.sse')
     boolean_examples.each do |input, output|
-      describe ".evaluate(RDF::Literal::#{input[1].to_s.upcase}, RDF::Literal::#{input[2].to_s.upcase})" do
-        it "returns RDF::Literal::#{output.to_s.upcase}" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           @ge.evaluate(input[1], input[2]).should eql output
         end
       end
@@ -1114,8 +1114,8 @@ describe SPARQL::Algebra do
 
     numeric_examples = load_sse_examples('operator/multiply/numeric.sse')
     numeric_examples.each do |input, output|
-      describe ".evaluate(RDF::Literal(#{input[1].to_f.inspect}), RDF::Literal(#{input[2].to_f.inspect}))" do
-        it "returns RDF::Literal(#{output.to_f.inspect})" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           result = @multiply.evaluate(input[1], input[2])
           if output.nan?
             result.should be_nan
@@ -1155,9 +1155,9 @@ describe SPARQL::Algebra do
 
     numeric_examples = load_sse_examples('operator/divide/numeric.sse')
     numeric_examples.each do |input, output|
-      describe ".evaluate(RDF::Literal(#{input[1].to_s}), RDF::Literal(#{input[2].to_s}))" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
         if output.is_a?(RDF::Term)
-          it "returns RDF::Literal(#{output.to_f.inspect})" do
+          it "returns #{repr(output)}" do
             result = @divide.evaluate(input[1], input[2])
             if output.nan?
               result.should be_nan
@@ -1202,8 +1202,8 @@ describe SPARQL::Algebra do
 
     numeric_examples = load_sse_examples('operator/add/numeric.sse')
     numeric_examples.each do |input, output|
-      describe ".evaluate(RDF::Literal(#{input[1].to_f.inspect}), RDF::Literal(#{input[2].to_f.inspect}))" do
-        it "returns RDF::Literal(#{output.to_f.inspect})" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           result = @add.evaluate(input[1], input[2])
           if output.nan?
             result.should be_nan
@@ -1243,8 +1243,8 @@ describe SPARQL::Algebra do
 
     numeric_examples = load_sse_examples('operator/subtract/numeric.sse')
     numeric_examples.each do |input, output|
-      describe ".evaluate(RDF::Literal(#{input[1].to_f.inspect}), RDF::Literal(#{input[2].to_f.inspect}))" do
-        it "returns RDF::Literal(#{output.to_f.inspect})" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           result = @subtract.evaluate(input[1], input[2])
           if output.nan?
             result.should be_nan
@@ -1326,8 +1326,8 @@ describe SPARQL::Algebra do
 
     examples = load_sse_examples('operator/same_term/term.sse')
     examples.each do |input, output|
-      describe ".evaluate(#{input[1].inspect}, #{input[2].inspect})" do # FIXME: repr(...)
-        it "returns RDF::Literal::#{output.to_s.upcase}" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           @same_term.evaluate(input[1], input[2]).should eql output
         end
       end
@@ -1374,8 +1374,8 @@ describe SPARQL::Algebra do
 
     examples = load_sse_examples('operator/lang_matches/literal.sse')
     examples.each do |input, output|
-      describe ".evaluate(RDF::Literal(#{input[1].to_s.inspect}), RDF::Literal(#{input[2].to_s.inspect}))" do
-        it "returns RDF::Literal::#{output.to_s.upcase}" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           @lang_matches.evaluate(input[1], input[2]).should eql output
         end
       end
@@ -1419,8 +1419,8 @@ describe SPARQL::Algebra do
 
     examples = load_sse_examples('operator/regex/literal.sse')
     examples.each do |input, output|
-      describe ".evaluate(RDF::Literal(#{input[1].to_s.inspect}), RDF::Literal(#{input[2].to_s.inspect}), RDF::Literal(#{input[2].to_s.inspect}))" do
-        it "returns RDF::Literal::#{output.to_s.upcase}" do
+      describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+        it "returns #{repr(output)}" do
           @regex.evaluate(input[1], input[2], input[3]).should eql output
         end
       end

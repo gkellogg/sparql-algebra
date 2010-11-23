@@ -35,3 +35,31 @@ def load_sse_examples(filename)
     result.merge(input => output)
   end
 end
+
+def repr(term)
+  case term
+    when RDF::Literal::Boolean
+      "RDF::Literal::#{term.true? ? 'TRUE' : 'FALSE'}"
+    when RDF::Literal::Numeric
+      value = case term
+        when RDF::Literal::Double  then term.to_f.inspect
+        when RDF::Literal::Decimal then "BigDecimal(#{term.to_f.inspect})"
+        when RDF::Literal::Integer then term.to_i.inspect
+      end
+      "RDF::Literal(#{value})"
+    when RDF::Literal::DateTime
+      "RDF::Literal::DateTime(#{term.to_s.inspect})"
+    when RDF::Literal then case
+      when term.datatype.eql?(RDF::XSD.string)
+        "RDF::Literal::String(#{term.to_s.inspect})"
+      when term.simple?
+        "RDF::Literal(#{term.to_s.inspect})"
+      else term.inspect
+    end
+    when RDF::Node
+      "RDF::Node(#{term.to_sym.inspect})"
+    when RDF::URI
+      "RDF::URI(#{term.to_s.inspect})"
+    else term.inspect
+  end
+end
