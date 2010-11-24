@@ -64,6 +64,24 @@ module SPARQL; module Algebra
     end
 
     ##
+    # Returns `false`.
+    #
+    # @return [Boolean] `true` or `false`
+    # @see    #variable?
+    def variable?
+      false
+    end
+
+    ##
+    # Returns `true`.
+    #
+    # @return [Boolean] `true` or `false`
+    # @see    #variable?
+    def constant?
+      !(variable?)
+    end
+
+    ##
     # Returns an optimized version of this expression.
     #
     # This is the default implementation, which simply returns `self`.
@@ -72,6 +90,32 @@ module SPARQL; module Algebra
     #
     # @return [Expression] `self`
     def optimize
+      self
+    end
+
+    ##
+    # Evaluates this expression using the given variable `bindings`.
+    #
+    # This is the default implementation, which simply returns `self`.
+    # Subclasses can override this method in order to implement something
+    # more useful.
+    #
+    # @param  [RDF::Query::Solution, #[]] bindings
+    # @return [Expression] `self`
+    def evaluate(bindings = {})
+      self
+    end
+
+    ##
+    # Returns the SPARQL S-Expression (SSE) representation of this expression.
+    #
+    # This is the default implementation, which simply returns `self`.
+    # Subclasses can override this method in order to implement something
+    # more useful.
+    #
+    # @return [Array] `self`
+    # @see    http://openjena.org/wiki/SSE
+    def to_sse
       self
     end
   end # Expression

@@ -194,6 +194,8 @@ module SPARQL; module Algebra
     end
 
     ##
+    # Evaluates this operator using the given variable `bindings`.
+    #
     # @param  [RDF::Query::Solution, #[]] bindings
     #   a query solution containing zero or more variable bindings
     # @return [RDF::Term]

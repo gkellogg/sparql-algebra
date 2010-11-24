@@ -1,27 +1,14 @@
 ##
 # Extensions for `RDF::Term`.
 module RDF::Term
-  ##
-  # Returns `self`.
-  #
-  # @param  [RDF::Query::Solution, #[]] bindings
-  # @return [RDF::Term] `self`
-  def evaluate(bindings = {})
-    self
-  end
-
-  ##
-  # Returns `self`.
-  #
-  # @return [RDF::Term] `self`
-  def to_sse
-    self
-  end
+  include SPARQL::Algebra::Expression
 end # RDF::Term
 
 ##
 # Extensions for `RDF::Query::Variable`.
 class RDF::Query::Variable
+  include SPARQL::Algebra::Expression
+
   ##
   # Returns the value of this variable in the given `bindings`.
   #
