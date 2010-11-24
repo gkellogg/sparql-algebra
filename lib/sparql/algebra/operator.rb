@@ -155,7 +155,10 @@ module SPARQL; module Algebra
     # @return [Boolean] `true` or `false`
     # @see    #constant?
     def variable?
-      operands.any? { |operand| operand.is_a?(Variable) }
+      operands.any? do |operand|
+        operand.is_a?(Variable) ||
+          (operand.respond_to?(:variable?) && operand.variable?)
+      end
     end
 
     ##
@@ -166,6 +169,28 @@ module SPARQL; module Algebra
     # @see    #variable?
     def constant?
       !(variable?)
+    end
+
+    ##
+    # Returns an optimized version of this expression.
+    #
+    # For constant expressions containing no variables, returns the result
+    # of evaluating the expression with empty bindings; otherwise returns
+    # `self`.
+    #
+    # Optimization is not possible if the expression raises an exception,
+    # such as a `TypeError` or `ZeroDivisionError`, which must be conserved
+    # at runtime.
+    #
+    # @return [Expression]
+    def optimize
+      if constant?
+        # Note that if evaluation results in a `TypeError` or other error,
+        # we must return `self` so that the error is conserved at runtime:
+        evaluate rescue self
+      else
+        super # returns `self`
+      end
     end
 
     ##

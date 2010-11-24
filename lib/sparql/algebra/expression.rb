@@ -62,5 +62,17 @@ module SPARQL; module Algebra
 
       operator.new(*operands)
     end
+
+    ##
+    # Returns an optimized version of this expression.
+    #
+    # This is the default implementation, which simply returns `self`.
+    # Subclasses can override this method in order to implement something
+    # more useful.
+    #
+    # @return [Expression] `self`
+    def optimize
+      self
+    end
   end # Expression
 end; end # SPARQL::Algebra
