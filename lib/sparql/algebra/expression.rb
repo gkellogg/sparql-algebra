@@ -45,7 +45,7 @@ module SPARQL; module Algebra
     def self.new(sse, options = {})
       raise ArgumentError, "invalid SPARQL::Algebra::Expression form: #{sse.inspect}" unless sse.is_a?(Array)
 
-      operator = Operator.for(sse.first)
+      operator = Operator.for(sse.first, sse.length - 1)
       raise ArgumentError, "invalid SPARQL::Algebra::Expression operator: #{sse.first.inspect}" unless operator
 
       operands = sse[1..-1].map do |operand|
