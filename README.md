@@ -92,6 +92,24 @@ expressions. Use the following to obtain optimized SSE forms:
     (!= ?x (* 6 7))    #=> (!= ?x 42)
     (!= ?x (/ 0 0.0))  #=> (!= ?x NaN)
 
+### Memoization
+
+Expressions can optionally be [memoized][memoization], which can speed up
+repeatedly executing the expression on a solution sequence:
+
+    Expression.parse(sse, :memoize => true)
+    Operator.new(*operands, :memoize => true)
+
+Memoization is implemented using RDF.rb's [RDF::Util::Cache][] utility
+library, a weak-reference cache that allows values contained in the cache to
+be garbage collected. This allows the cache to dynamically adjust to
+changing memory conditions, caching more objects when memory is plentiful,
+but evicting most objects if memory pressure increases to the point of
+scarcity.
+
+[memoization]:      http://en.wikipedia.org/wiki/Memoization
+[RDF::Util::Cache]: http://rdf.rubyforge.org/RDF/Util/Cache.html
+
 Documentation
 -------------
 

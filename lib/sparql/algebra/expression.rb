@@ -10,14 +10,16 @@ module SPARQL; module Algebra
     #
     # @param  [String] sse
     #   a SPARQL S-Expression (SSE) string
+    # @param  [Hash{Symbol => Object}] options
+    #   any additional options (see {Operator#initialize})
     # @return [Expression]
-    def self.parse(sse)
+    def self.parse(sse, options = {})
       begin
         require 'sxp' # @see http://rubygems.org/gems/sxp
       rescue LoadError
         abort "SPARQL::Algebra::Expression.parse requires the SXP gem (hint: `gem install sxp')."
       end
-      self.new(SXP::Reader::SPARQL.read(sse))
+      self.new(SXP::Reader::SPARQL.read(sse), options)
     end
 
     ##
@@ -40,6 +42,7 @@ module SPARQL; module Algebra
     # @param  [Array] sse
     #   a SPARQL S-Expression (SSE) form
     # @param  [Hash{Symbol => Object}] options
+    #   any additional options (see {Operator#initialize})
     # @return [Expression]
     # @raise  [TypeError] if any of the operands is invalid
     def self.new(sse, options = {})
@@ -60,6 +63,7 @@ module SPARQL; module Algebra
         end
       end
 
+      operands << options unless options.empty?
       operator.new(*operands)
     end
 

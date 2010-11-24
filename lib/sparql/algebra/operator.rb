@@ -112,6 +112,8 @@ module SPARQL; module Algebra
     # @param  [Array<RDF::Term>] operands
     # @param  [Hash{Symbol => Object}] options
     #   any additional options
+    # @option options [Boolean] :memoize (false)
+    #   whether to memoize results for particular operands
     # @raise  [TypeError] if any operand is invalid
     def initialize(*operands)
       @options  = operands.last.is_a?(Hash) ? operands.pop.dup : {}
@@ -201,7 +203,17 @@ module SPARQL; module Algebra
     # @return [RDF::Term]
     # @abstract
     def evaluate(bindings = {})
-      apply(*operands.map { |operand| operand.evaluate(bindings) })
+      args = operands.map { |operand| operand.evaluate(bindings) }
+      options[:memoize] ? memoize(*args) : apply(*args)
+    end
+
+    ##
+    # @param  [Array<RDF::Term>] operands
+    #   evaluated operands
+    # @return [RDF::Term] the memoized result
+    def memoize(*operands)
+      @cache ||= RDF::Util::Cache.new(options[:memoize].is_a?(Integer) ? options[:memoize] : -1)
+      @cache[operands] ||= apply(*operands)
     end
 
     ##
