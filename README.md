@@ -9,11 +9,12 @@ This is an in-the-works (currently pre-alpha) [Ruby][] implementation of the
 Features
 --------
 
-* 100% free and unencumbered [public domain](http://unlicense.org/) software.
 * Implements all of [SPARQL 1.0][]'s `FILTER` operators and functions.
 * Implements `FILTER` expression evaluation on `RDF::Query` solution sequences.
-* Implements SPARQL's [effective boolean value (EBV)][EBV] evaluation.
+* Implements `FILTER` expression optimizations such as constant folding,
+  strength reduction, and memoization.
 * Compatible with Ruby 1.8.7+, Ruby 1.9.x, and JRuby 1.4/1.5.
+* 100% free and unencumbered [public domain](http://unlicense.org/) software.
 
 Examples
 --------
@@ -45,9 +46,9 @@ Examples
 
 ### Evaluating operators standalone
 
-    Operator(:isBlank).evaluate(RDF::Node(:foobar))            #=> RDF::Literal::TRUE
-    Operator(:isIRI).evaluate(RDF::DC.title)                   #=> RDF::Literal::TRUE
-    Operator(:isLiteral).evaluate(RDF::Literal(3.1415))        #=> RDF::Literal::TRUE
+    Operator(:isBlank).evaluate(RDF::Node(:foobar))              #=> RDF::Literal::TRUE
+    Operator(:isIRI).evaluate(RDF::DC.title)                     #=> RDF::Literal::TRUE
+    Operator(:isLiteral).evaluate(RDF::Literal(3.1415))          #=> RDF::Literal::TRUE
 
 ### Evaluating expressions on a solution sequence
 
@@ -61,9 +62,35 @@ Examples
     end
     
     # Find people who have a name but don't have a known e-mail address:
-    expression = Expression[:not, [:bound, Variable(:email)]]  # ...or just...
+    expression = Expression[:not, [:bound, Variable(:email)]]    # ...or just...
     expression = Expression.parse('(not (bound ?email))')
     solutions.filter!(expression)
+
+### Optimizing expressions containing constant subexpressions
+
+    Expression.parse('(sameTerm ?var ?var)').optimize            #=> RDF::Literal::TRUE
+    Expression.parse('(* -2 (- (* (+ 1 2) (+ 3 4))))').optimize  #=> RDF::Literal(42)
+
+Optimizations
+-------------
+
+Some very simple optimizations are currently implemented for `FILTER`
+expressions. Use the following to obtain optimized SSE forms:
+
+    Expression.parse(sse).optimize.to_sse
+
+### Constant comparison folding
+
+    (sameTerm ?x ?x)   #=> true
+
+### Constant arithmetic folding
+
+    (!= ?x (+ 123))    #=> (!= ?x 123)
+    (!= ?x (- -1.0))   #=> (!= ?x 1.0)
+    (!= ?x (+ 1 2))    #=> (!= ?x 3)
+    (!= ?x (- 4 5))    #=> (!= ?x -1)
+    (!= ?x (* 6 7))    #=> (!= ?x 42)
+    (!= ?x (/ 0 0.0))  #=> (!= ?x NaN)
 
 Documentation
 -------------

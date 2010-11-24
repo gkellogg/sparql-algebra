@@ -20,6 +20,18 @@ module SPARQL; module Algebra
       def apply(term1, term2)
         RDF::Literal(term1.eql?(term2))
       end
+
+      ##
+      # Returns an optimized version of this expression.
+      #
+      # @return [Expression]
+      def optimize
+        if operand(0).is_a?(Variable) && operand(0).eql?(operand(1))
+          RDF::Literal::TRUE
+        else
+          super # @see Operator#optimize
+        end
+      end
     end # SameTerm
   end # Operator
 end; end # SPARQL::Algebra

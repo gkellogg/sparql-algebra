@@ -5,6 +5,8 @@ Spec::Runner.configure do |config|
   config.include(RDF::Spec::Matchers)
 end
 
+include SPARQL::Algebra
+
 begin
   require 'sxp' # @see http://rubygems.org/gems/sxp
 rescue LoadError

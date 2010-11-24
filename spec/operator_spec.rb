@@ -636,6 +636,12 @@ describe SPARQL::Algebra do
 
     verify sse_examples('operator/same_term/term.sse')
 
+    describe "#optimize" do
+      it "returns RDF::Literal::TRUE if both operands are the same variable" do
+        @same_term.new(Variable(:var), Variable(:var)).optimize.should eql RDF::Literal::TRUE
+      end
+    end
+
     describe "#to_sse" do
       it "returns the correct SSE form" do
         @same_term.new(RDF::Node(:foo), RDF::Node(:bar)).to_sse.should == [:sameTerm, RDF::Node(:foo), RDF::Node(:bar)]
