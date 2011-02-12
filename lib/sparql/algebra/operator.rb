@@ -37,6 +37,19 @@ module SPARQL; module Algebra
     autoload :LangMatches,        'sparql/algebra/operator/lang_matches'
     autoload :Regex,              'sparql/algebra/operator/regex'
 
+    # Query operators
+    autoload :Base,               'sparql/algebra/operator/base'
+    autoload :Distinct,           'sparql/algebra/operator/distinct'
+    autoload :Filter,             'sparql/algebra/operator/filter'
+    autoload :Join,               'sparql/algebra/operator/join'
+    autoload :LeftJoin,           'sparql/algebra/operator/left_join'
+    autoload :Order,              'sparql/algebra/operator/order'
+    autoload :Prefix,             'sparql/algebra/operator/prefix'
+    autoload :Project,            'sparql/algebra/operator/project'
+    autoload :Reduce,             'sparql/algebra/operator/reduce'
+    autoload :Slice,              'sparql/algebra/operator/slice'
+    autoload :Union,              'sparql/algebra/operator/union'
+
     ##
     # Returns an operator class for the given operator `name`.
     #
@@ -77,6 +90,18 @@ module SPARQL; module Algebra
         when :sameterm    then SameTerm
         when :langmatches then LangMatches
         when :regex       then Regex
+        when :join        then Join
+        when :leftjoin    then LeftJoin
+        when :filter      then Filter
+        when :base        then Base
+        when :distinct    then Distinct
+        when :filter      then Filter
+        when :order       then Order
+        when :prefix      then Prefix
+        when :project     then Project
+        when :reduce      then Reduce
+        when :slice       then Slice
+        when :union       then Union
         else nil # not found
       end
     end
@@ -161,6 +186,16 @@ module SPARQL; module Algebra
         operand.is_a?(Variable) ||
           (operand.respond_to?(:variable?) && operand.variable?)
       end
+    end
+
+
+    ##
+    # Returns `true` if this is executable (i.e., contains a graph patterns), `false`
+    # otherwise.
+    #
+    # @return [Boolean] `true` or `false`
+    def executable?
+      respond_to?(:execute)
     end
 
     ##
