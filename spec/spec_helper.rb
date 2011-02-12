@@ -1,3 +1,4 @@
+require "bundler/setup"
 require 'sparql/algebra'
 require 'rdf/spec'
 
