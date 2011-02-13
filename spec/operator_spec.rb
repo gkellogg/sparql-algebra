@@ -682,4 +682,35 @@ describe SPARQL::Algebra do
       end
     end
   end
+  
+  ##########################################################################
+  # Non-Operators
+  context ":triple" do
+    {
+      %q((triple <a> <b> <c>)) => RDF::Query::Pattern.new(RDF::URI("a"), RDF::URI("b"), RDF::URI("c")),
+      %q((triple ?a _:b "c")) => RDF::Query::Pattern.new(RDF::Query::Variable.new("a"), RDF::Node.new("b"), RDF::Literal.new("c")),
+    }.each_pair do |sse, pattern|
+      it "generates SSE" do
+        SXP::Reader::SPARQL.read(sse).should == pattern.to_sse
+      end
+      
+      it "parses SSE" do
+        SPARQL::Algebra::Expression.parse(sse).should == pattern
+      end
+    end
+  end
+
+  context ":bgp" do
+    {
+      %q((bgp (triple <a> <b> <c>))) => RDF::Query.new { pattern [RDF::URI("a"), RDF::URI("b"), RDF::URI("c")]},
+    }.each_pair do |sse, query|
+      it "generates SSE" do
+        SXP::Reader::SPARQL.read(sse).should == query.to_sse
+      end
+      
+      it "parses SSE" do
+        SPARQL::Algebra::Expression.parse(sse).should == query
+      end
+    end
+  end
 end
