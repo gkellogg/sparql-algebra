@@ -4,6 +4,26 @@ module RDF::Term
   include SPARQL::Algebra::Expression
 end # RDF::Term
 
+class RDF::Query
+  # Transform Query into an Array form of an SSE
+  #
+  # If Query is named, it's treated as a GroupGraphPattern, otherwise, a BGP
+  #
+  # @return [Array]
+  def to_sse
+    res = [:bgp] + patterns.map(&:to_sse)
+    (respond_to?(:named?) && named? ? [:graph, context, res] : res)
+  end
+end
+
+class RDF::Query::Pattern
+  # Transform Query Pattern into an SXP
+  # @return [Array]
+  def to_sse
+    [:triple, subject, predicate, object]
+  end
+end
+
 ##
 # Extensions for `RDF::Query::Variable`.
 class RDF::Query::Variable
