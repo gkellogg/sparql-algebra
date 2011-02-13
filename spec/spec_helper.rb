@@ -100,3 +100,16 @@ def repr(term)
     else term.inspect
   end
 end
+
+class RDF::Query
+  # Equivalence for Queries:
+  #   Same Patterns
+  #   Same Context
+  def ==(other)
+    other.is_a?(RDF::Query) && patterns == other.patterns && context == context
+  end
+
+  def inspect
+    "RDF::Query(#{context ? context.to_sxp : 'nil'})#{patterns.inspect}"
+  end
+end
