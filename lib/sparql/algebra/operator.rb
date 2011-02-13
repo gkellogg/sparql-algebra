@@ -41,6 +41,7 @@ module SPARQL; module Algebra
     autoload :Base,               'sparql/algebra/operator/base'
     autoload :Distinct,           'sparql/algebra/operator/distinct'
     autoload :Filter,             'sparql/algebra/operator/filter'
+    autoload :Graph,              'sparql/algebra/operator/graph'
     autoload :Join,               'sparql/algebra/operator/join'
     autoload :LeftJoin,           'sparql/algebra/operator/left_join'
     autoload :Order,              'sparql/algebra/operator/order'
@@ -90,17 +91,21 @@ module SPARQL; module Algebra
         when :sameterm    then SameTerm
         when :langmatches then LangMatches
         when :regex       then Regex
+          
+        when :bgp         then RDF::Query
         when :join        then Join
         when :leftjoin    then LeftJoin
         when :filter      then Filter
         when :base        then Base
         when :distinct    then Distinct
         when :filter      then Filter
+        when :graph       then Graph
         when :order       then Order
         when :prefix      then Prefix
         when :project     then Project
         when :reduce      then Reduce
         when :slice       then Slice
+        when :triple      then RDF::Query::Pattern
         when :union       then Union
         else nil # not found
       end
@@ -187,7 +192,6 @@ module SPARQL; module Algebra
           (operand.respond_to?(:variable?) && operand.variable?)
       end
     end
-
 
     ##
     # Returns `true` if this is executable (i.e., contains a graph patterns), `false`
