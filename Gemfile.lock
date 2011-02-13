@@ -1,9 +1,10 @@
 GIT
   remote: git@github.com:gkellogg/sxp-ruby.git
-  revision: 58f6536e8325e915115bf7cf24fe0a252e92831b
+  revision: 4412335d14b701be0fc7a2b322aa5d58ee17436e
   branch: query-algebra
   specs:
     sxp (0.0.13)
+      json (>= 0.6.0)
 
 GIT
   remote: https://github.com/bendiken/rdf-spec.git
@@ -13,8 +14,9 @@ GIT
       rspec (>= 2.1)
 
 GIT
-  remote: https://github.com/bendiken/rdf.git
-  revision: af21d4d9d01d009db67a677507705c6f8d49369c
+  remote: https://github.com/gkellogg/rdf.git
+  revision: 03defd6b534b288d7bbbfad4d75576558c6e7504
+  branch: query-algebra
   specs:
     rdf (0.3.1)
       addressable (>= 2.2)
@@ -24,6 +26,7 @@ GEM
   specs:
     addressable (2.2.4)
     diff-lcs (1.1.2)
+    json (1.5.1)
     rspec (2.5.0)
       rspec-core (~> 2.5.0)
       rspec-expectations (~> 2.5.0)
