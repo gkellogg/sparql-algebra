@@ -1,6 +1,8 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe SPARQL::Algebra do
+  EX = RDF::EX = RDF::Vocabulary.new('http://example.org/')
+
   before :all do
     @op  = SPARQL::Algebra::Operator
     @op0 = SPARQL::Algebra::Operator::Nullary
@@ -663,6 +665,46 @@ describe SPARQL::Algebra do
       end
     end
   end
+  
+  # Select parses to SSE. Note that SPARQL SXP will relative URIs
+  context Operator::Base do
+    {
+      %q(
+        (base <http://example.org/>
+          (bgp (triple <a> <b> 123.0)))) =>
+        Operator::Base.new(
+          RDF::URI("http://example.org/"),
+          RDF::Query.new {pattern [RDF::URI("http://example.org/a"), RDF::URI("http://example.org/b"), RDF::Literal.new(123.0)]}),
+    }.each_pair do |sse, operator|
+      it "generates SSE" do
+        SXP::Reader::SPARQL.read(sse).should == operator.to_sse
+      end
+      
+      it "parses SSE" do
+        SPARQL::Algebra::Expression.parse(sse).should == operator
+      end
+    end
+  end
+
+  # Select parses to SSE. Note that SPARQL SXP will translate PNAMES
+  context Operator::Prefix do
+    {
+      %q(
+        (prefix ((ex: <http://example.org/>))
+          (bgp (triple ?s ex:p1 123.0)))) =>
+        Operator::Prefix.new(
+          [[:"ex:", RDF::URI("http://example.org/")]],
+          RDF::Query.new {pattern [RDF::Query::Variable.new("s"), EX.p1, RDF::Literal.new(123.0)]}),
+    }.each_pair do |sse, operator|
+      it "generates SSE" do
+        SXP::Reader::SPARQL.read(sse).should == operator.to_sse
+      end
+      
+      it "parses SSE" do
+        SPARQL::Algebra::Expression.parse(sse).should == operator
+      end
+    end
+  end
 
   ##########################################################################
   # TERNARY OPERATORS
@@ -689,13 +731,13 @@ describe SPARQL::Algebra do
     {
       %q((triple <a> <b> <c>)) => RDF::Query::Pattern.new(RDF::URI("a"), RDF::URI("b"), RDF::URI("c")),
       %q((triple ?a _:b "c")) => RDF::Query::Pattern.new(RDF::Query::Variable.new("a"), RDF::Node.new("b"), RDF::Literal.new("c")),
-    }.each_pair do |sse, pattern|
+    }.each_pair do |sse, operator|
       it "generates SSE" do
-        SXP::Reader::SPARQL.read(sse).should == pattern.to_sse
+        SXP::Reader::SPARQL.read(sse).should == operator.to_sse
       end
       
       it "parses SSE" do
-        SPARQL::Algebra::Expression.parse(sse).should == pattern
+        SPARQL::Algebra::Expression.parse(sse).should == operator
       end
     end
   end
