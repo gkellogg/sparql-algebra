@@ -10,6 +10,7 @@ module SPARQL
 
     autoload :Expression, 'sparql/algebra/expression'
     autoload :Operator,   'sparql/algebra/operator'
+    autoload :Query,      'sparql/algebra/query'
     autoload :VERSION,    'sparql/algebra/version'
 
     ##
