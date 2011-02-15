@@ -49,12 +49,13 @@ module SPARQL; module Algebra
       raise ArgumentError, "invalid SPARQL::Algebra::Expression form: #{sse.inspect}" unless sse.is_a?(Array)
 
       operator = Operator.for(sse.first, sse.length - 1)
-      raise ArgumentError, "invalid SPARQL::Algebra::Expression operator: #{sse.first.inspect}" unless operator
+      return sse unless operator
 
       operands = sse[1..-1].map do |operand|
+        debug("Operator=#{operator.inspect}, Operand=#{operand.inspect}", options)
         case operand
           when Array
-            self.new(operand, options)
+            self.new(operand, options.merge(:depth => options[:depth].to_i + 1))
           when Operator, Variable, RDF::Term
             operand
           when TrueClass, FalseClass, Numeric, String, DateTime, Date, Time, Symbol
@@ -63,6 +64,7 @@ module SPARQL; module Algebra
         end
       end
 
+      debug("#{operator.inspect}(#{operands.map(&:inspect).join(',')})", options)
       operands << options unless options.empty?
       operator.new(*operands)
     end
@@ -121,6 +123,15 @@ module SPARQL; module Algebra
     # @see    http://openjena.org/wiki/SSE
     def to_sse
       self
+    end
+    
+    private
+    ##
+    # Progress output when debugging
+    # @param [String] str
+    def self.debug(message, options = {})
+      depth = options[:depth] || 0
+      $stderr.puts("#{' ' * depth}#{message}") if options[:debug]
     end
   end # Expression
 end; end # SPARQL::Algebra
