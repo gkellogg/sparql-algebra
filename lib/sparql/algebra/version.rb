@@ -1,9 +1,7 @@
 module SPARQL; module Algebra
   module VERSION
-    MAJOR = 0
-    MINOR = 0
-    TINY  = 1
-    EXTRA = nil
+    VERSION_FILE = File.join(File.expand_path(File.dirname(__FILE__)), "..", "..", "..", "VERSION")
+    MAJOR, MINOR, TINY, EXTRA = File.read(VERSION_FILE).chop.split(".")
 
     STRING = [MAJOR, MINOR, TINY, EXTRA].compact.join('.')
 
