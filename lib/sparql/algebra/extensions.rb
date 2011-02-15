@@ -1,8 +1,71 @@
+require 'json'
+
+##
+# Extensions for Ruby's `Object` class.
+class Object
+  ##
+  # Returns the SXP representation of this object, defaults to `self'.
+  #
+  # @return [String]
+  def to_sse
+    self
+  end
+end
+
+##
+# Extensions for Ruby's `Object` class.
+class Array
+  ##
+  # Returns the SXP representation of this object, defaults to `self'.
+  #
+  # @return [String]
+  def to_sse
+    map {|x| x.to_sse}
+  end
+end
+
 ##
 # Extensions for `RDF::Term`.
 module RDF::Term
   include SPARQL::Algebra::Expression
 end # RDF::Term
+
+# Override RDF::Queryable to execute against SPARQL::Algebra::Query elements as well as RDF::Query and RDF::Pattern
+module RDF::Queryable
+  alias_method :query_without_sparql, :query
+  ##
+  # Queries `self` for RDF statements matching the given `pattern`.
+  #
+  # This method delegates to the protected {#query_pattern} method for the
+  # actual lower-level query pattern matching implementation.
+  #
+  # @example
+  #     queryable.query([nil, RDF::DOAP.developer, nil])
+  #     queryable.query(:predicate => RDF::DOAP.developer)
+  #
+  #     op = SPARQL::Algebra::Expression.parse(%q((bgp (triple ?a doap:developer ?b))))
+  #     queryable.query(op)
+  #
+  # @param  [RDF::Query, RDF::Statement, Array(RDF::Term), Hash, SPARQL::Operator] pattern
+  # @yield  [statement]
+  #   each matching statement
+  # @yieldparam  [RDF::Statement] statement
+  # @yieldreturn [void] ignored
+  # @return [Enumerator]
+  # @see    RDF::Queryable#query_pattern
+  def query(pattern, &block)
+    raise TypeError, "#{self} is not readable" if respond_to?(:readable?) && !readable?
+
+    if pattern.is_a?(SPARQL::Algebra::Operator) && pattern.respond_to?(:execute)
+      before_query(pattern) if respond_to?(:before_query)
+      query_execute(pattern, &block)
+      after_query(pattern) if respond_to?(:after_query)
+      enum_for(:query_execute, pattern)
+    else
+      query_without_sparql(pattern, &block)
+    end
+  end
+end
 
 class RDF::Query
   # Transform Query into an Array form of an SSE
