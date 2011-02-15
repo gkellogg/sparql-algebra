@@ -151,10 +151,11 @@ Mailing List
 
 * <http://lists.w3.org/Archives/Public/public-rdf-ruby/>
 
-Author
+Authors
 ------
 
 * [Arto Bendiken](http://github.com/bendiken) - <http://ar.to/>
+* [Gregg Kellogg](http://github.com/gkellogg) - <http://kellogg-assoc.com/>
 
 Contributors
 ------------
@@ -181,6 +182,8 @@ License
 
 This is free and unencumbered public domain software. For more information,
 see <http://unlicense.org/> or the accompanying {file:UNLICENSE} file.
+
+Portions of tests are derived from [W3C DAWG tests](http://www.w3.org/2001/sw/DataAccess/tests/) and have [other licensing terms](http://www.w3.org/2001/sw/DataAccess/tests/data-r2/LICENSE).
 
 [Ruby]:       http://ruby-lang.org/
 [RDF]:        http://www.w3.org/RDF/
