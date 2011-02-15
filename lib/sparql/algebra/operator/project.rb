@@ -23,8 +23,8 @@ module SPARQL; module Algebra
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
       def execute(queryable, options = {})
         @solutions = operands.last.
-          execute(queriable, options = {}).
-          project(operands.first)
+          execute(queryable, options = {}).
+          project(*(operands.first))
       end
       
       ##

@@ -4,7 +4,7 @@ module SPARQL; module Algebra
     # The SPARQL GraphPattern `leftJoin` operator.
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
-   class LeftJoin < Operator
+    class LeftJoin < Operator
       include Query
       
       NAME = [:leftjoin]
@@ -50,7 +50,7 @@ module SPARQL; module Algebra
       # @return [Union, RDF::Query] `self`
       def optimize
         ops = operands.map {|o| o.optimize }.select {|o| o.respond_to?(:empty?) && !o.empty?}
-        expr = ops.pop if unless ops.last.executable?
+        expr = ops.pop unless ops.last.executable?
         expr = nil if expr.respond_to?(:true?) && expr.true?
         
         # ops now is one or two executable operators

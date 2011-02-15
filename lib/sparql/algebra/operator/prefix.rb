@@ -4,7 +4,7 @@ module SPARQL; module Algebra
     # The SPARQL GraphPattern `prefix` operator.
     #
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-add
-    class Prefix < Operator::Binary
+    class Prefix < Binary
       include Query
       
       NAME = [:prefix]
@@ -22,7 +22,7 @@ module SPARQL; module Algebra
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
       def execute(queryable, options = {})
-        @solutions = operands.last.execute(queriable, options = {})
+        @solutions = operands.last.execute(queryable, options = {})
       end
       
       ##
