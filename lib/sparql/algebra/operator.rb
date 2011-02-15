@@ -149,7 +149,7 @@ module SPARQL; module Algebra
       @options  = operands.last.is_a?(Hash) ? operands.pop.dup : {}
       @operands = operands.map! do |operand|
         case operand
-          when Operator, Variable, RDF::Term
+          when Operator, Variable, RDF::Term, RDF::Query, RDF::Query::Pattern, Array
             operand
           when TrueClass, FalseClass, Numeric, String, DateTime, Date, Time, Symbol
             RDF::Literal(operand)
@@ -275,6 +275,14 @@ module SPARQL; module Algebra
     end
 
     ##
+    # Returns an S-Expression (SXP) representation of this operator
+    #
+    # @return [String]
+    def to_sxp
+      to_sse.to_sxp
+    end
+
+    ##
     # Returns a developer-friendly representation of this operator.
     #
     # @return [String]
@@ -282,6 +290,13 @@ module SPARQL; module Algebra
       sprintf("#<%s:%#0x(%s)>", self.class.name, __id__, operands.map(&:inspect).join(', '))
     end
 
+    ##
+    # @param  [Statement] other
+    # @return [Boolean]
+    def eql?(other)
+      other.class == self.class && other.operands == self.operands
+    end
+    alias_method :==, :eql?
   protected
 
     ##
