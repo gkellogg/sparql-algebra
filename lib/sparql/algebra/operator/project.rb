@@ -3,7 +3,7 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `order` operator.
     #
-    # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
+    # @see http://www.w3.org/TR/rdf-sparql-query/#modProjection
     class Project < Operator::Binary
       include Query
       

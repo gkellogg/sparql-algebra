@@ -3,7 +3,7 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `prefix` operator.
     #
-    # @see http://www.w3.org/TR/xpath-functions/#func-numeric-add
+    # @see http://www.w3.org/TR/rdf-sparql-query/#QSynIRI
     class Prefix < Binary
       include Query
       
