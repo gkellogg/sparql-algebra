@@ -22,9 +22,23 @@ module SPARQL; module Algebra
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
       def execute(queryable, options = {})
-        @solutions = operands.last.
-          execute(queriable, options = {}).
-          order(operands.first)
+        @solutions = operands.last.execute(queryable, options).order do |a, b|
+          operands[0..-2].inject(false) do |memo, op|
+            memo ||= begin
+              comp = case op
+              when RDF::Query::Variable
+                a[op.to_sym] <=> b[op.to_sym]
+              when Operator::Dsc
+                op.evaluate(b) <=> op.evaluate(a)
+              when Operator
+                op.evaluate(a) <=> op.evaluate(b)
+              else
+                a <=> b
+              end
+              comp == 0 ? false : comp
+            end
+          end || 0  # They compare equivalently if there are no matches
+        end
       end
       
       ##
