@@ -15,7 +15,7 @@ GIT
 
 GIT
   remote: https://github.com/gkellogg/rdf.git
-  revision: 46cd30d9e73f6e9624caf7388d8709637610776b
+  revision: 37890fe5316bdf660e0d35b1b246c3ddb3cc80e5
   branch: query-algebra
   specs:
     rdf (0.3.1)
