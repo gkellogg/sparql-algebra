@@ -1,13 +1,13 @@
 module SPARQL; module Algebra
   class Operator
     ##
-    # The SPARQL GraphPattern `reduce` operator.
+    # The SPARQL GraphPattern `distinct` operator.
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
-    class Reduce < Operator::Binary
+    class Reduced < Operator::Unary
       include Query
       
-      NAME = [:reduce]
+      NAME = [:reduced]
 
       ##
       # Executes this query on the given `queryable` graph or repository.
@@ -24,7 +24,7 @@ module SPARQL; module Algebra
       def execute(queryable, options = {})
         @solutions = operands.last.
           execute(queriable, options = {}).
-          reduce(operands.first)
+          distinct
       end
       
       ##
@@ -36,6 +36,6 @@ module SPARQL; module Algebra
       def optimize
         operands = operands.map(&:optimize)
       end
-    end # Reduce
+    end # Reduced
   end # Operator
 end; end # SPARQL::Algebra
