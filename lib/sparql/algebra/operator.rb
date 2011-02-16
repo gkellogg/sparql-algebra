@@ -37,6 +37,11 @@ module SPARQL; module Algebra
     autoload :LangMatches,        'sparql/algebra/operator/lang_matches'
     autoload :Regex,              'sparql/algebra/operator/regex'
 
+    # Miscellaneous
+    autoload :Asc,                'sparql/algebra/operator/asc'
+    autoload :Desc,               'sparql/algebra/operator/desc'
+    autoload :Exprlist,           'sparql/algebra/operator/exprlist'
+
     # Query operators
     autoload :Base,               'sparql/algebra/operator/base'
     autoload :Distinct,           'sparql/algebra/operator/distinct'
@@ -47,7 +52,7 @@ module SPARQL; module Algebra
     autoload :Order,              'sparql/algebra/operator/order'
     autoload :Prefix,             'sparql/algebra/operator/prefix'
     autoload :Project,            'sparql/algebra/operator/project'
-    autoload :Reduce,             'sparql/algebra/operator/reduce'
+    autoload :Reduced,            'sparql/algebra/operator/reduced'
     autoload :Slice,              'sparql/algebra/operator/slice'
     autoload :Union,              'sparql/algebra/operator/union'
 
@@ -91,19 +96,26 @@ module SPARQL; module Algebra
         when :sameterm    then SameTerm
         when :langmatches then LangMatches
         when :regex       then Regex
-          
-        when :bgp         then RDF::Query
-        when :join        then Join
-        when :leftjoin    then LeftJoin
-        when :filter      then Filter
+        
+        # Miscellaneous
+        when :asc         then Asc
+        when :desc        then Desc
+        when :exprlist    then Exprlist
+
+        # Datasets
+        
+        # Query forms
         when :base        then Base
+        when :bgp         then RDF::Query
         when :distinct    then Distinct
         when :filter      then Filter
         when :graph       then Graph
+        when :join        then Join
+        when :leftjoin    then LeftJoin
         when :order       then Order
         when :prefix      then Prefix
         when :project     then Project
-        when :reduce      then Reduce
+        when :reduced     then Reduced
         when :slice       then Slice
         when :triple      then RDF::Query::Pattern
         when :union       then Union
