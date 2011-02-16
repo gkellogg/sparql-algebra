@@ -49,7 +49,20 @@ module SPARQL; module Algebra
       raise ArgumentError, "invalid SPARQL::Algebra::Expression form: #{sse.inspect}" unless sse.is_a?(Array)
 
       operator = Operator.for(sse.first, sse.length - 1)
-      return sse unless operator
+      unless operator
+        return case sse.first
+        when Array
+          debug("Map array elements #{sse}", options)
+          sse.map {|s| self.new(s, options.merge(:depth => options[:depth].to_i + 1))}
+        else
+          debug("No operator found for #{sse.first}", options)
+          sse.map do |s|
+            s.is_a?(Array) ?
+              self.new(s, options.merge(:depth => options[:depth].to_i + 1)) :
+              s
+          end
+        end
+      end
 
       operands = sse[1..-1].map do |operand|
         debug("Operator=#{operator.inspect}, Operand=#{operand.inspect}", options)
