@@ -28,7 +28,7 @@ module SPARQL; module Algebra
       def execute(queryable, options = {})
         @solutions = operands.last.execute(queryable, options).filter do |solution|
           # Evaluate the solution, which will return true or false
-          operands.first.evaluate(solution)
+          boolean(operands.first.evaluate(solution)).true?
         end
       end
       

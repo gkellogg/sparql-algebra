@@ -158,10 +158,10 @@ describe SPARQL::Algebra::Query do
       it "(filter (< ?o 3))" do
         query = SPARQL::Algebra::Expression.parse(%q(
           (prefix ((ex: <http://example.org/>))
-            (filter (exprlist (isLiteral ?o) (< ?o 3))
+            (filter (< ?o 3)
               (bgp (triple ?s ex:p ?o))))))
         query.execute(@graph).should have_result_set [ { :s => EX.x1, :o => RDF::Literal.new(1) },
-                                                       { :s => EX.x3, :o => RDF::Literal.new(2) }]
+                                                       { :s => EX.x2, :o => RDF::Literal.new(2) }]
       end
       
       it "(filter (exprlist (> ?o 1) (< ?o 3)))" do
@@ -169,7 +169,7 @@ describe SPARQL::Algebra::Query do
           (prefix ((ex: <http://example.org/>))
             (filter (exprlist (> ?o 1) (< ?o 3))
               (bgp (triple ?s ex:p ?o))))))
-        query.execute(@graph).should have_result_set [ { :s => EX.x3, :o => RDF::Literal.new(2) }]
+        query.execute(@graph).should have_result_set [ { :s => EX.x2, :o => RDF::Literal.new(2) }]
       end
       
       it "(order ?o)" do
