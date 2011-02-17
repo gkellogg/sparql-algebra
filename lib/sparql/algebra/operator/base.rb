@@ -22,7 +22,7 @@ module SPARQL; module Algebra
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
       def execute(queryable, options = {})
-        @solutions = operands.last.execute(queriable, options = {})
+        @solutions = operands.last.execute(queryable, options = {})
       end
       
       ##

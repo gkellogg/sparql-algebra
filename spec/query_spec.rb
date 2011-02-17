@@ -17,9 +17,9 @@ describe SPARQL::Algebra::Query do
         end
 
         query = SPARQL::Algebra::Expression.parse(%q(
-          (prefix ((ex <http://example.org/>))
+          (prefix ((ex: <http://example.org/>))
             (bgp (triple ex:x1 ex:p2 ex:x2)))))
-        query.execute(@graph).should == []
+        query.execute(@graph).should be_empty
       end
     end
 
@@ -129,6 +129,113 @@ describe SPARQL::Algebra::Query do
         query.execute(@graph).should have_result_set [ { :same => EX.x4 } ]
       end
 
+      it "(distinct ?s)" do
+        query = SPARQL::Algebra::Expression.parse(%q(
+          (prefix ((ex: <http://example.org/>))
+            (distinct
+              (project (?s)
+                (bgp (triple ?s ?p ?o)))))))
+        query.execute(@graph).should have_result_set [ { :s => EX.x1 },
+                                                       { :s => EX.x2 },
+                                                       { :s => EX.x3 },
+                                                       { :s => EX.x4 },
+                                                       { :s => EX.x5 },
+                                                       { :s => EX.x6 },
+                                                       { :s => EX.target },
+                                                       { :s => EX.target2 }]
+      end
+      
+      it "(filter (isLiteral ?o))" do
+        query = SPARQL::Algebra::Expression.parse(%q(
+          (prefix ((ex: <http://example.org/>))
+            (filter (isLiteral ?o)
+              (bgp (triple ?s ex:p ?o))))))
+        query.execute(@graph).should have_result_set [ { :s => EX.x1, :o => RDF::Literal.new(1) },
+                                                       { :s => EX.x2, :o => RDF::Literal.new(2) },
+                                                       { :s => EX.x3, :o => RDF::Literal.new(3) }]
+      end
+      
+      it "(filter (< ?o 3))" do
+        query = SPARQL::Algebra::Expression.parse(%q(
+          (prefix ((ex: <http://example.org/>))
+            (filter (exprlist (isLiteral ?o) (< ?o 3))
+              (bgp (triple ?s ex:p ?o))))))
+        query.execute(@graph).should have_result_set [ { :s => EX.x1, :o => RDF::Literal.new(1) },
+                                                       { :s => EX.x3, :o => RDF::Literal.new(2) }]
+      end
+      
+      it "(filter (exprlist (> ?o 1) (< ?o 3)))" do
+        query = SPARQL::Algebra::Expression.parse(%q(
+          (prefix ((ex: <http://example.org/>))
+            (filter (exprlist (> ?o 1) (< ?o 3))
+              (bgp (triple ?s ex:p ?o))))))
+        query.execute(@graph).should have_result_set [ { :s => EX.x3, :o => RDF::Literal.new(2) }]
+      end
+      
+      it "(order ?o)" do
+        query = SPARQL::Algebra::Expression.parse(%q(
+          (prefix ((ex: <http://example.org/>))
+            (order (?o)
+              (bgp (triple ?s ex:p ?o))))))
+        query.execute(@graph).should have_result_set [ { :s => EX.x1, :o => RDF::Literal.new(1) },
+                                                       { :s => EX.x2, :o => RDF::Literal.new(2) },
+                                                       { :s => EX.x3, :o => RDF::Literal.new(3) }]
+      end
+      
+      it "(project (?o) ?p ?o)" do
+        query = SPARQL::Algebra::Expression.parse(%q(
+          (prefix ((ex: <http://example.org/>))
+            (project (?o)
+              (bgp (triple ex:x1 ?p ?o))))))
+        query.execute(@graph).should have_result_set [ { :o => RDF::Literal(1) } ]
+      end
+      
+      it "(reduced ?s)" do
+        query = SPARQL::Algebra::Expression.parse(%q(
+          (prefix ((ex: <http://example.org/>))
+            (reduced
+              (project (?s)
+                (bgp (triple ?s ?p ?o)))))))
+        query.execute(@graph).should have_result_set [ { :s => EX.x1 },
+                                                       { :s => EX.x2 },
+                                                       { :s => EX.x3 },
+                                                       { :s => EX.x4 },
+                                                       { :s => EX.x5 },
+                                                       { :s => EX.x6 },
+                                                       { :s => EX.target },
+                                                       { :s => EX.target2 }]
+      end
+      
+      it "(slice _ 1)" do
+        query = SPARQL::Algebra::Expression.parse(%q(
+          (prefix ((ex: <http://example.org/>))
+            (slice _ 1
+              (project (?s)
+                (bgp (triple ?s ?p ?o)))))))
+        query.execute(@graph).should have_result_set [ { :s => EX.x1 }]
+      end
+      
+      it "(slice 1 2)" do
+        query = SPARQL::Algebra::Expression.parse(%q(
+          (prefix ((ex: <http://example.org/>))
+            (slice 1 2
+              (project (?s)
+                (bgp (triple ?s ?p ?o)))))))
+        query.execute(@graph).should have_result_set [ { :s => EX.x2 }, { :s => EX.x3 }]
+      end
+      
+      it "(slice 5 _)" do
+        query = SPARQL::Algebra::Expression.parse(%q(
+          (prefix ((ex: <http://example.org/>))
+            (slice 5 _
+              (project (?s)
+                (bgp (triple ?s ?p ?o)))))))
+        query.execute(@graph).should have_result_set [ { :s => EX.x5 },
+                                                       { :s => EX.x6 },
+                                                       { :s => EX.target },
+                                                       { :s => EX.target2 } ]
+      end
+      
       # From sp2b benchmark, query 7 bgp 2
       it "?class3 p o / ?doc3 p2 ?class3 / ?doc3 p3 ?bag3 / ?bag3 ?member3 ?doc" do
         @graph << [EX.class1, EX.subclass, EX.document]

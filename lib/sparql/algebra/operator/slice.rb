@@ -22,10 +22,10 @@ module SPARQL; module Algebra
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
       def execute(queryable, options = {})
-        @solutions = operands.last.
-          execute(queriable, options = {}).
-          offset(operands[0]).
-          limit(operands[1])
+        @solutions = operands.last. execute(queryable, options = {})
+        @solutions.offset(operands[0]) unless operands[0] == :_
+        @solutions.limit(operands[1]) unless operands[1] == :_
+        @solutions
       end
       
       ##
