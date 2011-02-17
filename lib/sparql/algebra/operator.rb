@@ -161,9 +161,9 @@ module SPARQL; module Algebra
       @options  = operands.last.is_a?(Hash) ? operands.pop.dup : {}
       @operands = operands.map! do |operand|
         case operand
-          when Operator, Variable, RDF::Term, RDF::Query, RDF::Query::Pattern, Array
+          when Operator, Variable, RDF::Term, RDF::Query, RDF::Query::Pattern, Array, Symbol
             operand
-          when TrueClass, FalseClass, Numeric, String, DateTime, Date, Time, Symbol
+          when TrueClass, FalseClass, Numeric, String, DateTime, Date, Time
             RDF::Literal(operand)
           else raise TypeError, "invalid SPARQL::Algebra::Operator operand: #{operand.inspect}"
         end
