@@ -688,16 +688,14 @@ describe SPARQL::Algebra do
   context "query forms" do
     {
       # @see http://www.w3.org/TR/rdf-sparql-query/#QSynIRI
-      %q(
-        (base <http://example.org/>
+      %q((base <http://example.org/>
           (bgp (triple <a> <b> 123.0)))) =>
         Operator::Base.new(
           RDF::URI("http://example.org/"),
           RDF::Query.new {pattern [RDF::URI("http://example.org/a"), RDF::URI("http://example.org/b"), RDF::Literal.new(123.0)]}),
 
       # @see http://www.w3.org/TR/rdf-sparql-query/#modDistinct
-      %q(
-        (distinct
+      %q((distinct
           (bgp (triple <a> <b> 123.0)))) =>
         Operator::Distinct.new(
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(123.0)]}),
@@ -712,16 +710,14 @@ describe SPARQL::Algebra do
           Operator::GreaterThan.new(Variable("y"), RDF::Literal.new(1))),
 
       # @see http://www.w3.org/TR/rdf-sparql-query/#evaluation
-      %q(
-        (filter
+      %q((filter
           (< ?x 1)
           (bgp (triple <a> <b> 123.0)))) =>
         Operator::Filter.new(
           Operator::LessThan.new(Variable("x"), RDF::Literal.new(1)),
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(123.0)]}),
 
-      %q(
-        (filter
+      %q((filter
           (exprlist
             (< ?x 1)
             (> ?y 1))
@@ -733,15 +729,12 @@ describe SPARQL::Algebra do
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(123.0)]}),
 
       # @see http://www.w3.org/TR/rdf-sparql-query/#ebv
-      %q(
-        (filter ?x
+      %q((filter ?x
           (bgp (triple <a> <b> 123.0)))) =>
         Operator::Filter.new(
           Variable("x"),
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(123.0)]}),
-
-      %q(
-        (filter
+      %q((filter
           (= ?x <a>)
           (bgp (triple <a> <b> 123.0)))) =>
         Operator::Filter.new(
@@ -749,16 +742,14 @@ describe SPARQL::Algebra do
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(123.0)]}),
 
       # @see http://www.w3.org/TR/rdf-sparql-query/#namedAndDefaultGraph
-      %q(
-        (graph ?g
+      %q((graph ?g
           (bgp  (triple <a> <b> 123.0)))) =>
         Operator::Graph.new(
           Variable("g"),
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(123.0)]}),
 
       # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
-      %q(
-        (join
+      %q((join
           (bgp (triple <a> <b> 123.0))
           (bgp (triple <a> <b> 456.0)))) =>
         Operator::Join.new(
@@ -766,15 +757,13 @@ describe SPARQL::Algebra do
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(456.0)]}),
 
       # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
-      %q(
-        (leftjoin
+      %q((leftjoin
           (bgp (triple <a> <b> 123.0))
           (bgp (triple <a> <b> 456.0)))) =>
         Operator::LeftJoin.new(
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(123.0)]},
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(456.0)]}),
-      %q(
-        (leftjoin
+      %q((leftjoin
           (bgp (triple <a> <b> 123.0))
           (bgp (triple <a> <b> 456.0))
           (bound ?x))) =>
@@ -784,57 +773,69 @@ describe SPARQL::Algebra do
           Operator::Bound.new(Variable("x"))),
 
       # @see http://www.w3.org/TR/rdf-sparql-query/#modOrderBy
-      %q(
-        (order (<a>)
+      %q((order (<a>)
           (bgp (triple <a> <b> ?o)))) =>
         Operator::Order.new(
           [RDF::URI("a")],
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), Variable("o")]}),
-      %q(
-        (order (<a> <b>)
+      %q((order (<a> <b>)
           (bgp (triple <a> <b> ?o)))) =>
         Operator::Order.new(
           [RDF::URI("a"), RDF::URI("b")],
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), Variable("o")]}),
-      %q(
-        (order ((asc 1))
+      %q((order ((asc 1))
           (bgp (triple <a> <b> ?o)))) =>
         Operator::Order.new(
           [Operator::Asc.new(RDF::Literal.new(1))],
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), Variable("o")]}),
-      %q(
-        (order ((desc ?a))
+      %q((order ((desc ?a))
           (bgp (triple <a> <b> ?a)))) =>
         Operator::Order.new(
           [Operator::Desc.new(Variable("a"))],
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), Variable("a")]}),
-      %q(
-        (order (?a ?b ?c)
+      %q((order (?a ?b ?c)
           (bgp (triple <a> <b> ?o)))) =>
         Operator::Order.new(
           [Variable(?a), Variable(?b), Variable(?c)],
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), Variable("o")]}),
-      %q(
-        (order (?a (asc 1) (isIRI <b>))
+      %q((order (?a (asc 1) (isIRI <b>))
           (bgp (triple <a> <b> ?o)))) =>
         Operator::Order.new(
           [Variable(?a), Operator::Asc.new(RDF::Literal.new(1)), Operator::IsIRI.new(RDF::URI("b"))],
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), Variable("o")]}),
 
       # @see http://www.w3.org/TR/rdf-sparql-query/#QSynIRI
-      %q(
-        (prefix ((ex: <http://example.org/>))
+      %q((prefix ((ex: <http://example.org/>))
           (bgp (triple ?s ex:p1 123.0)))) =>
         Operator::Prefix.new(
           [[:"ex:", RDF::URI("http://example.org/")]],
           RDF::Query.new {pattern [RDF::Query::Variable.new("s"), EX.p1, RDF::Literal.new(123.0)]}),
 
+      # @see http://www.w3.org/TR/rdf-sparql-query/#modProjection
+      %q((project (?s)
+          (bgp (triple ?s <p> 123.0)))) =>
+        Operator::Project.new(
+          [Variable("s")],
+          RDF::Query.new {pattern [Variable("s"), RDF::URI("p"), RDF::Literal.new(123.0)]}),
+
       # @see http://www.w3.org/TR/rdf-sparql-query/#modReduced
-      %q(
-        (reduced
+      %q((reduced
           (bgp (triple <a> <b> 123.0)))) =>
         Operator::Reduced.new(
           RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(123.0)]}),
+
+      # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebraEval
+      %q((slice _ 100
+          (bgp (triple <a> <b> 123.0)))) =>
+        Operator::Slice.new(
+          :_, RDF::Literal.new(100),
+          RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(123.0)]}),
+      %q((slice 1 2
+          (bgp (triple <a> <b> 123.0)))) =>
+        Operator::Slice.new(
+          RDF::Literal.new(1), RDF::Literal.new(2),
+          RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(123.0)]}),
+
 
       # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlTriplePatterns
       %q((triple <a> <b> <c>)) => RDF::Query::Pattern.new(RDF::URI("a"), RDF::URI("b"), RDF::URI("c")),
@@ -842,6 +843,14 @@ describe SPARQL::Algebra do
 
       # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlBasicGraphPatterns
       %q((bgp (triple <a> <b> <c>))) => RDF::Query.new { pattern [RDF::URI("a"), RDF::URI("b"), RDF::URI("c")]},
+
+      # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
+      %q((union
+          (bgp (triple <a> <b> 123.0))
+          (bgp (triple <a> <b> 456.0)))) =>
+        Operator::Union.new(
+          RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(123.0)]},
+          RDF::Query.new {pattern [RDF::URI("a"), RDF::URI("b"), RDF::Literal.new(456.0)]}),
     }.each_pair do |sse, operator|
       it "generates SSE for #{sse}" do
         SXP::Reader::SPARQL.read(sse).should == operator.to_sse
