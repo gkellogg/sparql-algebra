@@ -1,6 +1,7 @@
 require "bundler/setup"
 require 'sparql/algebra'
 require 'rdf/spec'
+require 'rdf/n3'
 
 RSpec.configure do |config|
   config.include(RDF::Spec::Matchers)
@@ -103,6 +104,55 @@ def repr(term)
   end
 end
 
+# This file defines the sparql query function, which makes a sparql query and returns results.
+
+# run a sparql query against SPARQL S-Expression (SSE)
+# Options:
+#   :graphs
+#     example
+#       opts[:graphs] ==
+#        { :default => {
+#             :data => '...',
+#             :format => :ttl
+#           },
+#           <g1> => {
+#            :data => '...',
+#            :format => :ttl
+#           }
+#        }
+#   :allow_empty => true
+#     allow no data for query (raises an exception by default)
+#   :query
+#     A SSE query, as a string
+#   :repository
+#     The dydra repository associated with the account to use
+#   :ssf
+#     An SSF query, as a string #TODO
+#   :form
+#     :ask, :construct, :select or :describe
+def sparql_query(opts)
+  raise "Cannot run query without data" if (opts[:graphs].nil? || opts[:graphs].empty?) && !opts[:allow_empty]
+  raise "A query is required to be run" if opts[:query].nil?
+
+  # Load default and named graphs into repository
+  repo = RDF::Repository.new do |r|
+    opts[:graphs].each do |key, info|
+      data, format = info[:data], info[:format]
+      RDF::Reader.for(:file_extension => format).new(data).each_statement do |st|
+        st.context = key unless key == :default
+        r << st
+      end
+    end
+  end
+
+  begin
+    query = SPARQL::Algebra::Expression.parse(opts[:query])
+  rescue Exception => e
+    raise "Failed to parse SSE #{opts[:query]}: #{e.message}"
+  end
+  query.execute(repo).to_a.map(&:to_hash)
+end
+
 class RDF::Query
   # Equivalence for Queries:
   #   Same Patterns
@@ -113,6 +163,32 @@ class RDF::Query
 
   def inspect
     "RDF::Query(#{context ? context.to_sxp : 'nil'})#{patterns.inspect}"
+  end
+end
+
+class RDF::Query::Solution
+  def pretty_print(o)
+#    puts "pp: #{o.inspect}"
+#    o.inspect
+  end
+end
+
+class RDF::Literal
+  require 'rdf/ntriples'
+  def inspect
+    RDF::NTriples::Writer.serialize(self) + " R:L:(#{self.class.to_s.match(/([^:]*)$/)})"
+  end
+end
+
+class RDF::URI
+  def inspect
+    RDF::NTriples::Writer.serialize(self)
+  end
+end
+
+class RDF::Node
+  def inspect
+    RDF::NTriples::Writer.serialize(self)
   end
 end
 
