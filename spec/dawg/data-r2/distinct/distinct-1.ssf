@@ -1,4 +1,0 @@
-(select (?v)
-        (distinct
-         (project (?v)
-                  (bgp (triple ?x ?p ?v)))))

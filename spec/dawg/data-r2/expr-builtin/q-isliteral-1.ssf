@@ -1,4 +1,0 @@
-(select (?x)
-  (project (?x)
-    (filter (isLiteral ?v)
-      (bgp (triple ?x <http://example/p> ?v)))))

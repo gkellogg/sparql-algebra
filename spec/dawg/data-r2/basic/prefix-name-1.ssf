@@ -1,3 +1,0 @@
-(select (?p)
-  (project (?p)
-    (bgp (triple <http://example.org/ns#x> ?p 1))))

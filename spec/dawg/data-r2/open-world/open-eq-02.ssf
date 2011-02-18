@@ -1,2 +1,0 @@
-(select (?x)
-  (bgp (triple ?x <http://example/ns#p> "a"^^<http://example/t#type1>)))

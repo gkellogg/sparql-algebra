@@ -1,2 +1,0 @@
-(ask (?x)
-     (bgp (triple <http://example/x> <http://example/p> ?x)))

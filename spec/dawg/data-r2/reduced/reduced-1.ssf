@@ -1,5 +1,0 @@
-(select (?s ?o)
-  (reduced
-    (union
-      (bgp (triple ?s <http://example/p> ?o))
-      (bgp (triple ?s <http://example/q> ?o)))))

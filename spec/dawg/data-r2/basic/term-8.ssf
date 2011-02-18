@@ -1,2 +1,0 @@
-(select (?p)
-        (bgp (triple <http://example.org/ns#x> ?p +5)))

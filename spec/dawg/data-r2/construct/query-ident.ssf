@@ -1,3 +1,0 @@
-(construct ((triple ?s ?p ?o))
-  (project (?s ?p ?o)
-    (bgp (triple ?s ?p ?o))))

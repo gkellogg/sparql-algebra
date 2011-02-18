@@ -1,3 +1,0 @@
-(construct ((triple ?s <http://xmlns.com/foaf/0.1/name> ?o))
-  (project (?s ?o)
-    (bgp (triple ?s <http://xmlns.com/foaf/0.1/name> ?o))))

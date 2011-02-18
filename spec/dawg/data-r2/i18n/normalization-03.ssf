@@ -1,3 +1,0 @@
-(select (?S)
-  (project (?S)
-    (bgp (triple ?S <http://example/vocab#p> <http://example.com:80/#abc>))))

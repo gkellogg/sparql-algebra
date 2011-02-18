@@ -1,3 +1,0 @@
-(select (?v ?p)
-  (filter (! (langMatches (lang ?v) "*"))
-    (bgp (triple <http://example.org/#x> ?p ?v))))

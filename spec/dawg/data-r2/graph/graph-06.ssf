@@ -1,3 +1,0 @@
-(select (?g ?s ?p ?o)
-  (graph ?g
-    (bgp (triple ?s ?p ?o))))

@@ -1,3 +1,0 @@
-(ask (?x)
-     (filter (= ?x 99)
-             (bgp (triple <http://example/x> <http://example/p> ?x))))

@@ -1,2 +1,0 @@
-(select (?a ?b)
-        (bgp (triple ?a ?a ?b)))
