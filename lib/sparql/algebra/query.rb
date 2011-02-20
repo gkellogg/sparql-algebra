@@ -38,6 +38,8 @@ module SPARQL; module Algebra
     #   the graph or repository to query
     # @param  [Hash{Symbol => Object}] options
     #   any additional keyword options
+    # @option options [Boolean] debug
+    #   Query execution debugging
     # @return [RDF::Query::Solutions]
     #   the resulting solution sequence
     # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra

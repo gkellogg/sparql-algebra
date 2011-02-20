@@ -23,7 +23,7 @@ module SPARQL; module Algebra
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
       def execute(queryable, options = {})
         @solutions = operands.last.
-          execute(queryable, options = {}).
+          execute(queryable, options.merge(:depth => options[:depth].to_i + 1)).
           reduced
       end
       

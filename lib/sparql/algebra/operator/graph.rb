@@ -1,10 +1,10 @@
 module SPARQL; module Algebra
   class Operator
     ##
-    # The SPARQL GraphPattern `join` operator.
+    # The SPARQL GraphPattern `graph` operator.
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
-    class Graph < Operator
+    class Graph < Operator::Binary
       include Query
       
       NAME = [:graph]
@@ -20,7 +20,11 @@ module SPARQL; module Algebra
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
       def execute(queryable, options = {})
-        operands.last.execute(queryable, options)
+        debug("Graph", options)
+        # FIXME: this must take into consideration the graph context
+        @solutions = operands.last.execute(queryable, options.merge(:depth => options[:depth].to_i + 1))
+        debug("=> #{@solutions.inspect}", options)
+        @solutions
       end
       
       ##
@@ -30,6 +34,7 @@ module SPARQL; module Algebra
       #
       # @return [RDF::Query]
       def optimize
+        # FIXME
         graph = operands.last.dup
         graph.context = operands.first
         graph

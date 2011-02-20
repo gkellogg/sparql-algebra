@@ -22,9 +22,12 @@ module SPARQL; module Algebra
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
       def execute(queryable, options = {})
-        @solutions = operands.last.
-          execute(queryable, options = {}).
-          distinct
+        debug("Distinct", options)
+        @solutions = operands.last.execute(queryable, options.merge(:depth => options[:depth].to_i + 1))
+        debug("=>(before) #{@solutions.inspect}", options)
+        @solutions = @solutions.distinct
+        debug("=>(after) #{@solutions.inspect}", options)
+        @solutions
       end
       
       ##
