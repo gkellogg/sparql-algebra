@@ -29,6 +29,19 @@ module SPARQL; module Algebra
       def execute(queryable, options = {})
         # Join(Ω1, Ω2) = { merge(μ1, μ2) | μ1 in Ω1 and μ2 in Ω2, and μ1 and μ2 are compatible }
         # eval(D(G), Join(P1, P2)) = Join(eval(D(G), P1), eval(D(G), P2))
+        #
+        # Generate solutions independently, merge based on solution compatibility
+        debug("Join", options)
+        solutions1 = operand(0).execute(queryable, options.merge(:depth => options[:depth].to_i + 1)) || {}
+        debug("=>(left) #{solutions1.inspect}", options)
+        solutions2 = operand(1).execute(queryable, options.merge(:depth => options[:depth].to_i + 1)) || {}
+        debug("=>(right) #{solutions2.inspect}", options)
+        @solutions = solutions1.map do |s1|
+          solutions2.map { |s2| s2.merge(s1) if s2.compatible?(s1) }
+        end.flatten.compact
+        @solutions = RDF::Query::Solutions.new(@solutions)
+        debug("=> #{@solutions.inspect}", options)
+        @solutions
       end
       
       ##
