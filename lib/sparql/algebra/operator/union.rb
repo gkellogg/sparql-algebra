@@ -31,6 +31,13 @@ module SPARQL; module Algebra
         # Union(Ω1, Ω2) = { μ | μ in Ω1 or μ in Ω2 }
         # card[Union(Ω1, Ω2)](μ) = card[Ω1](μ) + card[Ω2](μ)
         # eval(D(G), Union(P1,P2)) = Union(eval(D(G), P1), eval(D(G), P2)
+        debug("Union", options)
+        solutions1 = operand(0).execute(queryable, options.merge(:depth => options[:depth].to_i + 1))
+        debug("=>(left) #{solutions1.inspect}", options)
+        solutions2 = operand(1).execute(queryable, options.merge(:depth => options[:depth].to_i + 1))
+        @solutions = RDF::Query::Solutions.new(solutions1 + solutions2)
+        debug("=> #{@solutions.inspect}", options)
+        @solutions
       end
       
       ##
