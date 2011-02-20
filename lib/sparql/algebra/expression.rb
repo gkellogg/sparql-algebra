@@ -78,6 +78,7 @@ module SPARQL; module Algebra
       end
 
       debug("#{operator.inspect}(#{operands.map(&:inspect).join(',')})", options)
+      options.delete_if {|k, v| [:debug, :depth].include?(k) }
       operands << options unless options.empty?
       operator.new(*operands)
     end
@@ -145,6 +146,10 @@ module SPARQL; module Algebra
     def self.debug(message, options = {})
       depth = options[:depth] || 0
       $stderr.puts("#{' ' * depth}#{message}") if options[:debug]
+    end
+    
+    def debug(message, options = {})
+      Expression.debug(message, options)
     end
   end # Expression
 end; end # SPARQL::Algebra
