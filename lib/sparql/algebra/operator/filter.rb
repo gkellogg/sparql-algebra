@@ -26,10 +26,21 @@ module SPARQL; module Algebra
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
       # @see    http://www.w3.org/TR/rdf-sparql-query/#ebv
       def execute(queryable, options = {})
-        @solutions = operands.last.execute(queryable, options).filter do |solution|
+        debug("Filter #{operands.first}", options)
+        @solutions = operands.last.execute(queryable, options.merge(:depth => options[:depth].to_i + 1))
+        debug("=>(before) #{@solutions.inspect}", options)
+        @solutions = @solutions.filter do |solution|
           # Evaluate the solution, which will return true or false
-          boolean(operands.first.evaluate(solution)).true?
+          debug("===>(evaluate) #{operands.first.inspect} against #{solution.inspect}", options)
+          
+          # From http://www.w3.org/TR/rdf-sparql-query/#tests
+          # FILTERs eliminate any solutions that, when substituted into the expression, either
+          # result in an effective boolean value of false or produce an error.
+          boolean(operands.first.evaluate(solution)).true? rescue false
         end
+        @solutions = RDF::Query::Solutions.new(@solutions)
+        debug("=>(after) #{@solutions.inspect}", options)
+        @solutions
       end
       
       ##
