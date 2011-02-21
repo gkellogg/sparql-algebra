@@ -22,6 +22,21 @@ class Array
   def to_sse
     map {|x| x.to_sse}
   end
+  
+  ##
+  # Evaluates the array using the given variable `bindings`.
+  #
+  # In this case, the Array has two elements, the first of which is
+  # an XSD datatype, and the second is the expression to be evaluated.
+  # The result is cast as a literal of the appropriate type
+  #
+  # @param  [RDF::Query::Solution, #[]] bindings
+  #   a query solution containing zero or more variable bindings
+  # @return [RDF::Term]
+  def evaluate(bindings)
+    dt, val = self.map {|o| o.evaluate(bindings)}
+    Expression.cast(*self.map {|o| o.evaluate(bindings)})
+  end
 end
 
 ##
