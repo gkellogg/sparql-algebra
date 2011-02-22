@@ -22,16 +22,16 @@ module SPARQL; module Algebra
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
       def execute(queryable, options = {})
+        debug("Order", options)
         @solutions = operands.last.execute(queryable, options.merge(:depth => options[:depth].to_i + 1)).order do |a, b|
           operand(0).inject(false) do |memo, op|
+            debug("=> #{op}", options)
             memo ||= begin
               comp = case op
               when RDF::Query::Variable
                 a[op.to_sym] <=> b[op.to_sym]
-              when Operator::Desc
+              when Operator, Array
                 op.evaluate(b) <=> op.evaluate(a)
-              when Operator
-                op.evaluate(a) <=> op.evaluate(b)
               else
                 raise TypeError, "Unexpected order expression #{op.inspect}"
               end
