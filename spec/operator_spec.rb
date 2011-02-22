@@ -684,7 +684,7 @@ describe SPARQL::Algebra do
       end
     end
   end
-  
+    
   context "query forms" do
     {
       # @see http://www.w3.org/TR/rdf-sparql-query/#QSynIRI

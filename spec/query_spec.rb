@@ -379,4 +379,74 @@ describe SPARQL::Algebra::Query do
       end
     end
   end
+
+  context "join" do
+    it "passes data/extracted-examples/query-4.1" do
+      sparql_query(
+        :graphs => {
+          :default => {
+            :data => %q{
+              @prefix foaf:       <http://xmlns.com/foaf/0.1/> .
+              @prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+              _:a  rdf:type        foaf:Person .
+              _:a  foaf:name       "Alice" .
+              _:a  foaf:mbox       <mailto:alice@example.com> .
+              _:a  foaf:mbox       <mailto:alice@work.example> .
+
+              _:b  rdf:type        foaf:Person .
+              _:b  foaf:name       "Bob" .
+            },
+            :format => :ttl
+          }
+        },
+        :query => %q{
+          (prefix ((foaf: <http://xmlns.com/foaf/0.1/>))
+            (project (?name ?mbox)
+              (join
+                (bgp (triple ?x foaf:name ?name))
+                (bgp (triple ?x foaf:mbox ?mbox)))))
+        }
+      ).should == [
+        {:name => RDF::Literal.new("Alice"), :mbox => RDF::URI("mailto:alice@example.com")},
+        {:name => RDF::Literal.new("Alice"), :mbox => RDF::URI("mailto:alice@work.example")},
+      ]
+    end
+  end
+  
+  context "union" do
+    it "passes data/extracted-examples/query-6.1" do
+      sparql_query(
+        :graphs => {
+          :default => {
+            :data => %q{
+              @prefix dc10:  <http://purl.org/dc/elements/1.0/> .
+              @prefix dc11:  <http://purl.org/dc/elements/1.1/> .
+
+              _:a  dc10:title     "SPARQL Query Language Tutorial" .
+
+              _:b  dc11:title     "SPARQL Protocol Tutorial" .
+
+              _:c  dc10:title     "SPARQL" .
+              _:c  dc11:title     "SPARQL (updated)" .
+            },
+            :format => :ttl
+          }
+        },
+        :query => %q{
+          (prefix ((dc11: <http://purl.org/dc/elements/1.1/>)
+                   (dc10: <http://purl.org/dc/elements/1.0/>))
+            (project (?title)
+              (union
+                (bgp (triple ?book dc10:title ?title))
+                (bgp (triple ?book dc11:title ?title)))))
+        }
+      ).should =~ [
+        {:title => RDF::Literal.new("SPARQL Query Language Tutorial")},
+        {:title => RDF::Literal.new("SPARQL Protocol Tutorial")},
+        {:title => RDF::Literal.new("SPARQL")},
+        {:title => RDF::Literal.new("SPARQL (updated)")},
+      ]
+    end
+  end
 end
