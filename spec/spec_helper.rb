@@ -2,14 +2,19 @@ require "bundler/setup"
 require 'sparql/algebra'
 require 'rdf/spec'
 require 'rdf/n3'
+Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each {|f| require f}
 
 RSpec.configure do |config|
   config.include(RDF::Spec::Matchers)
   config.filter_run :focus => true
   config.run_all_when_everything_filtered = true
-  config.exclusion_filter = {:ruby => lambda { |version|
-    RUBY_VERSION.to_s !~ /^#{version}/
-  }}
+  config.exclusion_filter = {
+    :ruby           => lambda { |version| RUBY_VERSION.to_s !~ /^#{version}/},
+    :blank_nodes    => 'unique',
+    :arithmetic     => 'native',
+    :sparql_algebra => false,
+    :status         => 'bug',
+  }
 end
 
 include SPARQL::Algebra
@@ -146,69 +151,21 @@ def sparql_query(opts)
   end
 
   begin
-    query = SPARQL::Algebra::Expression.parse(opts[:query])
-  rescue Exception => e
-    raise "Failed to parse SSE #{opts[:query]}: #{e.message}"
+    query = SPARQL::Algebra::Expression.parse(opts[:query], :debug => ENV['PARSER_DEBUG'])
+  #rescue Exception => e
+  #  raise "Failed to parse SSE #{opts[:query]}: #{e.message}"
   end
-  query.execute(repo).to_a.map(&:to_hash)
-end
-
-class RDF::Query
-  # Equivalence for Queries:
-  #   Same Patterns
-  #   Same Context
-  def ==(other)
-    other.is_a?(RDF::Query) && patterns == other.patterns && context == context
-  end
-
-  def inspect
-    "RDF::Query(#{context ? context.to_sxp : 'nil'})#{patterns.inspect}"
-  end
-end
-
-class RDF::Query::Solution
-  def pretty_print(o)
-#    puts "pp: #{o.inspect}"
-#    o.inspect
-  end
-end
-
-class RDF::Literal
-  require 'rdf/ntriples'
-  def inspect
-    RDF::NTriples::Writer.serialize(self) + " R:L:(#{self.class.to_s.match(/([^:]*)$/)})"
-  end
-end
-
-class RDF::URI
-  def inspect
-    RDF::NTriples::Writer.serialize(self)
-  end
-end
-
-class RDF::Node
-  def inspect
-    RDF::NTriples::Writer.serialize(self)
-  end
-end
-
-class Array
-  alias_method :old_inspect, :inspect
-
-  def inspect
-    if all? { |item| item.is_a?(Hash) }
-      string = "[\n"
-      each do |item|
-        string += "  {\n"
-          item.keys.map(&:to_s).sort.each do |key|
-            string += "      #{key}: #{item[key.to_sym].inspect}\n"
-          end
-        string += "  },\n"
-      end
-      string += "]"
-      string
-    else
-      old_inspect
-    end
+  if opts[:query] =~ /\(leftjoin/
+    pending ("leftjoin not implemented")
+  elsif opts[:query] =~ /\(ask/
+    pending ("ask not implemented")
+  elsif opts[:query] =~ /\(describe/
+    pending ("describe not implemented")
+  elsif opts[:query] =~ /\(construct/
+    pending ("construct not implemented")
+  elsif opts[:query] =~ /\(graph/
+    pending ("graph not implemented")
+  else
+    query.execute(repo, :debug => ENV['EXEC_DEBUG']).to_a.map(&:to_hash)
   end
 end
