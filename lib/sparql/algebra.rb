@@ -15,6 +15,24 @@ module SPARQL
 
     ##
     # @example
+    #   sse = (prefix ((foaf: <http://xmlns.com/foaf/0.1/>))
+    #           (project (?name ?mbox)
+    #             (join
+    #               (bgp (triple ?x foaf:name ?name))
+    #               (bgp (triple ?x foaf:mbox ?mbox)))))
+    #   }
+    # @param  [String] sse
+    #   a SPARQL S-Expression (SSE) string
+    # @param  [Hash{Symbol => Object}] options
+    #   any additional options (see {Operator#initialize})
+    # @return [Expression]
+    def parse(sse, options = {})
+      Expression.parse(sse, options)
+    end
+    module_function :parse
+
+    ##
+    # @example
     #   Expression(:isLiteral, RDF::Literal(3.1415))
     #
     # @param  [Array] sse
