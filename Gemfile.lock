@@ -1,25 +1,33 @@
 GIT
-  remote: git@github.com:gkellogg/sxp-ruby.git
-  revision: 4412335d14b701be0fc7a2b322aa5d58ee17436e
-  branch: query-algebra
-  specs:
-    sxp (0.0.13)
-      json (>= 0.6.0)
-
-GIT
   remote: https://github.com/bendiken/rdf-spec.git
   revision: 32550390db3d80b1784601ab6861083b47c18e94
   specs:
     rdf-spec (0.3.1)
       rspec (>= 2.1)
 
-GIT
-  remote: https://github.com/gkellogg/rdf.git
-  revision: 37890fe5316bdf660e0d35b1b246c3ddb3cc80e5
-  branch: query-algebra
+PATH
+  remote: ~/Projects/rdf
   specs:
     rdf (0.3.1)
       addressable (>= 2.2)
+
+PATH
+  remote: ~/Projects/rdf-n3
+  specs:
+    rdf-n3 (0.3.1.1)
+      rdf (>= 0.3.1)
+
+PATH
+  remote: ~/Projects/sparql-tests
+  specs:
+    sparql-tests (0.0.1)
+      rdf (~> 0.3.0)
+
+PATH
+  remote: ~/Projects/sxp-ruby
+  specs:
+    sxp (0.0.13)
+      json (>= 0.6.0)
 
 GEM
   remote: http://rubygems.org/
@@ -42,7 +50,9 @@ PLATFORMS
 
 DEPENDENCIES
   rdf!
+  rdf-n3!
   rdf-spec!
   rspec (>= 2.1.0)
+  sparql-tests!
   sxp!
   yard (>= 0.6.0)
