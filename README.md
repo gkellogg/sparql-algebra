@@ -23,6 +23,23 @@ Examples
     
     include SPARQL::Algebra
 
+### Parsing and executing a query
+    sse = (prefix ((foaf: <http://xmlns.com/foaf/0.1/>))
+            (project (?name ?mbox)
+              (join
+                (bgp (triple ?x foaf:name ?name))
+                (bgp (triple ?x foaf:mbox ?mbox)))))
+    }
+    operator = SPARQL::Algebra.parse(sse) =>
+    
+    Operator::Prefix(
+      [[:"foaf:", RDF::URI("http://xmlns.com/foaf/0.1/")]],
+      Operator.Join(
+        RDF::Query.new {pattern [:x, RDF::FOAF.name, :name]},
+        RDF::Query.new {pattern [:x, RDF::FOAF.mbox, :mbox]}))
+        
+    operator.execute(queryable) => RDF::Query::Solutions
+    
 ### Constructing operator expressions manually
 
     Operator(:isBlank).new(RDF::Node(:foobar))
