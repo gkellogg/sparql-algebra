@@ -30,8 +30,11 @@ module SPARQL; module Algebra
               comp = case op
               when RDF::Query::Variable
                 a[op.to_sym] <=> b[op.to_sym]
+              when Operator::Desc
+                # Sadly, there's know way to encapsulate this logic in Operator::Desc
+                Operator::Compare.evaluate(op.evaluate(b), op.evaluate(a))
               when Operator, Array
-                op.evaluate(b) <=> op.evaluate(a)
+                Operator::Compare.evaluate(op.evaluate(a), op.evaluate(b))
               else
                 raise TypeError, "Unexpected order expression #{op.inspect}"
               end
