@@ -28,9 +28,9 @@ end
 
 def sse_examples(filename)
   input = File.read(File.join(File.dirname(__FILE__), filename))
-  input.gsub!(/\s\-INF/, " \"-INF\"^^<#{RDF::XSD.double}>") # FIXME in SXP.rb
-  input.gsub!(/\s\+INF/, " \"INF\"^^<#{RDF::XSD.double}>")  # FIXME in SXP.rb
-  input.gsub!(/\sNaN/,  " \"NaN\"^^<#{RDF::XSD.double}>")   # FIXME in SXP.rb
+  input.gsub!(/\s\-INF/, " \"-INF\"^^<#{RDF::XSD.double}>") # Shorthand
+  input.gsub!(/\s\+INF/, " \"INF\"^^<#{RDF::XSD.double}>")  # Shorthand
+  input.gsub!(/\sNaN/,  " \"NaN\"^^<#{RDF::XSD.double}>")   # Shorthand
   datatypes = {
     'xsd:double'   => RDF::XSD.double,
     'xsd:float'    => RDF::XSD.float,
@@ -42,7 +42,7 @@ def sse_examples(filename)
     'xsd:boolean'  => RDF::XSD.boolean,
     'xsd:dateTime' => RDF::XSD.dateTime,
   }
-  datatypes.each { |qname, uri| input.gsub!(qname, "<#{uri}>") } # FIXME in SXP.rb
+  datatypes.each { |qname, uri| input.gsub!(qname, "<#{uri}>") } # Shorthand
   examples = SXP::Reader::SPARQL.read_all(input)
   examples.inject({}) do |result, (tag, input, output)|
     output = case output
@@ -56,7 +56,7 @@ end
 
 def verify(examples)
   examples.each do |input, output|
-    describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+    describe ".evaluate(#{input.to_sse})" do
       if output.is_a?(Class)
         it "raises #{output.inspect}" do
           lambda { @op.evaluate(*input[1..-1]) }.should raise_error(output)
@@ -67,7 +67,7 @@ def verify(examples)
           if output.is_a?(RDF::Literal::Double) && output.nan?
             result.should be_nan
           else
-            result.should eql output
+            result.should == output
           end
         end
       end
