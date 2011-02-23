@@ -159,7 +159,7 @@ def sparql_query(opts)
   if opts[:query] =~ /\(leftjoin/
     pending ("leftjoin not implemented")
   elsif opts[:query] =~ /\(ask/
-    pending ("ask not implemented")
+    query.execute(repo, :debug => ENV['EXEC_DEBUG'])
   elsif opts[:query] =~ /\(describe/
     pending ("describe not implemented")
   elsif opts[:query] =~ /\(construct/

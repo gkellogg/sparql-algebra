@@ -43,6 +43,7 @@ module SPARQL; module Algebra
     autoload :Exprlist,           'sparql/algebra/operator/exprlist'
 
     # Query operators
+    autoload :Ask,                'sparql/algebra/operator/ask'
     autoload :Base,               'sparql/algebra/operator/base'
     autoload :Distinct,           'sparql/algebra/operator/distinct'
     autoload :Filter,             'sparql/algebra/operator/filter'
@@ -105,6 +106,7 @@ module SPARQL; module Algebra
         # Datasets
         
         # Query forms
+        when :ask         then Ask
         when :base        then Base
         when :bgp         then RDF::Query
         when :distinct    then Distinct
