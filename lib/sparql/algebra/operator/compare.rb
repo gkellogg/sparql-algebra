@@ -37,6 +37,7 @@ module SPARQL; module Algebra
           # @see http://www.w3.org/TR/xpath-functions/#op.boolean
           # @see http://www.w3.org/TR/xpath-functions/#comp.duration.datetime
           when (left.simple? && right.simple?) ||
+               (left.is_a?(RDF::Literal::Numeric) && right.is_a?(RDF::Literal::Numeric)) ||
                (left.datatype == right.datatype && left.language == right.language)
             RDF::Literal(left.send(self.class.const_get(:NAME), right))
 
