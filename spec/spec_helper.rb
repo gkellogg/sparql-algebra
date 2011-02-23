@@ -14,6 +14,7 @@ RSpec.configure do |config|
     :arithmetic     => 'native',
     :sparql_algebra => false,
     :status         => 'bug',
+    :reduced        => 'all',
   }
 end
 
