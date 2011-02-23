@@ -26,7 +26,7 @@ describe SPARQL::Algebra::Query do
     context "querying for a literal" do
       it "should return a sequence with an existing literal" do
         graph = RDF::Graph.new do |graph|
-          graph << [EX.x1, EX.p1, 123.0]
+          graph << [EX.x1, EX.p1, RDF::Literal::Decimal.new(123.0)]
         end
 
         query = SPARQL::Algebra::Expression.parse(%q(
