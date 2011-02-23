@@ -37,11 +37,11 @@ module SPARQL; module Algebra
           # @see http://www.w3.org/TR/xpath-functions/#op.boolean
           # @see http://www.w3.org/TR/xpath-functions/#comp.duration.datetime
           when (left.simple? && right.simple?) ||
-               (left.datatype.eql?(RDF::XSD.string) && right.datatype.eql?(RDF::XSD.string)) ||
-               (left.is_a?(RDF::Literal::Numeric)   && right.is_a?(RDF::Literal::Numeric))   ||
-               (left.is_a?(RDF::Literal::Boolean)   && right.is_a?(RDF::Literal::Boolean))   ||
-               (left.is_a?(RDF::Literal::DateTime)  && right.is_a?(RDF::Literal::DateTime))
+               (left.datatype == right.datatype && left.language == right.language)
             RDF::Literal(left.send(self.class.const_get(:NAME), right))
+
+          #when left.datatype == right.datatype && left.language == right.language
+          #  RDF::Literal(left.send(self.class.const_get(:NAME), right))            
 
           else raise TypeError, "unable to compare #{left.inspect} and #{right.inspect}"
           end
