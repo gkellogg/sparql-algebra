@@ -29,13 +29,29 @@ module SPARQL; module Algebra
                  (term1.datatype.eql?(RDF::XSD.string) && term2.datatype.eql?(RDF::XSD.string)) ||
                  (term1.is_a?(RDF::Literal::Numeric)   && term2.is_a?(RDF::Literal::Numeric))   ||
                  (term1.is_a?(RDF::Literal::Boolean)   && term2.is_a?(RDF::Literal::Boolean))   ||
+                 (term1.is_a?(RDF::Literal::Date)      && term2.is_a?(RDF::Literal::Date))      ||
+                 (term1.is_a?(RDF::Literal::Time)     && term2.is_a?(RDF::Literal::Time))       ||
                  (term1.is_a?(RDF::Literal::DateTime)  && term2.is_a?(RDF::Literal::DateTime))
-              RDF::Literal(!!(term1 == term2))
+              # If the lexical form is not in the lexical space of the datatype associated
+              # with the datatype URI, then no literal value can be associated with the typed literal.
+              # Such a case, while in error, is not syntactically ill-formed.
+              # @see http://www.w3.org/TR/rdf-concepts/#section-Literal-Equality
+              RDF::Literal(!!(term1 == term2) && term1.valid? && term2.valid?)
+
+            when [RDF::Literal::Date, RDF::Literal::Time, RDF::Literal::DateTime].include?(term1.class) &&
+                 [RDF::Literal::Date, RDF::Literal::Time, RDF::Literal::DateTime].include?(term2.class)
+              # Special case for xs:date and xs:time comparisons with xs:dateTime, they don't
+              # generate an error, but they don't compare otherwise
+              RDF::Literal::FALSE
+
+            #when term1.datatype == term2.datatype && term1.language == term2.language
+            #  RDF::Literal(!!(term1 == term2) && term1.valid? && term2.valid?)
 
             # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
             when term1.eql?(term2)
               RDF::Literal::TRUE
 
+             # produces a type error if the arguments are both literal but are not the same RDF term
             else raise TypeError, "unable to determine whether #{term1.inspect} and #{term2.inspect} are equivalent"
           end
 
