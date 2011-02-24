@@ -13,7 +13,7 @@ RSpec.configure do |config|
     :blank_nodes    => 'unique',
     :arithmetic     => 'native',
     :sparql_algebra => false,
-    :status         => 'bug',
+    #:status         => 'bug',
     :reduced        => 'all',
   }
 end
@@ -156,9 +156,7 @@ def sparql_query(opts)
   #rescue Exception => e
   #  raise "Failed to parse SSE #{opts[:query]}: #{e.message}"
   end
-  if opts[:query] =~ /\(leftjoin/
-    pending ("leftjoin not implemented")
-  elsif opts[:query] =~ /\(ask/
+  if opts[:query] =~ /\(ask/
     query.execute(repo, :debug => ENV['EXEC_DEBUG'])
   elsif opts[:query] =~ /\(describe/
     pending ("describe not implemented")
