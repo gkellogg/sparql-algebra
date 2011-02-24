@@ -414,6 +414,83 @@ describe SPARQL::Algebra::Query do
     end
   end
   
+  context "leftjoin" do
+    it "passes data/examples/ex11.2.3.2_1" do
+      sparql_query(
+        :graphs => {
+          :default => {
+            :data => %q{
+              @prefix foaf:        <http://xmlns.com/foaf/0.1/> .
+              @prefix dc:          <http://purl.org/dc/elements/1.1/> .
+              @prefix xs:          <http://www.w3.org/2001/XMLSchema#> .
+
+              _:a  foaf:name       "Alice".
+
+              _:b  foaf:givenName  "Bob" .
+              _:b  dc:created      "2005-04-04T04:04:04Z"^^xs:dateTime .
+            },
+            :format => :ttl
+          }
+        },
+        :query => %q{
+          (prefix ((dc: <http://purl.org/dc/elements/1.1/>)
+                   (foaf: <http://xmlns.com/foaf/0.1/>))
+            (project (?name)
+              (filter (! (bound ?created))
+                (leftjoin
+                  (bgp (triple ?x foaf:name ?name))
+                  (bgp (triple ?x dc:created ?created))))))
+        }
+      ).should == [
+        {:name => RDF::Literal.new("Alice")},
+      ]
+    end
+
+    it "passes data-r2/algebra/op-filter-1", :focus => true do
+      sparql_query(
+        :graphs => {
+          :default => {
+            :data => %q{
+              @prefix   :         <http://example/> .
+              @prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+
+              :x1 :p "1"^^xsd:integer .
+              :x2 :p "2"^^xsd:integer .
+
+              :x3 :q "3"^^xsd:integer .
+              :x3 :q "4"^^xsd:integer .
+            },
+            :format => :ttl
+          }
+        },
+        :query => %q{
+          (prefix ((: <http://example/>))
+            (leftjoin
+              (bgp (triple ?x :p ?v))
+              (bgp (triple ?y :q ?w))
+              (= ?v 2)))
+        }
+      ).should =~ [
+        { 
+            :v => RDF::Literal.new('2' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
+            :w => RDF::Literal.new('4' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
+            :x => RDF::URI('http://example/x2'),
+            :y => RDF::URI('http://example/x3'),
+        },
+        { 
+            :v => RDF::Literal.new('2' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
+            :w => RDF::Literal.new('3' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
+            :x => RDF::URI('http://example/x2'),
+            :y => RDF::URI('http://example/x3'),
+        },
+        { 
+            :v => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
+            :x => RDF::URI('http://example/x1'),
+        },
+      ]
+    end
+  end
+  
   context "union" do
     it "passes data/extracted-examples/query-6.1" do
       sparql_query(
@@ -447,6 +524,34 @@ describe SPARQL::Algebra::Query do
         {:title => RDF::Literal.new("SPARQL")},
         {:title => RDF::Literal.new("SPARQL (updated)")},
       ]
+    end
+  end
+
+  context "ask" do
+    it "passes data-r2/as/ask-1" do
+      sparql_query(
+        :graphs => {
+          :default => {
+            :data => %q{
+              @prefix :   <http://example/> .
+              @prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+
+              :x :p "1"^^xsd:integer .
+              :x :p "2"^^xsd:integer .
+              :x :p "3"^^xsd:integer .
+
+              :y :p :a .
+              :a :q :r .
+            },
+            :format => :ttl
+          }
+        },
+        :query => %q{
+          (prefix ((: <http://example/>))
+          (ask
+            (bgp (triple :x :p 1))))
+        }
+      ).should == true
     end
   end
 end
