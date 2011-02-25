@@ -125,6 +125,9 @@ end
 #            :data => '...',
 #            :format => :ttl
 #           }
+#           <g2> => {
+#            :default => true
+#           }
 #        }
 #   :allow_empty => true
 #     allow no data for query (raises an exception by default)
@@ -137,32 +140,33 @@ end
 #   :form
 #     :ask, :construct, :select or :describe
 def sparql_query(opts)
-  raise "Cannot run query without data" if (opts[:graphs].nil? || opts[:graphs].empty?) && !opts[:allow_empty]
   raise "A query is required to be run" if opts[:query].nil?
 
   # Load default and named graphs into repository
   repo = RDF::Repository.new do |r|
     opts[:graphs].each do |key, info|
-      data, format = info[:data], info[:format]
-      RDF::Reader.for(:file_extension => format).new(data).each_statement do |st|
-        st.context = key unless key == :default
-        r << st
+      data, format, default = info[:data], info[:format], info[:default]
+      if data
+        RDF::Reader.for(:file_extension => format).new(data).each_statement do |st|
+          st.context = key unless key == :default || default
+          r << st
+        end
       end
     end
   end
 
-  begin
-    query = SPARQL::Algebra::Expression.parse(opts[:query], :debug => ENV['PARSER_DEBUG'])
-  #rescue Exception => e
-  #  raise "Failed to parse SSE #{opts[:query]}: #{e.message}"
-  end
-  if opts[:query] =~ /\(ask/
+  query_opts = {:debug => ENV['PARSER_DEBUG']}
+  query_opts[:base_uri] = opts[:base_uri]
+  query_str = opts.delete(:query)
+  query = SPARQL::Algebra::Expression.parse(query_str, query_opts)
+
+  if query =~ /\(ask/
     query.execute(repo, :debug => ENV['EXEC_DEBUG'])
-  elsif opts[:query] =~ /\(describe/
+  elsif query_str =~ /\(describe/
     pending ("describe not implemented")
-  elsif opts[:query] =~ /\(construct/
+  elsif query_str =~ /\(construct/
     pending ("construct not implemented")
-  elsif opts[:query] =~ /\(graph/
+  elsif query_str =~ /\(graph/
     pending ("graph not implemented")
   else
     query.execute(repo, :debug => ENV['EXEC_DEBUG']).to_a.map(&:to_hash)

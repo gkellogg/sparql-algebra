@@ -446,7 +446,7 @@ describe SPARQL::Algebra::Query do
       ]
     end
 
-    it "passes data-r2/algebra/op-filter-1", :focus => true do
+    it "passes data-r2/algebra/op-filter-1" do
       sparql_query(
         :graphs => {
           :default => {
