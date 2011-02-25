@@ -8,18 +8,48 @@ module SPARQL; module Algebra
     # @example
     #   Expression.parse('(isLiteral 3.1415)')
     #
-    # @param  [String] sse
-    #   a SPARQL S-Expression (SSE) string
+    # @param  [IO, String, #read, #to_s] sse
+    #   a SPARQL S-Expression (SSE) string or IO object responding to #read
     # @param  [Hash{Symbol => Object}] options
     #   any additional options (see {Operator#initialize})
+    # @option options [RDF::URI, #to_s] :base_uri
+    #   Base URI used for loading relative URIs.
+    #
+    # @yield  [expression]
+    # @yieldparam  [SPARQL::Algebra::Expression] expression
+    # @yieldreturn [void] ignored
     # @return [Expression]
-    def self.parse(sse, options = {})
+    def self.parse(sse, options = {}, &block)
       begin
         require 'sxp' # @see http://rubygems.org/gems/sxp
       rescue LoadError
         abort "SPARQL::Algebra::Expression.parse requires the SXP gem (hint: `gem install sxp')."
       end
-      self.new(SXP::Reader::SPARQL.read(sse), options)
+      expression = self.new(SXP::Reader::SPARQL.read(sse), options)
+      yield(expression) if block_given?
+      expression
+    end
+
+    ##
+    # Parses input from the given file name or URL.
+    #
+    # @param  [String, #to_s] filename
+    # @param  [Hash{Symbol => Object}] options
+    #   any additional options (see {Operator#initialize})
+    # @option options [RDF::URI, #to_s] :base_uri
+    #   Base URI used for loading relative URIs.
+    #
+    # @yield  [expression]
+    # @yieldparam  [SPARQL::Algebra::Expression] expression
+    # @yieldreturn [void] ignored
+    # @return [Expression]
+    def self.open(filename, options = {}, &block)
+      RDF::Util::File.open_file(filename, options) do |file|
+        options[:base_uri] ||= filename
+        expression = Expression.parse(file, options)
+        yield(expression) if block_given?
+        expression
+      end
     end
 
     ##
@@ -78,7 +108,7 @@ module SPARQL; module Algebra
       end
 
       debug("#{operator.inspect}(#{operands.map(&:inspect).join(',')})", options)
-      options.delete_if {|k, v| [:debug, :depth].include?(k) }
+      options.delete_if {|k, v| [:debug, :depth, :base_uri].include?(k) }
       operands << options unless options.empty?
       operator.new(*operands)
     end
