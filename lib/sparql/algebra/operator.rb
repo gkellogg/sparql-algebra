@@ -45,6 +45,7 @@ module SPARQL; module Algebra
     # Query operators
     autoload :Ask,                'sparql/algebra/operator/ask'
     autoload :Base,               'sparql/algebra/operator/base'
+    autoload :Dataset,            'sparql/algebra/operator/dataset'
     autoload :Distinct,           'sparql/algebra/operator/distinct'
     autoload :Filter,             'sparql/algebra/operator/filter'
     autoload :Graph,              'sparql/algebra/operator/graph'
@@ -104,6 +105,7 @@ module SPARQL; module Algebra
         when :exprlist    then Exprlist
 
         # Datasets
+        when :dataset     then Dataset
         
         # Query forms
         when :ask         then Ask
@@ -170,6 +172,14 @@ module SPARQL; module Algebra
           else raise TypeError, "invalid SPARQL::Algebra::Operator operand: #{operand.inspect}"
         end
       end
+    end
+
+    ##
+    # Base URI used for reading data sources with relative URIs
+    #
+    # @return [RDF::URI]
+    def base_uri
+      @options[:base_uri] ? RDF::URI(@options[:base_uri]) : nil
     end
 
     ##
