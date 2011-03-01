@@ -83,6 +83,55 @@ module RDF::Queryable
 end
 
 class RDF::Query
+  alias_method :initialize_without_expression, :initialize
+  ##
+  # Initializes a new basic graph pattern query.
+  #
+  # @overload initialize(patterns = [], options = {})
+  #   @param  [Array<RDF::Query::Pattern>] patterns
+  #     ...
+  #   @param  [Hash{Symbol => Object}] options
+  #     any additional keyword options
+  #   @option options [RDF::Query::Solutions] :solutions (Solutions.new)
+  #   @option options [RDF::Term, RDF::Query::Variable, Boolean] :context (false)
+  #     Default context for matching against queryable.
+  #     Named queries either match against a specifically named
+  #     contexts if the name is an RDF::Term or bound RDF::Query::Variable.
+  #     Names that are against unbound variables match either detault
+  #     or named contexts.
+  # The name of `false' will only match against the default context.
+  #   @yield  [query]
+  #   @yieldparam  [RDF::Query] query
+  #   @yieldreturn [void] ignored
+  #
+  # @overload initialize(patterns, options = {})
+  #   @param  [Hash{Object => Object}] patterns
+  #     ...
+  #   @param  [Hash{Symbol => Object}] options
+  #     any additional keyword options
+  #   @option options [RDF::Query::Solutions] :solutions (Solutions.new)
+  #   @option options [RDF::Term, RDF::Query::Variable, Boolean] :context (false)
+  #     Default context for matching against queryable.
+  #     Named queries either match against a specifically named
+  #     contexts if the name is an RDF::Term or bound RDF::Query::Variable.
+  #     Names that are against unbound variables match either detault
+  #     or named contexts.
+  #   @yield  [query]
+  #   @yieldparam  [RDF::Query] query
+  #   @yieldreturn [void] ignored
+  def initialize(*patterns, &block)
+    initialize_without_expression(patterns) do
+      self.context = false if self.context.nil?
+      
+      if block_given?
+        case block.arity
+          when 0 then instance_eval(&block)
+          else block.call(self)
+        end
+      end
+    end
+  end
+
   # Transform Query into an Array form of an SSE
   #
   # If Query is named, it's treated as a GroupGraphPattern, otherwise, a BGP
@@ -90,7 +139,7 @@ class RDF::Query
   # @return [Array]
   def to_sse
     res = [:bgp] + patterns.map(&:to_sse)
-    (respond_to?(:named?) && named? ? [:graph, context, res] : res)
+    (context ? [:graph, context, res] : res)
   end
 end
 
