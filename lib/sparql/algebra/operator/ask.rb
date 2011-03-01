@@ -38,6 +38,6 @@ module SPARQL; module Algebra
       def optimize
         operands = operands.map(&:optimize)
       end
-    end # Project
+    end # Ask
   end # Operator
 end; end # SPARQL::Algebra

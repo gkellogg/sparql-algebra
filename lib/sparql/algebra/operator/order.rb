@@ -3,7 +3,7 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `order` operator.
     #
-    # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
+    # @see http://www.w3.org/TR/rdf-sparql-query/#modOrderBy
     class Order < Operator::Binary
       include Query
       
@@ -11,8 +11,8 @@ module SPARQL; module Algebra
 
       ##
       # Executes this query on the given `queryable` graph or repository.
-      # Really a pass-through, as this is a syntactic object used for providing
-      # context for URIs.
+      # Orders a solution set returned by executing operand(1) using
+      # an array of expressions and/or variables specified in operand(0)
       #
       # @param  [RDF::Queryable] queryable
       #   the graph or repository to query

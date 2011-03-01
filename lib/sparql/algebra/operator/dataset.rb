@@ -59,6 +59,6 @@ module SPARQL; module Algebra
       def optimize
         operands.last.optimize
       end
-    end # Prefix
+    end # Dataset
   end # Operator
 end; end # SPARQL::Algebra
