@@ -21,9 +21,12 @@ module SPARQL; module Algebra
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
       def execute(queryable, options = {})
-        boolean(!operands.last.
+        debug("Ask #{operands.first}", options)
+        @solutions = boolean(!operands.last.
           execute(queryable, options.merge(:depth => options[:depth].to_i + 1)).
           empty?)
+        debug("=> #{@solutions.inspect}", options)
+        @solutions
       end
       
       ##
