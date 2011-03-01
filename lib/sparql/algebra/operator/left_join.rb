@@ -42,6 +42,7 @@ module SPARQL; module Algebra
         join_solutions = []
         left_solutions = []
         left.each do |s1|
+          load_left = false
           right.each do |s2|
             s = s2.merge(s1)
             expr = filter ? boolean(filter.evaluate(s)).true? : true rescue false
@@ -56,21 +57,22 @@ module SPARQL; module Algebra
               # { μ1 | μ1 in Ω1 and μ2 in Ω2, and μ1 and μ2 are compatible and expr(merge(μ1, μ2)) is false }
               else
                 debug("=>(s1 compat !filter) #{s1.inspect}", options)
-                left_solutions << s1
+                load_left = true
               end
             else
               # { μ1 | μ1 in Ω1 and μ2 in Ω2, and μ1 and μ2 are not compatible }
               debug("=>(s1 !compat) #{s1.inspect}", options)
-              left_solutions << s1
+              load_left = true
             end
           end
+          left_solutions << s1 if load_left
         end
         debug("(l+r)=> #{join_solutions.inspect}", options)
         debug("(l)=> #{left_solutions.inspect}", options)
         
         # Left solutions (those not being the merge between left and right)
         # are only added if there are no compatible solutions in the join list
-        left_solutions.uniq.each do |l|
+        left_solutions.each do |l|
           next if join_solutions.any? {|j| j.compatible?(l) }
           debug("=>(add) #{l.inspect}", options)
           join_solutions << l
