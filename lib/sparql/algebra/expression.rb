@@ -25,6 +25,9 @@ module SPARQL; module Algebra
       rescue LoadError
         abort "SPARQL::Algebra::Expression.parse requires the SXP gem (hint: `gem install sxp')."
       end
+      
+      Operator.base_uri = options.delete(:base_uri) if options.has_key?(:base_uri)
+
       expression = self.new(SXP::Reader::SPARQL.read(sse), options)
       yield(expression) if block_given?
       expression
@@ -108,7 +111,7 @@ module SPARQL; module Algebra
       end
 
       debug("#{operator.inspect}(#{operands.map(&:inspect).join(',')})", options)
-      options.delete_if {|k, v| [:debug, :depth, :base_uri].include?(k) }
+      options.delete_if {|k, v| [:debug, :depth].include?(k) }
       operands << options unless options.empty?
       operator.new(*operands)
     end
