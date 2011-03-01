@@ -45,6 +45,7 @@ module SPARQL; module Algebra
     # Query operators
     autoload :Ask,                'sparql/algebra/operator/ask'
     autoload :Base,               'sparql/algebra/operator/base'
+    autoload :Construct,          'sparql/algebra/operator/construct'
     autoload :Dataset,            'sparql/algebra/operator/dataset'
     autoload :Distinct,           'sparql/algebra/operator/distinct'
     autoload :Filter,             'sparql/algebra/operator/filter'
@@ -111,6 +112,7 @@ module SPARQL; module Algebra
         when :ask         then Ask
         when :base        then Base
         when :bgp         then RDF::Query
+        when :construct   then Construct
         when :distinct    then Distinct
         when :filter      then Filter
         when :graph       then Graph
@@ -182,14 +184,52 @@ module SPARQL; module Algebra
       Operator.base_uri
     end
     
+    ##
+    # Base URI used for reading data sources with relative URIs
+    #
+    # @return [RDF::URI]
     def self.base_uri
       @base_uri
     end
     
+    ##
+    # Set Base URI associated with SPARQL document, typically done
+    # when reading SPARQL from a URI
+    #
+    # @param [RDF::URI] base
+    # @return [RDF::URI]
     def self.base_uri=(uri)
       @base_uri = RDF::URI(uri)
     end
-
+    
+    ##
+    # Prefixes useful for future serialization
+    #
+    # @return [Hash{Symbol => RDF::URI}]
+    #   Prefix definitions
+    def prefixes
+      Operator.prefixes
+    end
+    
+    ##
+    # Prefixes useful for future serialization
+    #
+    # @return [Hash{Symbol => RDF::URI}]
+    #   Prefix definitions
+    def self.prefixes
+      @prefixes
+    end
+    
+    ##
+    # Prefixes useful for future serialization
+    #
+    # @param [Hash{Symbol => RDF::URI}] hash
+    #   Prefix definitions
+    # @return [Hash{Symbol => RDF::URI}]
+    def self.prefixes=(hash)
+      @prefixes = hash
+    end
+    
     ##
     # Any additional options for this operator.
     #
