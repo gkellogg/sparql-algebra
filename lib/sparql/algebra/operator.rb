@@ -179,7 +179,15 @@ module SPARQL; module Algebra
     #
     # @return [RDF::URI]
     def base_uri
-      @options[:base_uri] ? RDF::URI(@options[:base_uri]) : nil
+      Operator.base_uri
+    end
+    
+    def self.base_uri
+      @base_uri
+    end
+    
+    def self.base_uri=(uri)
+      @base_uri = RDF::URI(uri)
     end
 
     ##
