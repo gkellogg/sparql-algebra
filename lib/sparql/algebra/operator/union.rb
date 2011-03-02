@@ -35,6 +35,7 @@ module SPARQL; module Algebra
         solutions1 = operand(0).execute(queryable, options.merge(:depth => options[:depth].to_i + 1))
         debug("=>(left) #{solutions1.inspect}", options)
         solutions2 = operand(1).execute(queryable, options.merge(:depth => options[:depth].to_i + 1))
+        debug("=>(right) #{solutions2.inspect}", options)
         @solutions = RDF::Query::Solutions.new(solutions1 + solutions2)
         debug("=> #{@solutions.inspect}", options)
         @solutions
