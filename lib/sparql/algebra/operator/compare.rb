@@ -42,9 +42,9 @@ module SPARQL; module Algebra
             RDF::Literal(left.send(self.class.const_get(:NAME), right))
 
           # A plain literal is lower than an RDF literal with type xsd:string of the same lexical form.
-          when left.simple? && right.is_a?(RDF::Literal::String) && left.value == right.value
+          when left.simple? && right.datatype == RDF::XSD.string && left.value == right.value
             RDF::Literal(-1)
-          when right.simple? && left.is_a?(RDF::Literal::String) && right.value == left.value
+          when right.simple? && left.datatype == RDF::XSD.string && right.value == left.value
             RDF::Literal(-1)
 
           else raise TypeError, "unable to compare #{left.inspect} and #{right.inspect}"
