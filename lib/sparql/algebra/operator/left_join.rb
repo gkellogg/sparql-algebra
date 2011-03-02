@@ -12,6 +12,9 @@ module SPARQL; module Algebra
       ##
       # Executes this query on the given `queryable` graph or repository.
       #
+      # Adds every solution from the left, merging compatible solutions from the right
+      # that match an optional filter.
+      #
       # @param  [RDF::Queryable] queryable
       #   the graph or repository to query
       # @param  [Hash{Symbol => Object}] options
@@ -19,19 +22,10 @@ module SPARQL; module Algebra
       # @return [RDF::Query::Solutions]
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
-      #
-      #     D : a dataset
-      #     D(G) : D a dataset with active graph G (the one patterns match against)
-      #     D[i] : The graph with IRI i in dataset D
-      #     D[DFT] : the default graph of D
-      #     P, P1, P2 : graph patterns
-      #     L : a solution sequence
       def execute(queryable, options = {})
         filter = operand(2)
 
-        # Let Ω1 and Ω2 be multisets of solution mappings and expr be an expression. We define:
-        # LeftJoin(Ω1, Ω2, expr) = Filter(expr, Join(Ω1, Ω2)) set-union Diff(Ω1, Ω2, expr)
-        # card[LeftJoin(Ω1, Ω2, expr)](μ) = card[Filter(expr, Join(Ω1, Ω2))](μ) + card[Diff(Ω1, Ω2, expr)](μ)
+        
         debug("LeftJoin", options)
         left = operand(0).execute(queryable, options.merge(:depth => options[:depth].to_i + 1)) || {}
         debug("=>(left) #{left.inspect}", options)
@@ -39,46 +33,28 @@ module SPARQL; module Algebra
         debug("=>(right) #{right.inspect}", options)
         
         # LeftJoin(Ω1, Ω2, expr) =
-        join_solutions = []
-        left_solutions = []
+        solutions = []
         left.each do |s1|
-          load_left = false
+          load_left = true
           right.each do |s2|
             s = s2.merge(s1)
             expr = filter ? boolean(filter.evaluate(s)).true? : true rescue false
             debug("===>(evaluate) #{s.inspect}", options) if filter
 
-            if s1.compatible?(s2)
+            if expr && s1.compatible?(s2)
               # { merge(μ1, μ2) | μ1 in Ω1 and μ2 in Ω2, and μ1 and μ2 are compatible and expr(merge(μ1, μ2)) is true }
-              if expr
-                debug("=>(merge s1 s2) #{s.inspect}", options)
-                join_solutions << s
-
-              # { μ1 | μ1 in Ω1 and μ2 in Ω2, and μ1 and μ2 are compatible and expr(merge(μ1, μ2)) is false }
-              else
-                debug("=>(s1 compat !filter) #{s1.inspect}", options)
-                load_left = true
-              end
-            else
-              # { μ1 | μ1 in Ω1 and μ2 in Ω2, and μ1 and μ2 are not compatible }
-              debug("=>(s1 !compat) #{s1.inspect}", options)
-              load_left = true
+              debug("=>(merge s1 s2) #{s.inspect}", options)
+              solutions << s
+              load_left = false   # Left solution added one or more times due to merge
             end
           end
-          left_solutions << s1 if load_left
+          if load_left
+            debug("=>(add) #{s1.inspect}", options)
+            solutions << s1
+          end
         end
-        debug("(l+r)=> #{join_solutions.inspect}", options)
-        debug("(l)=> #{left_solutions.inspect}", options)
         
-        # Left solutions (those not being the merge between left and right)
-        # are only added if there are no compatible solutions in the join list
-        left_solutions.each do |l|
-          next if join_solutions.any? {|j| j.compatible?(l) }
-          debug("=>(add) #{l.inspect}", options)
-          join_solutions << l
-        end
-
-        @solutions = RDF::Query::Solutions.new(join_solutions)
+        @solutions = RDF::Query::Solutions.new(solutions)
         debug("=> #{@solutions.inspect}", options)
         @solutions
       end
