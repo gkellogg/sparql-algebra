@@ -17,16 +17,14 @@ module SPARQL; module Algebra
       #   the graph or repository to query
       # @param  [Hash{Symbol => Object}] options
       #   any additional keyword options
-      # @return [RDF::Query::Solutions]
+      # @return [RDF::Literal::Boolean]
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
       def execute(queryable, options = {})
         debug("Ask #{operands.first}", options)
-        @solutions = boolean(!operands.last.
+        boolean(!operands.last.
           execute(queryable, options.merge(:depth => options[:depth].to_i + 1)).
           empty?)
-        debug("=> #{@solutions.inspect}", options)
-        @solutions
       end
       
       ##
