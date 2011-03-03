@@ -19,6 +19,19 @@
 (equal (= 1 "1"^^xsd:int) true)
 (equal (= "1"^^xsd:int 1) true)
 
+# more from expr-equals eq-1
+(equal (= 1 "01"^^xsd:integer) true)
+(equal (= 1 "1.0e0"^^xsd:double) true)
+(equal (= 1 "1.0"^^xsd:double) true)
+(equal (= 1 "1"^^xsd:double) true)
+
+# more from expr-equals eq-2-1
+(equal (= "1.0e0"^^xsd:double "1.0"^^xsd:double) true)
+(equal (= "1.0e0"^^xsd:double "1"^^xsd:double) true)
+(equal (= "1"^^xsd:double "1"^^xsd:integer) true)
+(equal (= "1"^^xsd:double "1.0"^^xsd:double) true)
+(equal (= "01"^^xsd:integer "1"^^xsd:integer) true)
+
 # Not equal
 (equal (= 1 2) false)
 (equal (= 1.0 2.0) false)
@@ -36,3 +49,6 @@
 (equal (= -INF +INF) false)
 (equal (= -INF -INF) true)
 (equal (= NaN NaN)   false)
+
+# From open-eq-10
+(equal (= "xyz"^^xsd:integer "xyz"^^xsd:integer) true)
