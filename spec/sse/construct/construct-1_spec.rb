@@ -41,23 +41,46 @@ _:bob
 
 }
       @query = %q{
-(construct ((triple ?s ?p ?o))
-  (project (?s ?p ?o)
-    (bgp (triple ?s ?p ?o))))
+        (prefix ((rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
+                 (foaf: <http://xmlns.com/foaf/0.1/>))
+          (construct ((triple ?s ?p ?o))
+            (project (?s ?p ?o)
+              (bgp (triple ?s ?p ?o)))))
+      }
 
-}
+      @result = %q{
+        @prefix foaf:       <http://xmlns.com/foaf/0.1/> .
+        @prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+        _:gff
+            rdf:type        foaf:Person ;
+            foaf:name       "Alice" ;
+            foaf:mbox       <mailto:alice@work> ;
+            foaf:knows      _:g2a ;
+            .
+
+        _:g2a
+            rdf:type        foaf:Person ;
+            foaf:name       "Bob" ; 
+            foaf:knows      _:gff ;
+            foaf:mbox       <mailto:bob@work> ;
+            foaf:mbox       <mailto:bob@home> ;
+            .
+      }
     end
 
     example "dawg-construct-identity", :status => 'bug' do
     
       graphs = {}
       graphs[:default] = { :data => @data, :format => :ttl}
+      graphs[:result] = { :data => @result, :format => :ttl}
 
+      expected = RDF::Graph.new << RDF::N3::Reader.new(@result)
 
       repository = 'construct-construct-1'
 
-
-        raise NotImplementedError("This test form is not yet implemented")
+      sparql_query(:graphs => graphs, :query => @query,
+                   :repository => repository, :form => :construct).should be_true
     end
   end
 end

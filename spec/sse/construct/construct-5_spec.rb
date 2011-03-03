@@ -20,40 +20,47 @@ describe "W3C test" do
   context "construct" do
     before :all do
       @data = %q{
-@prefix : <http://example/> .
-@prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+        @prefix : <http://example/> .
+        @prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
 
-:x :p :a .
-:x :p :b .
-:x :p :c .
-:x :p "1"^^xsd:integer .
+        :x :p :a .
+        :x :p :b .
+        :x :p :c .
+        :x :p "1"^^xsd:integer .
 
-:a :q "2"^^xsd:integer .
-:a :r "2"^^xsd:integer .
+        :a :q "2"^^xsd:integer .
+        :a :r "2"^^xsd:integer .
 
-:b :q "2"^^xsd:integer .
+        :b :q "2"^^xsd:integer .
+      }
 
-}
       @query = %q{
-(construct ((triple ?x <http://example/p2> ?v))
-  (project (?x ?o ?v)
-    (leftjoin
-      (bgp (triple ?x <http://example/p> ?o))
-      (bgp (triple ?o <http://example/q> ?v)))))
+        (prefix ((: <http://example/>))
+          (construct ((triple ?x :p2 ?v))
+            (project (?x ?o ?v)
+              (leftjoin
+                (bgp (triple ?x :p ?o))
+                (bgp (triple ?o :q ?v))))))
+      }
 
-}
+      @result = %q{
+        @prefix :        <http://example/> .
+        @prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+
+        :x    :p2           "2"^^xsd:integer .
+      }
     end
 
     example "dawg-construct-optional", :status => 'bug' do
     
       graphs = {}
       graphs[:default] = { :data => @data, :format => :ttl}
-
+      graphs[:result] = { :data => @result, :format => :ttl}
 
       repository = 'construct-construct-5'
 
-
-        raise NotImplementedError("This test form is not yet implemented")
+      sparql_query(:graphs => graphs, :query => @query,
+                   :repository => repository, :form => :construct).should be_true
     end
   end
 end

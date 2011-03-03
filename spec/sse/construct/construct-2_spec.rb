@@ -41,23 +41,33 @@ _:bob
 
 }
       @query = %q{
-(construct ((triple ?s <http://xmlns.com/foaf/0.1/name> ?o))
-  (project (?s ?o)
-    (bgp (triple ?s <http://xmlns.com/foaf/0.1/name> ?o))))
+        (prefix ((rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
+                 (foaf: <http://xmlns.com/foaf/0.1/>))
+          (construct ((triple ?s foaf:name ?o))
+            (project (?s ?o)
+              (bgp (triple ?s foaf:name ?o)))))
+      }
 
-}
+      @result = %q{
+        @prefix foaf:       <http://xmlns.com/foaf/0.1/> .
+        @prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+        _:gff foaf:name       "Alice" .
+
+        _:g2a foaf:name       "Bob" .
+      }
     end
 
     example "dawg-construct-subgraph", :status => 'bug'  do
     
       graphs = {}
       graphs[:default] = { :data => @data, :format => :ttl}
-
+      graphs[:result] = { :data => @result, :format => :ttl}
 
       repository = 'construct-construct-2'
 
-
-        raise NotImplementedError("This test form is not yet implemented")
+      sparql_query(:graphs => graphs, :query => @query,
+                   :repository => repository, :form => :construct).should be_true
     end
   end
 end

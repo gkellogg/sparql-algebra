@@ -20,45 +20,83 @@ describe "W3C test" do
   context "construct" do
     before :all do
       @data = %q{
-@prefix foaf:       <http://xmlns.com/foaf/0.1/> .
-@prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:	    <http://www.w3.org/2000/01/rdf-schema#> .
+        @prefix foaf:       <http://xmlns.com/foaf/0.1/> .
+        @prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+        @prefix rdfs:	    <http://www.w3.org/2000/01/rdf-schema#> .
 
-_:alice
-    rdf:type        foaf:Person ;
-    foaf:name       "Alice" ;
-    foaf:mbox       <mailto:alice@work> ;
-    foaf:knows      _:bob ;
-    .
+        _:alice
+            rdf:type        foaf:Person ;
+            foaf:name       "Alice" ;
+            foaf:mbox       <mailto:alice@work> ;
+            foaf:knows      _:bob ;
+            .
 
-_:bob
-    rdf:type        foaf:Person ;
-    foaf:name       "Bob" ; 
-    foaf:knows      _:alice ;
-    foaf:mbox       <mailto:bob@home> ;
-    .
+        _:bob
+            rdf:type        foaf:Person ;
+            foaf:name       "Bob" ; 
+            foaf:knows      _:alice ;
+            foaf:mbox       <mailto:bob@home> ;
+            .
+      }
 
-}
       @query = %q{
-(construct ((triple _:a <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> ?s)
-            (triple _:a <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> ?p)
-            (triple _:a <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> ?o))
-  (project (?s ?p ?o)
-    (bgp (triple ?s ?p ?o))))
+        (prefix ((rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
+                 (foaf: <http://xmlns.com/foaf/0.1/>))
+          (construct ((triple _:a rdf:subject ?s)
+                      (triple _:a rdf:predicate ?p)
+                      (triple _:a rdf:object ?o))
+            (project (?s ?p ?o)
+              (bgp (triple ?s ?p ?o)))))
+      }
 
-}
+      @result = %q{
+        @prefix foaf:       <http://xmlns.com/foaf/0.1/> .
+        @prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+        [] rdf:subject _:gff ;
+          rdf:predicate rdf:type ;
+          rdf:object foaf:Person .
+
+        [] rdf:subject _:gff ;
+          rdf:predicate foaf:name ;
+          rdf:object "Alice" .
+
+        [] rdf:subject _:gff ;
+          rdf:predicate foaf:mbox ;
+          rdf:object <mailto:alice@work> .
+
+        [] rdf:subject _:gff ;
+          rdf:predicate foaf:knows ;
+          rdf:object _:g2a .
+
+        [] rdf:subject _:g2a ;
+          rdf:predicate rdf:type ;
+          rdf:object foaf:Person .
+
+        [] rdf:subject _:g2a ;
+          rdf:predicate foaf:name ;
+          rdf:object "Bob" .
+
+        [] rdf:subject _:g2a ;
+          rdf:predicate foaf:knows ;
+          rdf:object _:gff .
+
+        [] rdf:subject _:g2a ;
+          rdf:predicate foaf:mbox ;
+          rdf:object <mailto:bob@home> .
+      }
     end
 
     example "dawg-construct-reification-1", :status => 'bug' do
     
       graphs = {}
       graphs[:default] = { :data => @data, :format => :ttl}
-
+      graphs[:result] = { :data => @result, :format => :ttl}
 
       repository = 'construct-construct-3'
 
-
-        raise NotImplementedError("This test form is not yet implemented")
+      sparql_query(:graphs => graphs, :query => @query,
+                   :repository => repository, :form => :construct).should be_true
     end
   end
 end
