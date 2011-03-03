@@ -276,7 +276,7 @@ describe SPARQL::Algebra::Query do
                  (triple ?doc3 ex:refs ?bag3)
                  (triple ?bag3 ?member3 ?doc)))))
 
-        query.execute(@graph).should have_result_set [
+        query.execute(@graph).map(&:to_hash).should =~ [
           { :doc3 => EX.doc1, :class3 => EX.class1, :bag3 => EX.bag1, :member3 => RDF::Node.new('ref1'), :doc => EX.doc11 },
           { :doc3 => EX.doc1, :class3 => EX.class1, :bag3 => EX.bag1, :member3 => RDF::Node.new('ref2'), :doc => EX.doc12 },
           { :doc3 => EX.doc1, :class3 => EX.class1, :bag3 => EX.bag1, :member3 => RDF::Node.new('ref3'), :doc => EX.doc13 },
@@ -338,7 +338,7 @@ describe SPARQL::Algebra::Query do
                  (triple ?doc ex:refs ?bag)
                  (triple ?bag ?member ?doc2)))))
 
-        query.execute(@graph).should have_result_set [
+        query.execute(@graph).map(&:to_hash).should =~ [
           { :doc => EX.doc1, :class => EX.class1, :bag => EX.bag1,
             :member => RDF::Node.new('ref1'), :doc2 => EX.doc11, :title => EX.title1 },
           { :doc => EX.doc1, :class => EX.class1, :bag => EX.bag1,
@@ -530,6 +530,7 @@ describe SPARQL::Algebra::Query do
   context "ask" do
     it "passes data-r2/as/ask-1" do
       sparql_query(
+        :form => :ask,
         :graphs => {
           :default => {
             :data => %q{
@@ -551,7 +552,7 @@ describe SPARQL::Algebra::Query do
           (ask
             (bgp (triple :x :p 1))))
         }
-      ).should == true
+      ).should be_true
     end
   end
 end
