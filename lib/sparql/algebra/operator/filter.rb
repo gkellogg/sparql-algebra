@@ -28,18 +28,25 @@ module SPARQL; module Algebra
       def execute(queryable, options = {})
         debug("Filter #{operands.first}", options)
         @solutions = operands.last.execute(queryable, options.merge(:depth => options[:depth].to_i + 1))
-        debug("=>(before) #{@solutions.inspect}", options)
+        debug("=>(before) #{@solutions.map(&:to_hash).inspect}", options)
         @solutions = @solutions.filter do |solution|
           # Evaluate the solution, which will return true or false
-          debug("===>(evaluate) #{operands.first.inspect} against #{solution.inspect}", options)
+          #debug("===>(evaluate) #{operands.first.inspect} against #{solution.to_hash.inspect}", options)
           
           # From http://www.w3.org/TR/rdf-sparql-query/#tests
           # FILTERs eliminate any solutions that, when substituted into the expression, either
           # result in an effective boolean value of false or produce an error.
-          boolean(operands.first.evaluate(solution)).true? rescue false
+          begin
+            res = boolean(operands.first.evaluate(solution)).true?
+            debug("===>#{res} #{solution.to_hash.inspect}", options)
+            res
+          rescue
+            debug("rescue(#{$!}): #{solution.to_hash.inspect}", options)
+            false
+          end
         end
         @solutions = RDF::Query::Solutions.new(@solutions)
-        debug("=>(after) #{@solutions.inspect}", options)
+        debug("=>(after) #{@solutions.map(&:to_hash).inspect}", options)
         @solutions
       end
       
