@@ -19,7 +19,7 @@ require 'spec_helper'
 describe "W3C test" do
   context "graph" do
     before :all do
-      @data = %q{
+      @g1 = %q{
 @prefix : <http://example/> .
 @prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
 
@@ -28,7 +28,7 @@ describe "W3C test" do
 
 }
        # data-g2.ttl
-       @graph0 = %q{
+       @g2 = %q{
 @prefix : <http://example/> .
 @prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
 
@@ -45,14 +45,14 @@ describe "W3C test" do
     example "graph-06", :status => 'bug' do
     
       graphs = {}
-      graphs[:default] = { :data => @data, :format => :ttl}
+      graphs[:default] = { :data => @g1, :format => :ttl}
 
-      graphs[RDF::URI('data-g2.ttl')] = { :data => @graph0, :format => :ttl }
+      graphs[RDF::URI('data-g2.ttl')] = { :data => @g2, :format => :ttl }
 
       repository = 'graph-dawg-graph-06'
       expected = [
           { 
-              :g => RDF::URI('/Users/ben/repos/datagraph/tests/tests/data-r2/graph/data-g2.ttl'),
+              :g => RDF::URI('data-g2.ttl'),
               :o => RDF::Literal.new('2' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
               :p => RDF::URI('http://example/q'),
               :s => RDF::URI('http://example/x'),
