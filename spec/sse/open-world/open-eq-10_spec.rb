@@ -136,7 +136,7 @@ describe "W3C test" do
           },
           { 
               :v1 => RDF::Literal.new('xyz', :language => :en ),
-              :v2 => RDF::Node.new('xyz'),
+              :v2 => RDF::Node.new('abc'),
               :x => RDF::URI('http://example/x2'),
               :y => RDF::URI('http://example/y7'),
           },
@@ -232,13 +232,13 @@ describe "W3C test" do
           },
           { 
               :v1 => RDF::Literal.new('xyz' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('abc' ),
+              :v2 => RDF::Literal.new('abc', :language => :en ),
               :x => RDF::URI('http://example/x5'),
               :y => RDF::URI('http://example/y2'),
           },
           { 
               :v1 => RDF::Literal.new('xyz' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('abc' ),
+              :v2 => RDF::Literal.new('abc', :language => :EN),
               :x => RDF::URI('http://example/x5'),
               :y => RDF::URI('http://example/y3'),
           },
@@ -286,13 +286,13 @@ describe "W3C test" do
           },
           { 
               :v1 => RDF::Node.new('xyz'),
-              :v2 => RDF::Literal.new('abc' ),
+              :v2 => RDF::Literal.new('abc', :language => :en ),
               :x => RDF::URI('http://example/x7'),
               :y => RDF::URI('http://example/y2'),
           },
           { 
               :v1 => RDF::Node.new('xyz'),
-              :v2 => RDF::Literal.new('abc' ),
+              :v2 => RDF::Literal.new('abc', :language => :EN ),
               :x => RDF::URI('http://example/x7'),
               :y => RDF::URI('http://example/y3'),
           },
@@ -316,7 +316,7 @@ describe "W3C test" do
           },
           { 
               :v1 => RDF::Node.new('xyz'),
-              :v2 => RDF::Node.new('b0'),
+              :v2 => RDF::Node.new('abc'),
               :x => RDF::URI('http://example/x7'),
               :y => RDF::URI('http://example/y7'),
           },

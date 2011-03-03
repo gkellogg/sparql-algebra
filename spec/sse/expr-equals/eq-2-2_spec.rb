@@ -65,170 +65,59 @@ describe "W3C test" do
       repository = 'expr-equals-eq-2-2'
       expected = [
           { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
               :v1 => RDF::Literal.new('zzz' , :datatype => RDF::URI('http://example.org/things#myType')),
-              :v2 => RDF::Literal.new('zzz' , :datatype => RDF::URI('http://example.org/things#myType')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1.0e0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1.0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('zzz' ),
-              :v2 => RDF::Literal.new('zzz' ),
-          },
-          { 
-              :v1 => RDF::Literal.new('1.0e0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1.0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1.0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('01' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1.0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('01' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1.0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1.0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('01' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('01' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('01' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
-              :v1 => RDF::Literal.new('01' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1.0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1.0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('01' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1.0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('01' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1.0e0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1.0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('01' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' ),
-              :v2 => RDF::Literal.new('1' ),
-          },
-          { 
-              :v1 => RDF::Literal.new('1.0e0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1.0e0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1.0e0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('01' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('01' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1.0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1.0e0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1.0e0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-          },
-          { 
-              :v1 => RDF::Literal.new('1.0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1.0e0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-          },
-          { 
-              :v1 => RDF::URI('http://example.org/things#z'),
               :v2 => RDF::URI('http://example.org/things#z'),
           },
           { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1.0e0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
+              :v1 => RDF::URI('http://example.org/things#z'),
+              :v2 => RDF::Literal.new('zzz'),
           },
           { 
-              :v1 => RDF::Literal.new('1.0e0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
+              :v1 => RDF::Literal.new('zzz'),
+              :v2 => RDF::URI('http://example.org/things#z'),
           },
           { 
-              :v1 => RDF::Literal.new('1.0e0' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
-              :v2 => RDF::Literal.new('01' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
+              :v1 => RDF::Literal.new('zzz' , :datatype => RDF::URI('http://example.org/things#myType')),
+              :v2 => RDF::Literal.new('1' ),
           },
           { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
+              :v1 => RDF::Literal.new('zzz'),
+              :v2 => RDF::Literal.new('1' ),
           },
           { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
+              :v1 => RDF::URI('http://example.org/things#z'),
+              :v2 => RDF::Literal.new('1' ),
           },
           { 
-              :v1 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
-              :v2 => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#double')),
+              :v1 => RDF::Literal.new('zzz'),
+              :v2 => RDF::Literal.new('zzz' , :datatype => RDF::URI('http://example.org/things#myType')),
+          },
+          { 
+              :v1 => RDF::Literal.new('1' ),
+              :v2 => RDF::Literal.new('zzz' , :datatype => RDF::URI('http://example.org/things#myType')),
+          },
+          { 
+              :v1 => RDF::Literal.new('zzz' , :datatype => RDF::URI('http://example.org/things#myType')),
+              :v2 => RDF::Literal.new('zzz'),
+          },
+          { 
+              :v1 => RDF::URI('http://example.org/things#z'),
+              :v2 => RDF::Literal.new('zzz' , :datatype => RDF::URI('http://example.org/things#myType')),
+          },
+          { 
+              :v1 => RDF::Literal.new('1' ),
+              :v2 => RDF::Literal.new('zzz'),
+          },
+          { 
+              :v1 => RDF::Literal.new('1' ),
+              :v2 => RDF::URI('http://example.org/things#z'),
           },
       ]
 
-
-      sparql_query(:graphs => graphs, :query => @query,       # unordered comparison in rspec is =~
-                   :repository => repository, :form => :select).should =~ expected
+      pending("includes solutions for plain/unknown inequality that are inconsistent with open-eq-08") do
+        sparql_query(:graphs => graphs, :query => @query,       # unordered comparison in rspec is =~
+                     :repository => repository, :form => :select).should =~ expected
+      end
     end
   end
 end
