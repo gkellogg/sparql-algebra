@@ -24,8 +24,6 @@ describe "W3C test" do
 
       repository = 'dawg-dataset-02'
       expected = [
-          { 
-          },
       ]
 
       sparql_query(:graphs => graphs, :query => @query, :base_uri => File.expand_path(__FILE__),
