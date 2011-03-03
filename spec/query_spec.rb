@@ -7,8 +7,6 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 end
 
 describe SPARQL::Algebra::Query do
-  EX = RDF::EX = RDF::Vocabulary.new('http://example.org/')
-
   context "BGPs" do
     context "querying for a specific statement" do
       it "returns an empty solution sequence if the statement does not exist" do
