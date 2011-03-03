@@ -120,7 +120,7 @@ class RDF::Query
   #   @yieldparam  [RDF::Query] query
   #   @yieldreturn [void] ignored
   def initialize(*patterns, &block)
-    initialize_without_expression(patterns) do
+    initialize_without_expression(*patterns) do
       self.context = false if self.context.nil?
       
       if block_given?
