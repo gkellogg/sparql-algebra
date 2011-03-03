@@ -1,4 +1,5 @@
 require "bundler/setup"
+require 'rdf/isomorphic'
 require 'sparql/algebra'
 require 'rdf/spec'
 require 'rdf/n3'
@@ -135,8 +136,6 @@ end
 #     A SSE query, as a string
 #   :repository
 #     The dydra repository associated with the account to use
-#   :ssf
-#     An SSF query, as a string #TODO
 #   :form
 #     :ask, :construct, :select or :describe
 def sparql_query(opts)
@@ -145,6 +144,7 @@ def sparql_query(opts)
   # Load default and named graphs into repository
   repo = RDF::Repository.new do |r|
     opts[:graphs].each do |key, info|
+      next if key == :result
       data, format, default = info[:data], info[:format], info[:default]
       if data
         RDF::Reader.for(:file_extension => format).new(data).each_statement do |st|
@@ -155,19 +155,28 @@ def sparql_query(opts)
     end
   end
 
+  query_str = opts[:query]
   query_opts = {:debug => ENV['PARSER_DEBUG']}
   query_opts[:base_uri] = opts[:base_uri]
-  query_str = opts.delete(:query)
+  
   query = SPARQL::Algebra::Expression.parse(query_str, query_opts)
 
-  if query =~ /\(ask/
+  case opts[:form]
+  when :ask
     query.execute(repo, :debug => ENV['EXEC_DEBUG'])
-  elsif query_str =~ /\(describe/
-    pending ("describe not implemented")
-  elsif query_str =~ /\(construct/
-    pending ("construct not implemented")
-  elsif query_str =~ /\(graph/
-    pending ("graph not implemented")
+  when :construct
+    info = opts[:graphs][:result]
+    raise "Result graph expected for :construct" unless info
+    data, format = info[:data], info[:format]
+    expected = RDF::Graph.new << RDF::Reader.for(:file_extension => format).new(data)
+    graph = query.execute(repo, :debug => ENV['EXEC_DEBUG'])
+    if ENV['EXEC_DEBUG']
+      puts "Check isomophism:"
+      puts graph.dump(:n3, :prefixes => Operator.prefixes, :base_uri => Operator.base_uri)
+      puts "\nwith"
+      puts expected.dump(:n3, :prefixes => Operator.prefixes, :base_uri => Operator.base_uri)
+    end
+    graph.isomorphic_with?(expected)
   else
     query.execute(repo, :debug => ENV['EXEC_DEBUG']).to_a.map(&:to_hash)
   end
