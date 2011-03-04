@@ -153,14 +153,11 @@ module RDF::Queryable
             RDF.subject => statement.subject,
             RDF.predicate => statement.predicate,
             RDF.object => statement.object,
-            RDFS.isDefinedBy => :defined,
           }
         }).execute(self).each do |solution|
-          graph << RDF::Statement.new(solution[:s], RDF.type, RDF["Statement"])
-          graph << RDF::Statement.new(solution[:s], RDF.subject, statement.subject)
-          graph << RDF::Statement.new(solution[:s], RDF.predicate, statement.predicate)
-          graph << RDF::Statement.new(solution[:s], RDF.object, statement.object)
-          graph << RDF::Statement.new(solution[:s], RDFS.isDefinedBy, solution[:defined])
+          # Recurse to include this subject
+          recurse_opts = options.merge(:non_subjects => false, :graph => graph)
+          self.concise_bounded_description(solution[:s], recurse_opts, &block)
         end
 
         # Recurse if object is a BNode and it is not already in subjects
@@ -171,11 +168,6 @@ module RDF::Queryable
       end
     end
     
-    if [:non_subjects]
-      graph.dup.each do |statement|
-      end
-    end
-
     graph
   end
 end
