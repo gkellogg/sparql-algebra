@@ -3,6 +3,13 @@ module SPARQL; module Algebra
     ##
     # The SPARQL `isIRI`/`isURI` operator.
     #
+    # @example
+    #   (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
+    #            (: <http://example.org/things#>))
+    #     (project (?x ?v)
+    #       (filter (isIRI ?v)
+    #         (bgp (triple ?x :p ?v)))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-isIRI
     class IsIRI < Operator::Unary
       NAME = [:isIRI, :isURI]

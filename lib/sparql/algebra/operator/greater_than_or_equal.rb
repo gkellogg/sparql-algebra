@@ -4,6 +4,9 @@ module SPARQL; module Algebra
     # The SPARQL relational `>=` (greater than or equal) comparison
     # operator.
     #
+    # @example
+    #   (>= ?x ?y)
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-greater-than

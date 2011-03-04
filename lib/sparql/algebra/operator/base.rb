@@ -3,6 +3,10 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `base` operator.
     #
+    # @example
+    #   (base <http://example.org/>
+    #     (bgp (triple <a> <b> 123.0)))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#QSynIRI
     class Base < Binary
       include Query

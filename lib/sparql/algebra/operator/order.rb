@@ -3,6 +3,12 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `order` operator.
     #
+    # @example
+    #   (prefix ((foaf: <http://xmlns.com/foaf/0.1/>))
+    #     (project (?name)
+    #       (order ((asc ?name))
+    #         (bgp (triple ?x foaf:name ?name)))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#modOrderBy
     class Order < Operator::Binary
       include Query

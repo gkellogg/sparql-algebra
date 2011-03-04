@@ -3,6 +3,9 @@ module SPARQL; module Algebra
     ##
     # A SPARQL relational `<=>` comparison operator.
     #
+    # @example
+    #   (<=> ?x ?y)
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
     # @see http://www.w3.org/TR/xpath-functions/#func-compare
     class Compare < Operator::Binary

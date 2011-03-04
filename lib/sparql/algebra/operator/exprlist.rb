@@ -3,6 +3,17 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `exprlist` operator.
     #
+    # Used for filters with more than one expression.
+    #
+    # @example
+    #   (prefix ((: <http://example/>))
+    #     (project (?v ?w)
+    #       (filter (exprlist (= ?v 2) (= ?w 3))
+    #         (bgp
+    #           (triple ?s :p ?v)
+    #           (triple ?s :q ?w)
+    #         ))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#evaluation
     class Exprlist < Operator
       NAME = [:exprlist]

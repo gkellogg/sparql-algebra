@@ -3,6 +3,10 @@ module SPARQL; module Algebra
     ##
     # The SPARQL logical `and` operator.
     #
+    # @example
+    #   (&& ?x ?y)
+    #   (and ?x ?y)
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-logical-and
     # @see http://www.w3.org/TR/rdf-sparql-query/#evaluation
     class And < Operator::Binary

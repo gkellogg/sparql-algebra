@@ -3,6 +3,11 @@ module SPARQL; module Algebra
     ##
     # The SPARQL `langMatches` operator.
     #
+    # @example
+    #   (prefix ((: <http://example.org/#>))
+    #     (filter (langMatches (lang ?v) "en-GB")
+    #       (bgp (triple :x ?p ?v))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-langMatches
     # @see http://tools.ietf.org/html/rfc4647#section-3.3.1
     class LangMatches < Operator::Binary

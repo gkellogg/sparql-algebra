@@ -3,6 +3,12 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `filter` operator.
     #
+    # @example
+    #   (select (?v)
+    #     (project (?v)
+    #       (filter (= ?v 2)
+    #         (bgp (triple ?s <http://example/p> ?v)))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#evaluation
     class Filter < Operator::Binary
       include Query

@@ -8,7 +8,9 @@ module SPARQL; module Algebra
     # indicating that it represents a named data source.
     #
     # @example
-    #   (dataset (<a> (named <b>)) (bgp))
+    #   (prefix ((: <http://example/>))
+    #     (dataset (<data-g1.ttl> (named <data-g2.ttl>))
+    #       (bgp (triple ?s ?p ?o))))
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#specifyingDataset
     class Dataset < Binary

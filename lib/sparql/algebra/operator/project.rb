@@ -3,6 +3,12 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `order` operator.
     #
+    # @example
+    #   (select (?v)
+    #     (project (?v)
+    #       (filter (= ?v 2)
+    #         (bgp (triple ?s <http://example/p> ?v)))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#modProjection
     class Project < Operator::Binary
       include Query

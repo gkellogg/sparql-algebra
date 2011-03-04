@@ -3,6 +3,13 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `leftjoin` operator.
     #
+    # @example
+    #   (prefix ((: <http://example/>))
+    #     (leftjoin
+    #       (bgp (triple ?x :p ?v))
+    #       (bgp (triple ?y :q ?w))
+    #       (= ?v 2)))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
     class LeftJoin < Operator
       include Query

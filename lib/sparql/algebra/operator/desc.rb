@@ -3,6 +3,12 @@ module SPARQL; module Algebra
     ##
     # The SPARQL descending sort operator.
     #
+    # @example
+    #   (prefix ((foaf: <http://xmlns.com/foaf/0.1/>))
+    #     (project (?name)
+    #       (order ((desc ?name))
+    #         (bgp (triple ?x foaf:name ?name)))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-isLiteral
     class Desc < Operator::Unary
       NAME = :desc

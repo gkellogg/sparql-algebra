@@ -3,6 +3,10 @@ module SPARQL; module Algebra
     ##
     # The SPARQL numeric `add` operator.
     #
+    # @example
+    #   (+ 1 ?x)
+    #   (add 1 ?x)
+    #
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-add
     class Add < Operator::Binary
       NAME = [:+, :add]

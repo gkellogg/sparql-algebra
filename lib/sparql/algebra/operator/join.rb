@@ -3,6 +3,13 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `join` operator.
     #
+    # @example
+    #   (prefix ((: <http://example/>))
+    #     (join
+    #       (bgp (triple ?s ?p ?o))
+    #       (graph ?g
+    #         (bgp (triple ?s ?q ?v)))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
     class Join < Operator
       include Query

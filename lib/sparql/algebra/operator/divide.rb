@@ -3,6 +3,9 @@ module SPARQL; module Algebra
     ##
     # The SPARQL numeric `divide` operator.
     #
+    # @example
+    #   (/ 4 2)
+    #
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-divide
     class Divide < Operator::Binary
       NAME = [:'/', :divide]

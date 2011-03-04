@@ -5,6 +5,11 @@ module SPARQL; module Algebra
     #
     # This is a wrapper to add a `context` to the BGP.
     #
+    # @example
+    #   (prefix ((: <http://example/>))
+    #     (graph ?g
+    #       (bgp (triple ?s ?p ?o))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
     class Graph < Operator::Binary
       NAME = [:graph]

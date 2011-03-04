@@ -3,6 +3,11 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `ask` operator.
     #
+    # @example
+    #   (prefix ((: <http://example/>))
+    #     (ask
+    #       (bgp (triple :x :p ?x))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#ask
     class Ask < Operator::Unary
       include Query

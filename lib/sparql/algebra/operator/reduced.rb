@@ -3,6 +3,13 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `reduced` operator.
     #
+    # @example
+    #   (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
+    #            (: <http://example/>))
+    #     (reduced
+    #       (project (?v)
+    #         (bgp (triple ?x ?p ?v)))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
     class Reduced < Operator::Unary
       include Query

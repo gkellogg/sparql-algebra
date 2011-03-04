@@ -3,6 +3,13 @@ module SPARQL; module Algebra
     ##
     # The SPARQL `sameTerm` operator.
     #
+    # @example
+    #   (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
+    #            (: <http://example.org/things#>))
+    #     (project (?x ?v)
+    #       (filter (sameTerm ?v)
+    #         (bgp (triple ?x :p ?v)))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-sameTerm
     class SameTerm < Operator::Binary
       NAME = :sameTerm

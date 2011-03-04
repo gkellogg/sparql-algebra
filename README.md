@@ -23,34 +23,144 @@ Examples
     
     include SPARQL::Algebra
 
-### Constructing operator expressions manually
+### Example Queries
+
+#### Basic Query
+    BASE <http://example.org/x/> 
+    PREFIX : <>
+
+    SELECT * WHERE { :x ?p ?v } 
+
+is equivalent to
+
+    (prefix ((: <http://example.org/x/>))
+      (bgp (triple :x ?p ?v)))
+
+#### Prefixes
+
+    PREFIX ns: <http://example.org/ns#>
+    PREFIX x:  <http://example.org/x/>
+
+    SELECT * WHERE { x:x ns:p ?v } 
+    
+is equivalent to
+
+    (prefix ((ns: <http://example.org/ns#>)
+             (x: <http://example.org/x/>))
+      (bgp (triple x:x ns:p ?v)))
+    
+#### Ask
+
+    (prefix ((: <http://example/>))
+      (ask
+        (bgp (triple :x :p ?x))))
+    
+#### Datasets
+
+    PREFIX : <http://example/> 
+
+    SELECT * 
+    FROM <data-g1.ttl>
+    FROM NAMED <data-g2.ttl>
+    { ?s ?p ?o }
+    
+is equivalent to
+
+    (prefix ((: <http://example/>))
+      (dataset (<data-g1.ttl> (named <data-g2.ttl>))
+        (bgp (triple ?s ?p ?o))))
+
+#### Join
+
+    PREFIX : <http://example/> 
+
+    SELECT * 
+    { 
+       ?s ?p ?o
+       GRAPH ?g { ?s ?q ?v }
+    }
+
+is equivalent to
+
+    (prefix ((: <http://example/>))
+      (join
+        (bgp (triple ?s ?p ?o))
+        (graph ?g
+          (bgp (triple ?s ?q ?v)))))
+
+#### Union
+
+    PREFIX : <http://example/> 
+
+    SELECT * 
+    { 
+       { ?s ?p ?o }
+      UNION
+       { GRAPH ?g { ?s ?p ?o } }
+    }
+
+is equivalent to
+
+    (prefix ((: <http://example/>))
+      (union
+        (bgp (triple ?s ?p ?o))
+        (graph ?g
+          (bgp (triple ?s ?p ?o)))))
+    
+#### LeftJoin
+
+    PREFIX :    <http://example/>
+
+    SELECT *
+    { 
+      ?x :p ?v .
+      OPTIONAL
+      { 
+        ?y :q ?w .
+        FILTER(?v=2)
+      }
+    }
+
+is equivalent to
+
+    (prefix ((: <http://example/>))
+      (leftjoin
+        (bgp (triple ?x :p ?v))
+        (bgp (triple ?y :q ?w))
+        (= ?v 2)))
+
+#### Complex
+
+### Expression Evaluation
+
+#### Constructing operator expressions manually
 
     Operator(:isBlank).new(RDF::Node(:foobar))
     Operator(:isIRI).new(RDF::URI('http://rdf.rubyforge.org/'))
     Operator(:isLiteral).new(RDF::Literal(3.1415))
     Operator(:str).new(Operator(:datatype).new(RDF::Literal(3.1415)))
 
-### Constructing operator expressions using SSE forms
+#### Constructing operator expressions using SSE forms
 
     Expression[:isBlank, RDF::Node(:foobar)]
     Expression[:isIRI, RDF::URI('http://rdf.rubyforge.org/')]
     Expression[:isLiteral, RDF::Literal(3.1415)]
     Expression[:str, [:datatype, RDF::Literal(3.1415)]]
 
-### Constructing operator expressions using SSE strings
+#### Constructing operator expressions using SSE strings
 
     Expression.parse('(isBlank _:foobar)')
     Expression.parse('(isIRI <http://rdf.rubyforge.org/>)')
     Expression.parse('(isLiteral 3.1415)')
     Expression.parse('(str (datatype 3.1415))')
 
-### Evaluating operators standalone
+#### Evaluating operators standalone
 
     Operator(:isBlank).evaluate(RDF::Node(:foobar))              #=> RDF::Literal::TRUE
     Operator(:isIRI).evaluate(RDF::DC.title)                     #=> RDF::Literal::TRUE
     Operator(:isLiteral).evaluate(RDF::Literal(3.1415))          #=> RDF::Literal::TRUE
 
-### Evaluating expressions on a solution sequence
+#### Evaluating expressions on a solution sequence
 
     require 'rdf/triples'
     
@@ -66,7 +176,7 @@ Examples
     expression = Expression.parse('(not (bound ?email))')
     solutions.filter!(expression)
 
-### Optimizing expressions containing constant subexpressions
+#### Optimizing expressions containing constant subexpressions
 
     Expression.parse('(sameTerm ?var ?var)').optimize            #=> RDF::Literal::TRUE
     Expression.parse('(* -2 (- (* (+ 1 2) (+ 3 4))))').optimize  #=> RDF::Literal(42)

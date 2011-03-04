@@ -3,6 +3,10 @@ module SPARQL; module Algebra
     ##
     # The SPARQL numeric unary `+` operator.
     #
+    # @example
+    #   (+ ?x ?y)
+    #   (plus ?x ?y)
+    #
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-plus
     class Plus < Operator::Unary
       NAME = [:+, :plus]

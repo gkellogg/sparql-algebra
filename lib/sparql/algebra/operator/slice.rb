@@ -3,6 +3,13 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `slice` operator.
     #
+    # @example
+    #   (prefix ((: <http://example.org/ns#>))
+    #     (slice 1 1
+    #       (project (?v)
+    #         (order (?v)
+    #           (bgp (triple ??0 :num ?v))))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
     class Slice < Operator::Ternary
       include Query

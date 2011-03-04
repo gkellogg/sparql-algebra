@@ -3,6 +3,14 @@ module SPARQL; module Algebra
     ##
     # The SPARQL `bound` operator.
     #
+    # @example
+    #   (prefix ((: <http://example.org/ns#>))
+    #     (project (?a ?c)
+    #       (filter (! (bound ?e))
+    #         (leftjoin
+    #           (bgp (triple ?a :b ?c))
+    #           (bgp (triple ?c :d ?e))))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-bound
     class Bound < Operator::Unary
       NAME = :bound

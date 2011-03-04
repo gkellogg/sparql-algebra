@@ -3,6 +3,11 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `prefix` operator.
     #
+    # @example
+    #   (prefix ((: <http://example/>))
+    #     (graph ?g
+    #       (bgp (triple ?s ?p ?o))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#QSynIRI
     class Prefix < Binary
       include Query

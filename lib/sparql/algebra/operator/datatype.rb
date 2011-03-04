@@ -3,6 +3,14 @@ module SPARQL; module Algebra
     ##
     # The SPARQL `datatype` operator.
     #
+    # @example
+    #   (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
+    #            (rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
+    #            (: <http://example.org/>))
+    #     (project (?s)
+    #       (filter (= (datatype (xsd:double ?v)) xsd:double)
+    #         (bgp (triple ?s :p ?v)))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-datatype
     class Datatype < Operator::Unary
       NAME = :datatype

@@ -2,6 +2,8 @@ module SPARQL; module Algebra
   class Operator
     ##
     # The SPARQL numeric `subtract` operator.
+    #   (- ?x ?y)
+    #   (subtract ?x ?y)
     #
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-subtract
     class Subtract < Operator::Binary

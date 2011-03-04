@@ -3,6 +3,13 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `distinct` operator.
     #
+    # @example
+    #   (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
+    #            (: <http://example/>))
+    #     (distinct
+    #       (project (?v)
+    #         (bgp (triple ?x ?p ?v)))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
     class Distinct < Operator::Unary
       include Query

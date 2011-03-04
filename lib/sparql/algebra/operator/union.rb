@@ -3,6 +3,13 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `union` operator.
     #
+    # @example
+    #   (prefix ((: <http://example/>))
+    #     (union
+    #       (bgp (triple ?s ?p ?o))
+    #       (graph ?g
+    #         (bgp (triple ?s ?p ?o)))))
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
     class Union < Operator
       include Query

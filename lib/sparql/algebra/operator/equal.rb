@@ -3,6 +3,9 @@ module SPARQL; module Algebra
     ##
     # The SPARQL relational `=` (equal) comparison operator.
     #
+    # @example
+    #   (= ?x ?y)
+    #
     # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
     class Equal < Compare
