@@ -3,7 +3,14 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `describe` operator.
     #
-    # @see http://www.w3.org/TR/rdf-sparql-query/#ask
+    # Generages a graph across specified terms using {RDF::Queryable}`#concise_bounded_description`.
+    #
+    # @example
+    #   (prefix ((exOrg: <http://org.example.com/employees#>))
+    #     (describe (?x)
+    #       (bgp (triple ?x exOrg:employeeId "1234"))))
+    #
+    # @see http://www.w3.org/TR/rdf-sparql-query/#describe
     class Describe < Operator::Binary
       include Query
       
@@ -29,7 +36,6 @@ module SPARQL; module Algebra
       # @return [RDF::Query::Solutions]
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#describe
-      # @see    http://www.w3.org/Submission/CBD/
       def execute(queryable, options = {})
         debug("Describe #{operands.first}, #{options.inspect}", options)
 

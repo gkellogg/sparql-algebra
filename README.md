@@ -240,6 +240,7 @@ Documentation
     * {SPARQL::Algebra::Operator::Dataset}
     * {SPARQL::Algebra::Operator::Datatype}
     * {SPARQL::Algebra::Operator::Desc}
+    * {SPARQL::Algebra::Operator::Describe}
     * {SPARQL::Algebra::Operator::Distinct}
     * {SPARQL::Algebra::Operator::Divide}
     * {SPARQL::Algebra::Operator::Equal}
