@@ -32,9 +32,27 @@ module SPARQL; module Algebra
       # @return [RDF::Literal::Boolean] `true` or `false`
       # @raise  [TypeError] if the operands could not be coerced to boolean literals
       def evaluate(bindings = {})
-        left  = lambda { boolean(operand(0).evaluate(bindings)).true? }
-        right = lambda { boolean(operand(1).evaluate(bindings)).true? }
-        RDF::Literal(left.call && right.call) # FIXME: error handling
+        begin
+          left = boolean(operand(0).evaluate(bindings)).true?
+        rescue TypeError
+          left = nil
+        end
+        
+        begin
+          right = boolean(operand(1).evaluate(bindings)).true?
+        rescue TypeError
+          right = nil
+        end
+
+        # From http://www.w3.org/TR/rdf-sparql-query/#evaluation
+        # A logical-and that encounters an error on only one branch will return an error if the other branch is
+        # TRUE and FALSE if the other branch is FALSE.
+        case
+        when left.nil? && right.nil? then raise(TypeError)
+        when left.nil?               then right ? raise(TypeError) : RDF::Literal::FALSE
+        when right.nil?              then left  ? raise(TypeError) : RDF::Literal::FALSE
+        else                              RDF::Literal(left && right)
+        end
       end
     end # And
   end # Operator

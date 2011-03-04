@@ -37,6 +37,28 @@ module SPARQL; module Algebra
     autoload :LangMatches,        'sparql/algebra/operator/lang_matches'
     autoload :Regex,              'sparql/algebra/operator/regex'
 
+    # Miscellaneous
+    autoload :Asc,                'sparql/algebra/operator/asc'
+    autoload :Desc,               'sparql/algebra/operator/desc'
+    autoload :Exprlist,           'sparql/algebra/operator/exprlist'
+
+    # Query operators
+    autoload :Ask,                'sparql/algebra/operator/ask'
+    autoload :Base,               'sparql/algebra/operator/base'
+    autoload :Construct,          'sparql/algebra/operator/construct'
+    autoload :Dataset,            'sparql/algebra/operator/dataset'
+    autoload :Distinct,           'sparql/algebra/operator/distinct'
+    autoload :Filter,             'sparql/algebra/operator/filter'
+    autoload :Graph,              'sparql/algebra/operator/graph'
+    autoload :Join,               'sparql/algebra/operator/join'
+    autoload :LeftJoin,           'sparql/algebra/operator/left_join'
+    autoload :Order,              'sparql/algebra/operator/order'
+    autoload :Prefix,             'sparql/algebra/operator/prefix'
+    autoload :Project,            'sparql/algebra/operator/project'
+    autoload :Reduced,            'sparql/algebra/operator/reduced'
+    autoload :Slice,              'sparql/algebra/operator/slice'
+    autoload :Union,              'sparql/algebra/operator/union'
+
     ##
     # Returns an operator class for the given operator `name`.
     #
@@ -77,6 +99,32 @@ module SPARQL; module Algebra
         when :sameterm    then SameTerm
         when :langmatches then LangMatches
         when :regex       then Regex
+        
+        # Miscellaneous
+        when :asc         then Asc
+        when :desc        then Desc
+        when :exprlist    then Exprlist
+
+        # Datasets
+        when :dataset     then Dataset
+        
+        # Query forms
+        when :ask         then Ask
+        when :base        then Base
+        when :bgp         then RDF::Query
+        when :construct   then Construct
+        when :distinct    then Distinct
+        when :filter      then Filter
+        when :graph       then Graph
+        when :join        then Join
+        when :leftjoin    then LeftJoin
+        when :order       then Order
+        when :prefix      then Prefix
+        when :project     then Project
+        when :reduced     then Reduced
+        when :slice       then Slice
+        when :triple      then RDF::Query::Pattern
+        when :union       then Union
         else nil # not found
       end
     end
@@ -119,15 +167,69 @@ module SPARQL; module Algebra
       @options  = operands.last.is_a?(Hash) ? operands.pop.dup : {}
       @operands = operands.map! do |operand|
         case operand
-          when Operator, Variable, RDF::Term
+          when Operator, Variable, RDF::Term, RDF::Query, RDF::Query::Pattern, Array, Symbol
             operand
-          when TrueClass, FalseClass, Numeric, String, DateTime, Date, Time, Symbol
+          when TrueClass, FalseClass, Numeric, String, DateTime, Date, Time
             RDF::Literal(operand)
           else raise TypeError, "invalid SPARQL::Algebra::Operator operand: #{operand.inspect}"
         end
       end
     end
 
+    ##
+    # Base URI used for reading data sources with relative URIs
+    #
+    # @return [RDF::URI]
+    def base_uri
+      Operator.base_uri
+    end
+    
+    ##
+    # Base URI used for reading data sources with relative URIs
+    #
+    # @return [RDF::URI]
+    def self.base_uri
+      @base_uri
+    end
+    
+    ##
+    # Set Base URI associated with SPARQL document, typically done
+    # when reading SPARQL from a URI
+    #
+    # @param [RDF::URI] base
+    # @return [RDF::URI]
+    def self.base_uri=(uri)
+      @base_uri = RDF::URI(uri)
+    end
+    
+    ##
+    # Prefixes useful for future serialization
+    #
+    # @return [Hash{Symbol => RDF::URI}]
+    #   Prefix definitions
+    def prefixes
+      Operator.prefixes
+    end
+    
+    ##
+    # Prefixes useful for future serialization
+    #
+    # @return [Hash{Symbol => RDF::URI}]
+    #   Prefix definitions
+    def self.prefixes
+      @prefixes
+    end
+    
+    ##
+    # Prefixes useful for future serialization
+    #
+    # @param [Hash{Symbol => RDF::URI}] hash
+    #   Prefix definitions
+    # @return [Hash{Symbol => RDF::URI}]
+    def self.prefixes=(hash)
+      @prefixes = hash
+    end
+    
     ##
     # Any additional options for this operator.
     #
@@ -161,6 +263,15 @@ module SPARQL; module Algebra
         operand.is_a?(Variable) ||
           (operand.respond_to?(:variable?) && operand.variable?)
       end
+    end
+
+    ##
+    # Returns `true` if this is executable (i.e., contains a graph patterns), `false`
+    # otherwise.
+    #
+    # @return [Boolean] `true` or `false`
+    def executable?
+      respond_to?(:execute)
     end
 
     ##
@@ -236,6 +347,14 @@ module SPARQL; module Algebra
     end
 
     ##
+    # Returns an S-Expression (SXP) representation of this operator
+    #
+    # @return [String]
+    def to_sxp
+      to_sse.to_sxp
+    end
+
+    ##
     # Returns a developer-friendly representation of this operator.
     #
     # @return [String]
@@ -243,6 +362,13 @@ module SPARQL; module Algebra
       sprintf("#<%s:%#0x(%s)>", self.class.name, __id__, operands.map(&:inspect).join(', '))
     end
 
+    ##
+    # @param  [Statement] other
+    # @return [Boolean]
+    def eql?(other)
+      other.class == self.class && other.operands == self.operands
+    end
+    alias_method :==, :eql?
   protected
 
     ##

@@ -1,11 +1,22 @@
+require "bundler/setup"
+require 'rdf/isomorphic'
 require 'sparql/algebra'
 require 'rdf/spec'
+require 'rdf/n3'
+Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each {|f| require f}
 
 RSpec.configure do |config|
   config.include(RDF::Spec::Matchers)
-  config.exclusion_filter = {:ruby => lambda { |version|
-    RUBY_VERSION.to_s !~ /^#{version}/
-  }}
+  config.filter_run :focus => true
+  config.run_all_when_everything_filtered = true
+  config.exclusion_filter = {
+    :ruby           => lambda { |version| RUBY_VERSION.to_s !~ /^#{version}/},
+    :blank_nodes    => 'unique',
+    :arithmetic     => 'native',
+    :sparql_algebra => false,
+    #:status         => 'bug',
+    :reduced        => 'all',
+  }
 end
 
 include SPARQL::Algebra
@@ -18,9 +29,9 @@ end
 
 def sse_examples(filename)
   input = File.read(File.join(File.dirname(__FILE__), filename))
-  input.gsub!(/\s\-INF/, " \"-INF\"^^<#{RDF::XSD.double}>") # FIXME in SXP.rb
-  input.gsub!(/\s\+INF/, " \"INF\"^^<#{RDF::XSD.double}>")  # FIXME in SXP.rb
-  input.gsub!(/\sNaN/,  " \"NaN\"^^<#{RDF::XSD.double}>")   # FIXME in SXP.rb
+  input.gsub!(/\s\-INF/, " \"-INF\"^^<#{RDF::XSD.double}>") # Shorthand
+  input.gsub!(/\s\+INF/, " \"INF\"^^<#{RDF::XSD.double}>")  # Shorthand
+  input.gsub!(/\sNaN/,  " \"NaN\"^^<#{RDF::XSD.double}>")   # Shorthand
   datatypes = {
     'xsd:double'   => RDF::XSD.double,
     'xsd:float'    => RDF::XSD.float,
@@ -32,7 +43,7 @@ def sse_examples(filename)
     'xsd:boolean'  => RDF::XSD.boolean,
     'xsd:dateTime' => RDF::XSD.dateTime,
   }
-  datatypes.each { |qname, uri| input.gsub!(qname, "<#{uri}>") } # FIXME in SXP.rb
+  datatypes.each { |qname, uri| input.gsub!(qname, "<#{uri}>") } # Shorthand
   examples = SXP::Reader::SPARQL.read_all(input)
   examples.inject({}) do |result, (tag, input, output)|
     output = case output
@@ -46,7 +57,7 @@ end
 
 def verify(examples)
   examples.each do |input, output|
-    describe ".evaluate(#{input[1..-1].map { |term| repr(term) }.join(', ')})" do
+    describe ".evaluate(#{input.to_sse})" do
       if output.is_a?(Class)
         it "raises #{output.inspect}" do
           lambda { @op.evaluate(*input[1..-1]) }.should raise_error(output)
@@ -57,7 +68,7 @@ def verify(examples)
           if output.is_a?(RDF::Literal::Double) && output.nan?
             result.should be_nan
           else
-            result.should eql output
+            result.should == output
           end
         end
       end
@@ -97,5 +108,76 @@ def repr(term)
       else term.inspect
     end
     else term.inspect
+  end
+end
+
+# This file defines the sparql query function, which makes a sparql query and returns results.
+
+# run a sparql query against SPARQL S-Expression (SSE)
+# Options:
+#   :graphs
+#     example
+#       opts[:graphs] ==
+#        { :default => {
+#             :data => '...',
+#             :format => :ttl
+#           },
+#           <g1> => {
+#            :data => '...',
+#            :format => :ttl
+#           }
+#           <g2> => {
+#            :default => true
+#           }
+#        }
+#   :allow_empty => true
+#     allow no data for query (raises an exception by default)
+#   :query
+#     A SSE query, as a string
+#   :repository
+#     The dydra repository associated with the account to use
+#   :form
+#     :ask, :construct, :select or :describe
+def sparql_query(opts)
+  raise "A query is required to be run" if opts[:query].nil?
+
+  # Load default and named graphs into repository
+  repo = RDF::Repository.new do |r|
+    opts[:graphs].each do |key, info|
+      next if key == :result
+      data, format, default = info[:data], info[:format], info[:default]
+      if data
+        RDF::Reader.for(:file_extension => format).new(data).each_statement do |st|
+          st.context = key unless key == :default || default
+          r << st
+        end
+      end
+    end
+  end
+
+  query_str = opts[:query]
+  query_opts = {:debug => ENV['PARSER_DEBUG']}
+  query_opts[:base_uri] = opts[:base_uri]
+  
+  query = SPARQL::Algebra::Expression.parse(query_str, query_opts)
+
+  case opts[:form]
+  when :ask
+    query.execute(repo, :debug => ENV['EXEC_DEBUG'])
+  when :construct
+    info = opts[:graphs][:result]
+    raise "Result graph expected for :construct" unless info
+    data, format = info[:data], info[:format]
+    expected = RDF::Graph.new << RDF::Reader.for(:file_extension => format).new(data)
+    graph = query.execute(repo, :debug => ENV['EXEC_DEBUG'])
+    if ENV['EXEC_DEBUG']
+      puts "Check isomophism:"
+      puts graph.dump(:n3, :prefixes => Operator.prefixes, :base_uri => Operator.base_uri)
+      puts "\nwith"
+      puts expected.dump(:n3, :prefixes => Operator.prefixes, :base_uri => Operator.base_uri)
+    end
+    graph.isomorphic_with?(expected)
+  else
+    query.execute(repo, :debug => ENV['EXEC_DEBUG']).to_a.map(&:to_hash)
   end
 end

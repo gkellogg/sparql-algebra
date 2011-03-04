@@ -117,14 +117,59 @@ Documentation
 
 * {SPARQL::Algebra}
   * {SPARQL::Algebra::Expression}
+  * {SPARQL::Algebra::Query}
   * {SPARQL::Algebra::Operator}
+    * {SPARQL::Algebra::Operator::Add}
+    * {SPARQL::Algebra::Operator::And}
+    * {SPARQL::Algebra::Operator::Asc}
+    * {SPARQL::Algebra::Operator::Ask}
+    * {SPARQL::Algebra::Operator::Base}
+    * {SPARQL::Algebra::Operator::Bound}
+    * {SPARQL::Algebra::Operator::Compare}
+    * {SPARQL::Algebra::Operator::Construct}
+    * {SPARQL::Algebra::Operator::Dataset}
+    * {SPARQL::Algebra::Operator::Datatype}
+    * {SPARQL::Algebra::Operator::Desc}
+    * {SPARQL::Algebra::Operator::Distinct}
+    * {SPARQL::Algebra::Operator::Divide}
+    * {SPARQL::Algebra::Operator::Equal}
+    * {SPARQL::Algebra::Operator::Exprlist}
+    * {SPARQL::Algebra::Operator::Filter}
+    * {SPARQL::Algebra::Operator::Graph}
+    * {SPARQL::Algebra::Operator::GreaterThan}
+    * {SPARQL::Algebra::Operator::GreaterThanOrEqual}
+    * {SPARQL::Algebra::Operator::IsBlank}
+    * {SPARQL::Algebra::Operator::IsIRI}
+    * {SPARQL::Algebra::Operator::IsLiteral}
+    * {SPARQL::Algebra::Operator::Join}
+    * {SPARQL::Algebra::Operator::Lang}
+    * {SPARQL::Algebra::Operator::LangMatches}
+    * {SPARQL::Algebra::Operator::LeftJoin}
+    * {SPARQL::Algebra::Operator::LessThan}
+    * {SPARQL::Algebra::Operator::LessThanOrEqual}
+    * {SPARQL::Algebra::Operator::Minus}
+    * {SPARQL::Algebra::Operator::Multiply}
+    * {SPARQL::Algebra::Operator::Not}
+    * {SPARQL::Algebra::Operator::NotEqual}
+    * {SPARQL::Algebra::Operator::Or}
+    * {SPARQL::Algebra::Operator::Order}
+    * {SPARQL::Algebra::Operator::Plus}
+    * {SPARQL::Algebra::Operator::Prefix}
+    * {SPARQL::Algebra::Operator::Project}
+    * {SPARQL::Algebra::Operator::Reduced}
+    * {SPARQL::Algebra::Operator::Regex}
+    * {SPARQL::Algebra::Operator::SameTerm}
+    * {SPARQL::Algebra::Operator::Slice}
+    * {SPARQL::Algebra::Operator::Str}
+    * {SPARQL::Algebra::Operator::Subtract}
+    * {SPARQL::Algebra::Operator::Union}
 
 Dependencies
 ------------
 
 * [Ruby](http://ruby-lang.org/) (>= 1.8.7) or (>= 1.8.1 with [Backports][])
-* [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.3.0)
-* [SXP](http://rubygems.org/gems/sxp) (>= 0.0.12) for [SSE][] parsing only
+* [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.3.1)
+* [SXP](http://rubygems.org/gems/sxp) (>= 0.0.14) for [SSE][] parsing only
 
 Installation
 ------------
@@ -151,10 +196,11 @@ Mailing List
 
 * <http://lists.w3.org/Archives/Public/public-rdf-ruby/>
 
-Author
+Authors
 ------
 
 * [Arto Bendiken](http://github.com/bendiken) - <http://ar.to/>
+* [Gregg Kellogg](http://github.com/gkellogg) - <http://kellogg-assoc.com/>
 
 Contributors
 ------------
@@ -181,6 +227,8 @@ License
 
 This is free and unencumbered public domain software. For more information,
 see <http://unlicense.org/> or the accompanying {file:UNLICENSE} file.
+
+Portions of tests are derived from [W3C DAWG tests](http://www.w3.org/2001/sw/DataAccess/tests/) and have [other licensing terms](http://www.w3.org/2001/sw/DataAccess/tests/data-r2/LICENSE).
 
 [Ruby]:       http://ruby-lang.org/
 [RDF]:        http://www.w3.org/RDF/

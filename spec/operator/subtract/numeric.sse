@@ -15,6 +15,6 @@
 
 (equal (- 42 13) 29)
 (equal (- 42.0 13.0) 29.0)
-(equal (- "42"^^xsd:decimal "13"^^xsd:decimal) "29"^^xsd:decimal)
+(equal (- "42"^^xsd:decimal "13"^^xsd:decimal) "29.0"^^xsd:decimal)
 
 (error (- true false) TypeError)
