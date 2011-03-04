@@ -47,6 +47,7 @@ module SPARQL; module Algebra
     autoload :Base,               'sparql/algebra/operator/base'
     autoload :Construct,          'sparql/algebra/operator/construct'
     autoload :Dataset,            'sparql/algebra/operator/dataset'
+    autoload :Describe,           'sparql/algebra/operator/describe'
     autoload :Distinct,           'sparql/algebra/operator/distinct'
     autoload :Filter,             'sparql/algebra/operator/filter'
     autoload :Graph,              'sparql/algebra/operator/graph'
@@ -113,6 +114,7 @@ module SPARQL; module Algebra
         when :base        then Base
         when :bgp         then RDF::Query
         when :construct   then Construct
+        when :describe    then Describe
         when :distinct    then Distinct
         when :filter      then Filter
         when :graph       then Graph
