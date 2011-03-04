@@ -1,7 +1,7 @@
 module SPARQL; module Algebra
   class Operator
     ##
-    # The SPARQL GraphPattern `union` operator.
+    # The SPARQL GraphPattern `base` operator.
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#QSynIRI
     class Base < Binary
@@ -12,7 +12,7 @@ module SPARQL; module Algebra
       ##
       # Executes this query on the given `queryable` graph or repository.
       # Really a pass-through, as this is a syntactic object used for providing
-      # context for URIs.
+      # context for relative URIs.
       #
       # @param  [RDF::Queryable] queryable
       #   the graph or repository to query

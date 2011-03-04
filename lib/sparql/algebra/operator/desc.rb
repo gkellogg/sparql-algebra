@@ -8,7 +8,8 @@ module SPARQL; module Algebra
       NAME = :desc
 
       ##
-      # Returns the evaluation of it's operand
+      # Returns the evaluation of it's operand. Default comparison is in
+      # ascending order. Ordering is applied in {Order}.
       #
       # @param  [RDF::Query::Solution, #[]] bindings
       # @return [RDF::Term]

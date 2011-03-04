@@ -1,7 +1,7 @@
 module SPARQL; module Algebra
   class Operator
     ##
-    # The SPARQL GraphPattern `ask` operator.
+    # The SPARQL GraphPattern `construct` operator.
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#ask
     class Construct < Operator::Binary
@@ -10,11 +10,11 @@ module SPARQL; module Algebra
       NAME = [:construct]
 
       ##
-      # Executes this query on the given `queryable` graph or repository.
+      # Executes this query on the given {RDF::Queryable} object.
       # Binds variables to the array of patterns in the first operand and returns the resulting RDF::Graph object
       #
       # If any such instantiation produces a triple containing an unbound variable or an illegal RDF construct,
-      # such as a literal in subject or predicate position, then that triple is not included in the output RDF
+      # such as an RDF::Literal in _subject_ or _predicate_ position, then that triple is not included in the output RDF
       # graph. The graph template can contain triples with no variables (known as ground or explicit triples),
       # and these also appear in the output RDF graph returned by the CONSTRUCT query form.
       #

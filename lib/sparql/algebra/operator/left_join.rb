@@ -1,7 +1,7 @@
 module SPARQL; module Algebra
   class Operator
     ##
-    # The SPARQL GraphPattern `leftJoin` operator.
+    # The SPARQL GraphPattern `leftjoin` operator.
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
     class LeftJoin < Operator
@@ -10,9 +10,8 @@ module SPARQL; module Algebra
       NAME = [:leftjoin]
 
       ##
-      # Executes this query on the given `queryable` graph or repository.
-      #
-      # Adds every solution from the left, merging compatible solutions from the right
+      # Executes each operand with `queryable` and performs the `leftjoin` operation
+      # by adding every solution from the left, merging compatible solutions from the right
       # that match an optional filter.
       #
       # @param  [RDF::Queryable] queryable
@@ -22,6 +21,8 @@ module SPARQL; module Algebra
       # @return [RDF::Query::Solutions]
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
+      # @see    http://rdf.rubyforge.org/RDF/Query/Solution.html#merge-instance_method
+      # @see    http://rdf.rubyforge.org/RDF/Query/Solution.html#compatible%3F-instance_method
       def execute(queryable, options = {})
         filter = operand(2)
 

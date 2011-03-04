@@ -51,8 +51,8 @@ module RDF::Queryable
   ##
   # Queries `self` for RDF statements matching the given `pattern`.
   #
-  # This method delegates to the protected {#query_pattern} method for the
-  # actual lower-level query pattern matching implementation.
+  # Monkey patch to RDF::Queryable#query to execute a {SPARQL::Algebra::Operator}
+  # in addition to an {RDF::Query} object.
   #
   # @example
   #     queryable.query([nil, RDF::DOAP.developer, nil])

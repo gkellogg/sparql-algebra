@@ -1,7 +1,7 @@
 module SPARQL; module Algebra
   class Operator
     ##
-    # The SPARQL GraphPattern `distinct` operator.
+    # The SPARQL GraphPattern `reduced` operator.
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
     class Reduced < Operator::Unary
@@ -11,8 +11,7 @@ module SPARQL; module Algebra
 
       ##
       # Executes this query on the given `queryable` graph or repository.
-      # Really a pass-through, as this is a syntactic object used for providing
-      # context for URIs.
+      # Removes duplicate solutions from the solution set.
       #
       # @param  [RDF::Queryable] queryable
       #   the graph or repository to query

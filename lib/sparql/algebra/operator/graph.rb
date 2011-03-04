@@ -3,13 +3,17 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `graph` operator.
     #
-    # This is basically a wrapper to add the context to the BGP.
+    # This is a wrapper to add a `context` to the BGP.
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
     class Graph < Operator::Binary
       NAME = [:graph]
       ##
-      # A graph is an RDF::Query with a context
+      # A `graph` is an RDF::Query with a context.
+      #
+      # @param [RDF::URI, RDF::Query::Variable] context
+      # @param [RDF::Query] bgp
+      # @return [RDF::Query]
       def self.new(context, bgp)
         bgp.context = context
         bgp

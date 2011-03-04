@@ -23,23 +23,6 @@ Examples
     
     include SPARQL::Algebra
 
-### Parsing and executing a query
-    sse = (prefix ((foaf: <http://xmlns.com/foaf/0.1/>))
-            (project (?name ?mbox)
-              (join
-                (bgp (triple ?x foaf:name ?name))
-                (bgp (triple ?x foaf:mbox ?mbox)))))
-    }
-    operator = SPARQL::Algebra.parse(sse) =>
-    
-    Operator::Prefix(
-      [[:"foaf:", RDF::URI("http://xmlns.com/foaf/0.1/")]],
-      Operator.Join(
-        RDF::Query.new {pattern [:x, RDF::FOAF.name, :name]},
-        RDF::Query.new {pattern [:x, RDF::FOAF.mbox, :mbox]}))
-        
-    operator.execute(queryable) => RDF::Query::Solutions
-    
 ### Constructing operator expressions manually
 
     Operator(:isBlank).new(RDF::Node(:foobar))
@@ -134,14 +117,59 @@ Documentation
 
 * {SPARQL::Algebra}
   * {SPARQL::Algebra::Expression}
+  * {SPARQL::Algebra::Query}
   * {SPARQL::Algebra::Operator}
+    * {SPARQL::Algebra::Operator::Add}
+    * {SPARQL::Algebra::Operator::And}
+    * {SPARQL::Algebra::Operator::Asc}
+    * {SPARQL::Algebra::Operator::Ask}
+    * {SPARQL::Algebra::Operator::Base}
+    * {SPARQL::Algebra::Operator::Bound}
+    * {SPARQL::Algebra::Operator::Compare}
+    * {SPARQL::Algebra::Operator::Construct}
+    * {SPARQL::Algebra::Operator::Dataset}
+    * {SPARQL::Algebra::Operator::Datatype}
+    * {SPARQL::Algebra::Operator::Desc}
+    * {SPARQL::Algebra::Operator::Distinct}
+    * {SPARQL::Algebra::Operator::Divide}
+    * {SPARQL::Algebra::Operator::Equal}
+    * {SPARQL::Algebra::Operator::Exprlist}
+    * {SPARQL::Algebra::Operator::Filter}
+    * {SPARQL::Algebra::Operator::Graph}
+    * {SPARQL::Algebra::Operator::GreaterThan}
+    * {SPARQL::Algebra::Operator::GreaterThanOrEqual}
+    * {SPARQL::Algebra::Operator::IsBlank}
+    * {SPARQL::Algebra::Operator::IsIRI}
+    * {SPARQL::Algebra::Operator::IsLiteral}
+    * {SPARQL::Algebra::Operator::Join}
+    * {SPARQL::Algebra::Operator::Lang}
+    * {SPARQL::Algebra::Operator::LangMatches}
+    * {SPARQL::Algebra::Operator::LeftJoin}
+    * {SPARQL::Algebra::Operator::LessThan}
+    * {SPARQL::Algebra::Operator::LessThanOrEqual}
+    * {SPARQL::Algebra::Operator::Minus}
+    * {SPARQL::Algebra::Operator::Multiply}
+    * {SPARQL::Algebra::Operator::Not}
+    * {SPARQL::Algebra::Operator::NotEqual}
+    * {SPARQL::Algebra::Operator::Or}
+    * {SPARQL::Algebra::Operator::Order}
+    * {SPARQL::Algebra::Operator::Plus}
+    * {SPARQL::Algebra::Operator::Prefix}
+    * {SPARQL::Algebra::Operator::Project}
+    * {SPARQL::Algebra::Operator::Reduced}
+    * {SPARQL::Algebra::Operator::Regex}
+    * {SPARQL::Algebra::Operator::SameTerm}
+    * {SPARQL::Algebra::Operator::Slice}
+    * {SPARQL::Algebra::Operator::Str}
+    * {SPARQL::Algebra::Operator::Subtract}
+    * {SPARQL::Algebra::Operator::Union}
 
 Dependencies
 ------------
 
 * [Ruby](http://ruby-lang.org/) (>= 1.8.7) or (>= 1.8.1 with [Backports][])
-* [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.3.0)
-* [SXP](http://rubygems.org/gems/sxp) (>= 0.0.12) for [SSE][] parsing only
+* [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.3.1)
+* [SXP](http://rubygems.org/gems/sxp) (>= 0.0.14) for [SSE][] parsing only
 
 Installation
 ------------

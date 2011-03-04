@@ -4,6 +4,20 @@ module SPARQL
   ##
   # A SPARQL algebra for RDF.rb.
   #
+  # Parses Sparql S-Expressions (SSE) into SPARQL Algebra operators.
+  #
+  # Operators implementing {SPARQL::Algebra::Query#execute} may directly
+  # execute an object implementing {RDF::Queryable}, and so may be treated
+  # equivalently to {RDF::Query}.
+  #
+  # Operators implementing {SPARQL::Algebra::Expression#evaluate} may be
+  # evaluated with RDF::Query::Solution bindings to yield an appropriate result.
+  #
+  # An entire SSE expression is parsed into a recursive set of {SPARQL::Algebra::Operator}
+  # instances, with each operand representing an additional operator.
+  #
+  # {RDF::Query} and {RDF::Query::Pattern} are used as primitives for `bgp` and `triple` expressions.
+  #
   # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
   module Algebra
     include RDF

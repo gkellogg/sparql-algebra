@@ -11,7 +11,7 @@ module SPARQL; module Algebra
 
       ##
       # Executes this query on the given `queryable` graph or repository.
-      # Returns true if any solutions are found.
+      # Returns true if any solutions are found, false otherwise.
       #
       # @param  [RDF::Queryable] queryable
       #   the graph or repository to query

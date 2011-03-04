@@ -8,10 +8,14 @@ module SPARQL; module Algebra
       NAME = [:exprlist]
 
       ##
-      # Returns the logical `OR` of the left operand and the right operand.
+      # Returns `true` if all operands evaluate to `true`.
       #
       # Note that this operator operates on the effective boolean value
       # (EBV) of its operands.
+      #
+      # @example
+      #
+      #   (exprlist (= 1 1) (!= 1 0))
       #
       # @param  [RDF::Query::Solution, #[]] bindings
       # @return [RDF::Literal::Boolean] `true` or `false`

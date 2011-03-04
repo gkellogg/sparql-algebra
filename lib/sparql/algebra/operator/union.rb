@@ -10,7 +10,8 @@ module SPARQL; module Algebra
       NAME = [:union]
 
       ##
-      # Executes this query on the given `queryable` graph or repository.
+      # Executes each operand with `queryable` and performs the `union` operation
+      # by creating a new solution set consiting of all solutions from both operands.
       #
       # @param  [RDF::Queryable] queryable
       #   the graph or repository to query
@@ -19,18 +20,7 @@ module SPARQL; module Algebra
       # @return [RDF::Query::Solutions]
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
-      #
-      #     D : a dataset
-      #     D(G) : D a dataset with active graph G (the one patterns match against)
-      #     D[i] : The graph with IRI i in dataset D
-      #     D[DFT] : the default graph of D
-      #     P, P1, P2 : graph patterns
-      #     L : a solution sequence
       def execute(queryable, options = {})
-        # Let Ω1 and Ω2 be multisets of solution mappings. We define:
-        # Union(Ω1, Ω2) = { μ | μ in Ω1 or μ in Ω2 }
-        # card[Union(Ω1, Ω2)](μ) = card[Ω1](μ) + card[Ω2](μ)
-        # eval(D(G), Union(P1,P2)) = Union(eval(D(G), P1), eval(D(G), P2)
         debug("Union", options)
         solutions1 = operand(0).execute(queryable, options.merge(:depth => options[:depth].to_i + 1))
         debug("=>(left) #{solutions1.inspect}", options)

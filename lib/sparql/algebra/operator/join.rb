@@ -10,7 +10,9 @@ module SPARQL; module Algebra
       NAME = [:join]
 
       ##
-      # Executes this query on the given `queryable` graph or repository.
+      # Executes each operand with `queryable` and performs the `join` operation
+      # by creating a new solution set containing the `merge` of all solutions
+      # from each set that are `compatible` with each other.
       #
       # @param  [RDF::Queryable] queryable
       #   the graph or repository to query
@@ -19,13 +21,8 @@ module SPARQL; module Algebra
       # @return [RDF::Query::Solutions]
       #   the resulting solution sequence
       # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
-      #
-      #     D : a dataset
-      #     D(G) : D a dataset with active graph G (the one patterns match against)
-      #     D[i] : The graph with IRI i in dataset D
-      #     D[DFT] : the default graph of D
-      #     P, P1, P2 : graph patterns
-      #     L : a solution sequence
+      # @see    http://rdf.rubyforge.org/RDF/Query/Solution.html#merge-instance_method
+      # @see    http://rdf.rubyforge.org/RDF/Query/Solution.html#compatible%3F-instance_method
       def execute(queryable, options = {})
         # Join(Ω1, Ω2) = { merge(μ1, μ2) | μ1 in Ω1 and μ2 in Ω2, and μ1 and μ2 are compatible }
         # eval(D(G), Join(P1, P2)) = Join(eval(D(G), P1), eval(D(G), P2))

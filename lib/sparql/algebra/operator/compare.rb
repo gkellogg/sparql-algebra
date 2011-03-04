@@ -1,7 +1,7 @@
 module SPARQL; module Algebra
   class Operator
     ##
-    # A (non-standard) SPARQL relational `<=>` comparison operator.
+    # A SPARQL relational `<=>` comparison operator.
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
     # @see http://www.w3.org/TR/xpath-functions/#func-compare

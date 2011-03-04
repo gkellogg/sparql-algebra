@@ -11,8 +11,19 @@ module SPARQL; module Algebra
 
       ##
       # Executes this query on the given `queryable` graph or repository.
-      # Really a pass-through, as this is a syntactic object used for providing
-      # context for URIs.
+      # Returns a subset of the solutions resulting from executing
+      # the third operand, an RDF::Queryable object by indexing in to the
+      # result set by the amount specified in the first operand and limiting
+      # the total number of solutions returned by the amount specified in the
+      # second operand.
+      #
+      # If either the first or second operands are `:_`, they are not considered.
+      #
+      # @example
+      #
+      #   (slice 1 2 (bgp (triple ?s ?p ?o)))   # Returns at most two solutions starting with the second solution.
+      #   (slice _ 2 (bgp (triple ?s ?p ?o)))   # Returns at most two solutions starting with the first solution.
+      #   (slice 1 _ (bgp (triple ?s ?p ?o)))   # Returns all solution after the first.
       #
       # @param  [RDF::Queryable] queryable
       #   the graph or repository to query

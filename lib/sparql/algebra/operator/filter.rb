@@ -11,9 +11,10 @@ module SPARQL; module Algebra
 
       ##
       # Executes this query on the given `queryable` graph or repository.
-      # Then it passes each solution through one or more filters
+      # Then it passes each solution through one or more filters and removes
+      # those that evaluate to false or generate a _TypeError_.
       #
-      # Note that the last operand returns a solution, while the first
+      # Note that the last operand returns a solution set, while the first
       # is an expression. This may be a variable, simple expression,
       # or exprlist.
       #
