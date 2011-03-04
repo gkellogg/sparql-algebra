@@ -62,12 +62,13 @@ _:bob
     
       graphs = {}
       graphs[:default] = { :data => @data, :format => :ttl}
-      graphs[:result] = { :data => @result, :format => :ttl}
+
+      expected = RDF::Graph.new << RDF::N3::Reader.new(@result)
 
       repository = 'construct-construct-2'
 
       sparql_query(:graphs => graphs, :query => @query,
-                   :repository => repository, :form => :construct).should be_true
+                   :repository => repository, :form => :construct).should == expected
     end
   end
 end

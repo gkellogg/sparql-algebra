@@ -162,21 +162,8 @@ def sparql_query(opts)
   query = SPARQL::Algebra::Expression.parse(query_str, query_opts)
 
   case opts[:form]
-  when :ask
+  when :ask, :describe, :construct
     query.execute(repo, :debug => ENV['EXEC_DEBUG'])
-  when :construct
-    info = opts[:graphs][:result]
-    raise "Result graph expected for :construct" unless info
-    data, format = info[:data], info[:format]
-    expected = RDF::Graph.new << RDF::Reader.for(:file_extension => format).new(data)
-    graph = query.execute(repo, :debug => ENV['EXEC_DEBUG'])
-    if ENV['EXEC_DEBUG']
-      puts "Check isomophism:"
-      puts graph.dump(:n3, :prefixes => Operator.prefixes, :base_uri => Operator.base_uri)
-      puts "\nwith"
-      puts expected.dump(:n3, :prefixes => Operator.prefixes, :base_uri => Operator.base_uri)
-    end
-    graph.isomorphic_with?(expected)
   else
     query.execute(repo, :debug => ENV['EXEC_DEBUG']).to_a.map(&:to_hash)
   end

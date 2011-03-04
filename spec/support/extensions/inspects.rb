@@ -56,6 +56,11 @@ module RSpec
   end
 end
 
+class RDF::Graph
+  def inspect
+    "\n" + dump(:n3) + "\n"
+  end
+end
 
 class RDF::Query
   # Equivalence for Queries:

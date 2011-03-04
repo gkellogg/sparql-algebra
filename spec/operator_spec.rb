@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe SPARQL::Algebra do
-  EX = RDF::EX = RDF::Vocabulary.new('http://example.org/')
+  EX = RDF::EX = RDF::Vocabulary.new('http://example.org/') unless const_defined?(:EX)
 
   before :all do
     @op  = SPARQL::Algebra::Operator

@@ -7,7 +7,7 @@ module SPARQL; module Algebra
     class Ask < Operator::Unary
       include Query
       
-      NAME = [:project]
+      NAME = [:ask]
 
       ##
       # Executes this query on the given `queryable` graph or repository.
