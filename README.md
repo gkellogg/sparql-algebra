@@ -4,13 +4,13 @@ SPARQL Algebra for RDF.rb
 This is an in-the-works (currently pre-alpha) [Ruby][] implementation of the
 [SPARQL][] algebra for [RDF.rb][].
 
-* <http://github.com/bendiken/sparql-algebra>
+* <http://github.com/gkellogg/sparql-algebra>
 
 Features
 --------
 
-* Implements all of [SPARQL 1.0][]'s `FILTER` operators and functions.
-* Implements `FILTER` expression evaluation on `RDF::Query` solution sequences.
+* Implements all [SPARQL 1.0][] algebra operators generating `RDF::Query` compatible
+  solution sequences.
 * Implements `FILTER` expression optimizations such as constant folding,
   strength reduction, and memoization.
 * Compatible with Ruby 1.8.7+, Ruby 1.9.x, and JRuby 1.4/1.5.
