@@ -11,7 +11,7 @@ module SPARQL; module Algebra
     #         (bgp (triple ?s ?q ?v)))))
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
-    class Join < Operator
+    class Join < Operator::Binary
       include Query
       
       NAME = [:join]

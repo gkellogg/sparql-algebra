@@ -11,7 +11,7 @@ module SPARQL; module Algebra
     #         (bgp (triple ?s ?p ?o)))))
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
-    class Union < Operator
+    class Union < Operator::Binary
       include Query
       
       NAME = [:union]
