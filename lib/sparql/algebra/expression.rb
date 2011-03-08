@@ -107,7 +107,7 @@ module SPARQL; module Algebra
         case operand
           when Array
             self.new(operand, options.merge(:depth => options[:depth].to_i + 1))
-          when Operator, Variable, RDF::Term, Symbol
+          when Operator, Variable, RDF::Term, RDF::Query, Symbol
             operand
           when TrueClass, FalseClass, Numeric, String, DateTime, Date, Time
             RDF::Literal(operand)
