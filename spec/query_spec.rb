@@ -9,6 +9,15 @@ end
 describe SPARQL::Algebra::Query do
   EX = RDF::EX = RDF::Vocabulary.new('http://example.org/') unless const_defined?(:EX)
 
+  context "shortcuts" do
+    it "translates 'a' to rdf:type" do
+      sse = SPARQL::Algebra.parse(%q((triple <a> a <b>)))
+      sse.should be_a(RDF::Statement)
+      sse.predicate.should == RDF.type
+      sse.predicate.lexical.should == 'a'
+    end
+  end
+  
   context "BGPs" do
     context "querying for a specific statement" do
       it "returns an empty solution sequence if the statement does not exist" do
