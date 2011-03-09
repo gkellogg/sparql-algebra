@@ -47,6 +47,16 @@ module SPARQL; module Algebra
       raise NotImplementedError, "#{self.class}#execute(#{queryable})"
     end
 
+    # Add context to sub-items, unless they already have a context
+    # @param [RDF::URI, RDF::Query::Variable] value
+    # @return [RDF::URI, RDF::Query::Variable]
+    def context=(value)
+      operands.each do |operand|
+        operand.context = value if operand.respond_to?(:context) && operand.context != false
+      end
+      value
+    end
+
     ##
     # Returns `true` if this query did not match when last executed.
     #

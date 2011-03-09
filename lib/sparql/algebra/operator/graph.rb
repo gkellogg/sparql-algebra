@@ -3,7 +3,7 @@ module SPARQL; module Algebra
     ##
     # The SPARQL GraphPattern `graph` operator.
     #
-    # This is a wrapper to add a `context` to the BGP.
+    # This is a wrapper to add a `context` to the query.
     #
     # @example
     #   (prefix ((: <http://example/>))

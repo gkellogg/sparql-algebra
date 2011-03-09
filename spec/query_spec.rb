@@ -412,6 +412,16 @@ describe SPARQL::Algebra::Query do
         {:name => RDF::Literal.new("Alice"), :mbox => RDF::URI("mailto:alice@work.example")},
       ]
     end
+    
+    it "parses " do
+      query = %q((graph ?g
+          (join
+            (bgp (triple :x :b ?a))
+            (graph ?g2
+              (bgp (triple :x :p ?x))))))
+      
+      SPARQL::Algebra.parse(query).should be_a(SPARQL::Algebra::Operator::Join)
+    end
   end
   
   context "leftjoin" do
