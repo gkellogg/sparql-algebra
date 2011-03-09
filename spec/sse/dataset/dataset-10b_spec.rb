@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 # This is a W3C test from the DAWG test suite:
-# http://www.w3.org/2001/sw/DataAccess/tests/data-r2/dataset/dawg-dataset-09b
+# http://www.w3.org/2001/sw/DataAccess/tests/data-r2/dataset/dawg-dataset-10b
 describe "W3C test" do
   context "dataset" do
     before :all do
@@ -17,15 +17,12 @@ describe "W3C test" do
       }
     end
 
-    example "dawg-dataset-09b" do
+    example "dawg-dataset-10b" do
     
       graphs = {}
 
-      repository = 'dawg-dataset-09b'
-      expected = [
-          {
-          },
-      ]
+      repository = 'dawg-dataset-10b'
+      expected = []
 
       sparql_query(:graphs => graphs, :query => @query, :base_uri => File.expand_path(__FILE__),
                    :repository => repository, :form => :select).should =~ expected

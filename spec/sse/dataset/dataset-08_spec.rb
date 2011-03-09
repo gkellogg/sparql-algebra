@@ -25,7 +25,7 @@ describe "W3C test" do
       expected = [
           {
             :s => RDF::URI("http://example/x"),
-            :p => RDF::URI("http://example/q"),
+            :p => RDF::URI("http://example/p"),
             :o => RDF::Literal(1),
             :q => RDF::URI("http://example/q"),
             :v => RDF::Literal(2),

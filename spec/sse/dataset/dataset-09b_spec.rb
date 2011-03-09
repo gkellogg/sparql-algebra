@@ -3,13 +3,13 @@
 require 'spec_helper'
 
 # This is a W3C test from the DAWG test suite:
-# http://www.w3.org/2001/sw/DataAccess/tests/data-r2/dataset/dawg-dataset-09
+# http://www.w3.org/2001/sw/DataAccess/tests/data-r2/dataset/dawg-dataset-09b
 describe "W3C test" do
   context "dataset" do
     before :all do
       @query = %q{
         (prefix ((: <http://example/>))
-          (dataset (<data-g3.ttl> (named <data-g3.ttl>))
+          (dataset (<data-g3-dup.ttl> (named <data-g3.ttl>))
             (join
               (bgp (triple ?s ?p ?o))
               (graph ?g
@@ -17,15 +17,12 @@ describe "W3C test" do
       }
     end
 
-    example "dawg-dataset-09" do
+    example "dawg-dataset-09b" do
     
       graphs = {}
 
-      repository = 'dawg-dataset-09'
-      expected = [
-          {
-          },
-      ]
+      repository = 'dawg-dataset-09b'
+      expected = []
 
       sparql_query(:graphs => graphs, :query => @query, :base_uri => File.expand_path(__FILE__),
                    :repository => repository, :form => :select).should =~ expected
