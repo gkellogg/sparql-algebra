@@ -29,8 +29,10 @@ z:x z:p   "z:x z:p" .
 
 }
       @query = %q{
-        (prefix ((: <http://example.org/x/>))
-          (bgp (triple :x ?p ?v)))}
+        (base <http://example.org/x/>
+          (prefix ((: <http://example.org/x/>))
+            (bgp (triple :x ?p ?v))))
+      }
     end
 
     example "Basic - Prefix/Base 1" do
