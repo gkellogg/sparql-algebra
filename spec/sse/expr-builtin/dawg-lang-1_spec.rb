@@ -35,8 +35,8 @@ describe "W3C test" do
 
 }
       @query = %q{
-        (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
-                 (: <http://example/>))
+        (prefix ((: <http://example/>)
+                 (xsd: <http://www.w3.org/2001/XMLSchema#>))
           (project (?x)
             (filter (!= (lang ?v) "@NotALangTag@")
               (bgp (triple ?x :p ?v)))))

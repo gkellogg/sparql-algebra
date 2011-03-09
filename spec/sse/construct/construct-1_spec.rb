@@ -44,8 +44,7 @@ _:bob
         (prefix ((rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
                  (foaf: <http://xmlns.com/foaf/0.1/>))
           (construct ((triple ?s ?p ?o))
-            (project (?s ?p ?o)
-              (bgp (triple ?s ?p ?o)))))
+            (bgp (triple ?s ?p ?o))))
       }
 
       @result = %q{

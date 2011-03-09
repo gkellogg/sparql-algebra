@@ -49,15 +49,15 @@ t:dateTime1		rdf:value	"2005-01-14T12:34:56"^^xsd:dateTime .
 
 }
       @query = %q{
-    (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
-             (t: <http://www.w3.org/2001/sw/DataAccess/tests/data/TypePromotion/tP-0#>)
-             (rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>))
-      (ask
-        (filter (= (datatype (+ ?l ?r)) xsd:double)
-          (bgp
-            (triple t:double1 rdf:value ?l)
-            (triple t:float1 rdf:value ?r)
-          ))))
+        (prefix ((t: <http://www.w3.org/2001/sw/DataAccess/tests/data/TypePromotion/tP-0#>)
+                 (rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
+                 (xsd: <http://www.w3.org/2001/XMLSchema#>))
+        (ask
+          (filter (= (datatype (+ ?l ?r)) xsd:double)
+            (bgp
+              (triple t:double1 rdf:value ?l)
+              (triple t:float1 rdf:value ?r)
+            ))))
 }
     end
 

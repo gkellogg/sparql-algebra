@@ -43,7 +43,7 @@ describe "W3C test" do
                   (bgp (triple ?a :r ?d)))
                 (bgp (triple ?a ?p 1)))
               (union
-                (bgp (triple ?p <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?y))
+                (bgp (triple ?p a ?y))
                 (bgp (triple ?a ?z ?p))))))
         }
     end

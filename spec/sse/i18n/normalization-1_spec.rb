@@ -44,8 +44,8 @@ describe "W3C test" do
 
 }
       @query = %q{
-        (prefix ((HR: <http://www.w3.org/2001/sw/DataAccess/tests/data/i18n/normalization.ttl#>)
-                 (foaf: <http://xmlns.com/foaf/0.1/>))
+        (prefix ((foaf: <http://xmlns.com/foaf/0.1/>)
+                 (HR: <http://www.w3.org/2001/sw/DataAccess/tests/data/i18n/normalization.ttl#>))
           (project (?name)
             (bgp
               (triple ??0 foaf:name ?name)

@@ -28,13 +28,10 @@ y""" .
 
 :x3 :p3 """x
 y"""^^:someType .
-
-
-
 }
       @query = %q{
-        (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
-                 (: <http://example.org/ns#>))
+        (prefix ((: <http://example.org/ns#>)
+                 (xsd: <http://www.w3.org/2001/XMLSchema#>))
           (project (?x)
             (bgp (triple ?x ?p "x\ny"^^:someType))))
       }

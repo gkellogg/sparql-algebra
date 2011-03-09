@@ -26,8 +26,8 @@ ex:foo rdf:value "abcDEFghiJKL" , "ABCdefGHIjkl", "0123456789",
 
 }
       @query = %q{
-        (prefix ((ex: <http://example.com/#>)
-                 (rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>))
+        (prefix ((rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
+                 (ex: <http://example.com/#>))
           (project (?val)
             (filter (regex ?val "GHI")
               (bgp (triple ex:foo rdf:value ?val)))))

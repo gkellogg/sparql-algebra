@@ -37,12 +37,14 @@ _:g foaf:name "Dirk" ;
 
 }
       @query = %q{
-  (project (?name ?emp)
-    (order ((asc ?emp))
-      (bgp
-        (triple ?x <http://xmlns.com/foaf/0.1/name> ?name)
-        (triple ?x <http://example.org/things#empId> ?emp)
-      )))
+        (prefix ((foaf: <http://xmlns.com/foaf/0.1/>)
+                 (ex: <http://example.org/things#>))
+          (project (?name ?emp)
+            (order ((asc ?emp))
+              (bgp
+                (triple ?x foaf:name ?name)
+                (triple ?x ex:empId ?emp)
+              ))))
 }
     end
 

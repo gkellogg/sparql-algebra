@@ -81,8 +81,8 @@ _:g rdf:type foaf:Person;
 
 }
       @query = %q{
-        (prefix ((ex: <http://example.org/things#>)
-                 (foaf: <http://xmlns.com/foaf/0.1/>))
+        (prefix ((foaf: <http://xmlns.com/foaf/0.1/>)
+                 (ex: <http://example.org/things#>))
           (project (?name ?plan ?dept ?img)
             (leftjoin
               (join
@@ -91,7 +91,7 @@ _:g rdf:type foaf:Person;
                   (bgp (triple ?person ex:healthplan ?plan))
                   (bgp (triple ?person ex:department ?dept))))
               (join
-                (bgp (triple ?person <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> foaf:Person))
+                (bgp (triple ?person a foaf:Person))
                 (graph ?g
                   (bgp
                     (triple ??0 foaf:name ?name)

@@ -38,8 +38,8 @@ describe "W3C test" do
 
 }
       @query = %q{
-        (prefix ((t: <http://example/t#>)
-                 (: <http://example/ns#>))
+        (prefix ((: <http://example/ns#>)
+                 (t: <http://example/t#>))
           (bgp (triple ?x :p "a"^^t:type1)))
 }
     end

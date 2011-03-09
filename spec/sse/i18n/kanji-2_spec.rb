@@ -43,8 +43,8 @@ _:bob   foaf:name "Bob" ;
 
 }
       @query = %q{
-        (prefix ((食: <http://www.w3.org/2001/sw/DataAccess/tests/data/i18n/kanji.ttl#>)
-                 (foaf: <http://xmlns.com/foaf/0.1/>))
+        (prefix ((foaf: <http://xmlns.com/foaf/0.1/>)
+                 (食: <http://www.w3.org/2001/sw/DataAccess/tests/data/i18n/kanji.ttl#>))
           (project (?name)
             (bgp
               (triple ??0 foaf:name ?name)

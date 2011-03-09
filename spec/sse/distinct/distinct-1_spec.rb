@@ -58,8 +58,8 @@ describe "W3C test" do
 
 }
       @query = %q{
-        (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
-                 (: <http://example/>))
+        (prefix ((: <http://example/>)
+                 (xsd: <http://www.w3.org/2001/XMLSchema#>))
           (distinct
             (project (?v)
               (bgp (triple ?x ?p ?v)))))

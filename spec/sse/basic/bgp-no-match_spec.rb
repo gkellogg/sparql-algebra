@@ -28,12 +28,14 @@ describe "W3C test" do
 
 }
       @query = %q{
-        (project (?x)
-                 (bgp
-                  (triple ?x <http://xmlns.com/foaf/0.1/name> "John Smith")
-                  (triple ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Womble>)))
-
-}
+        (prefix ((: <http://example.org/>)
+                 (foaf: <http://xmlns.com/foaf/0.1/>))
+          (project (?x)
+            (bgp
+              (triple ?x foaf:name "John Smith")
+              (triple ?x a foaf:Womble)
+            )))
+      }
     end
 
     example "Non-matching triple pattern" do

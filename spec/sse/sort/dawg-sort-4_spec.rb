@@ -43,8 +43,8 @@ _:f foaf:name "Bob" ;
 
 }
       @query = %q{
-        (prefix ((ex: <http://example.org/things#>)
-                 (foaf: <http://xmlns.com/foaf/0.1/>))
+        (prefix ((foaf: <http://xmlns.com/foaf/0.1/>)
+                 (ex: <http://example.org/things#>))
           (project (?name ?emp)
             (order ((asc ?emp))
               (bgp

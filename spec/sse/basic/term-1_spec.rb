@@ -35,9 +35,10 @@ describe "W3C test" do
 
 }
       @query = %q{
-        (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
-                 (: <http://example.org/ns#>))
-          (bgp (triple :x ?p true)))}
+        (prefix ((: <http://example.org/ns#>)
+                 (xsd: <http://www.w3.org/2001/XMLSchema#>))
+          (bgp (triple :x ?p true)))
+      }
     end
 
     example "Basic - Term 1" do

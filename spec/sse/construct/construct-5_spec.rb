@@ -37,10 +37,9 @@ describe "W3C test" do
       @query = %q{
         (prefix ((: <http://example/>))
           (construct ((triple ?x :p2 ?v))
-            (project (?x ?o ?v)
-              (leftjoin
-                (bgp (triple ?x :p ?o))
-                (bgp (triple ?o :q ?v))))))
+            (leftjoin
+              (bgp (triple ?x :p ?o))
+              (bgp (triple ?o :q ?v)))))
       }
 
       @result = %q{

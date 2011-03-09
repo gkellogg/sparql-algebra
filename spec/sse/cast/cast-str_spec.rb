@@ -30,9 +30,9 @@ describe "W3C test" do
 
 }
       @query = %q{
-        (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
+        (prefix ((: <http://example.org/>)
                  (rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
-                 (: <http://example.org/>))
+                 (xsd: <http://www.w3.org/2001/XMLSchema#>))
           (project (?s)
             (filter (= (datatype (xsd:string ?v)) xsd:string)
               (bgp (triple ?s :p ?v)))))

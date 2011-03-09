@@ -42,11 +42,10 @@ describe "W3C test" do
       @query = %q{
         (prefix ((rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
                  (foaf: <http://xmlns.com/foaf/0.1/>))
-          (construct ((triple _:a rdf:subject ?s)
-                      (triple _:a rdf:predicate ?p)
-                      (triple _:a rdf:object ?o))
-            (project (?s ?p ?o)
-              (bgp (triple ?s ?p ?o)))))
+          (construct ((triple _:b0 rdf:subject ?s)
+                      (triple _:b0 rdf:predicate ?p)
+                      (triple _:b0 rdf:object ?o))
+            (bgp (triple ?s ?p ?o))))
       }
 
       @result = %q{

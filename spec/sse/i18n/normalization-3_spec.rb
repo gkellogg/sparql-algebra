@@ -30,8 +30,8 @@ describe "W3C test" do
 
 }
       @query = %q{
-        (prefix ((p2: <http://example.com:80/#>)
-                 (: <http://example/vocab#>))
+        (prefix ((: <http://example/vocab#>)
+                 (p2: <http://example.com:80/#>))
           (project (?S)
             (bgp (triple ?S :p p2:abc))))
 }

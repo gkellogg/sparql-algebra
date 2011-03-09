@@ -45,8 +45,7 @@ describe "W3C test" do
           (construct ((triple _:a rdf:subject ?s)
                       (triple _:a rdf:predicate ?p)
                       (triple _:a rdf:object ?o))
-            (project (?s ?p ?o)
-              (bgp (triple ?s ?p ?o)))))
+            (bgp (triple ?s ?p ?o))))
       }
 
       @result = %q{
