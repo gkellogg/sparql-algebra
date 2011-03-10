@@ -12,6 +12,8 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-isBlank
     class IsBlank < Operator::Unary
+      include Evaluatable
+
       NAME = :isBlank
 
       ##

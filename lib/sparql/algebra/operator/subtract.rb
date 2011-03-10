@@ -7,6 +7,8 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-subtract
     class Subtract < Operator::Binary
+      include Evaluatable
+
       NAME = [:-, :subtract]
 
       ##

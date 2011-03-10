@@ -1,5 +1,7 @@
 module SPARQL; module Algebra
   class Operator
+    include Evaluatable
+
     ##
     # The SPARQL numeric `add` operator.
     #

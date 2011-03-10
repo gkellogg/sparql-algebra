@@ -11,6 +11,8 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-isLiteral
     class Desc < Operator::Unary
+      include Evaluatable
+
       NAME = :desc
 
       ##

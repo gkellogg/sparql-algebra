@@ -13,6 +13,8 @@ module SPARQL; module Algebra
     # @see http://www.w3.org/TR/rdf-sparql-query/#funcex-regex
     # @see http://www.w3.org/TR/xpath-functions/#func-matches
     class Regex < Operator::Ternary
+      include Evaluatable
+
       NAME = :regex
 
       ##

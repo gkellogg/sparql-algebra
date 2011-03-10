@@ -22,10 +22,11 @@ module SPARQL
   module Algebra
     include RDF
 
-    autoload :Expression, 'sparql/algebra/expression'
-    autoload :Operator,   'sparql/algebra/operator'
-    autoload :Query,      'sparql/algebra/query'
-    autoload :VERSION,    'sparql/algebra/version'
+    autoload :Evaluatable, 'sparql/algebra/evaluatable'
+    autoload :Expression,  'sparql/algebra/expression'
+    autoload :Operator,    'sparql/algebra/operator'
+    autoload :Query,       'sparql/algebra/query'
+    autoload :VERSION,     'sparql/algebra/version'
 
     ##
     # @example

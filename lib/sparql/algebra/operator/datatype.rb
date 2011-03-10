@@ -13,6 +13,8 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-datatype
     class Datatype < Operator::Unary
+      include Evaluatable
+
       NAME = :datatype
 
       ##

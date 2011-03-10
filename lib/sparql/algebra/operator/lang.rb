@@ -5,6 +5,8 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-lang
     class Lang < Operator::Unary
+      include Evaluatable
+
       NAME = :lang
 
       ##

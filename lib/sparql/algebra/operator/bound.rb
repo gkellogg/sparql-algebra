@@ -13,6 +13,8 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-bound
     class Bound < Operator::Unary
+      include Evaluatable
+
       NAME = :bound
 
       ##

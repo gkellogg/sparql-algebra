@@ -12,6 +12,8 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-isIRI
     class IsIRI < Operator::Unary
+      include Evaluatable
+
       NAME = [:isIRI, :isURI]
 
       ##

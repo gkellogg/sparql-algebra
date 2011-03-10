@@ -12,6 +12,8 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-sameTerm
     class SameTerm < Operator::Binary
+      include Evaluatable
+
       NAME = :sameTerm
 
       ##

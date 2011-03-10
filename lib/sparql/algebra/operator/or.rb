@@ -10,6 +10,8 @@ module SPARQL; module Algebra
     # @see http://www.w3.org/TR/rdf-sparql-query/#func-logical-or
     # @see http://www.w3.org/TR/rdf-sparql-query/#evaluation
     class Or < Operator::Binary
+      include Evaluatable
+
       NAME = [:or, :'||']
 
       ##

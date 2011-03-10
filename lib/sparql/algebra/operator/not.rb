@@ -9,6 +9,8 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/xpath-functions/#func-not
     class Not < Operator::Unary
+      include Evaluatable
+
       NAME = [:not, :'!']
 
       ##

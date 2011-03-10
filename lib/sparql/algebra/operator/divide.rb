@@ -8,6 +8,8 @@ module SPARQL; module Algebra
     #
     # @see http://www.w3.org/TR/xpath-functions/#func-numeric-divide
     class Divide < Operator::Binary
+      include Evaluatable
+
       NAME = [:'/', :divide]
 
       ##
