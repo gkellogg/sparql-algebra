@@ -280,7 +280,7 @@ Dependencies
 
 * [Ruby](http://ruby-lang.org/) (>= 1.8.7) or (>= 1.8.1 with [Backports][])
 * [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.3.1)
-* [SXP](http://rubygems.org/gems/sxp) (>= 0.0.14) for [SSE][] parsing only
+* [SXP](http://rubygems.org/gems/sxp) (>= 0.0.14) for [SSE][] parsing and serialization
 
 Installation
 ------------
