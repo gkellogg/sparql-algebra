@@ -47,12 +47,14 @@ describe "W3C test" do
 
 }
       @query = %q{
-  (project (?v1 ?v2)
-    (filter (= ?v1 ?v2)
-      (bgp
-        (triple ?x1 <http://example.org/things#p> ?v1)
-        (triple ?x2 <http://example.org/things#p> ?v2)
-      )))
+        (prefix ((xsd: <http://www.w3.org/2001/XMLSchema#>)
+                 (: <http://example.org/things#>))
+          (project (?v1 ?v2)
+            (filter (= ?v1 ?v2)
+              (bgp
+                (triple ?x1 :p ?v1)
+                (triple ?x2 :p ?v2)
+              ))))
 }
     end
 
