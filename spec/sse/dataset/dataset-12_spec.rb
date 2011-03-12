@@ -42,7 +42,7 @@ describe "W3C test" do
           :g => RDF::URI("data-g1.ttl")
         },
         {
-          :s => RDF::Node.new("a"),
+          :s => RDF::Node.new("g3a"),
           :p => RDF::URI("http://example/p"),
           :o => RDF::Literal(9),
           :g => RDF::URI("data-g3.ttl")
@@ -58,7 +58,7 @@ describe "W3C test" do
           :o => RDF::Literal(1),
         },
         {
-          :s => RDF::Node.new("x"),
+          :s => RDF::Node.new("g4x"),
           :p => RDF::URI("http://example/q"),
           :o => RDF::Literal(2),
           :g => RDF::URI("data-g4.ttl")
@@ -80,7 +80,7 @@ describe "W3C test" do
           :o => RDF::Literal(9),
         },
         {
-          :s => RDF::Node.new("x"),
+          :s => RDF::Node.new("g3x"),
           :p => RDF::URI("http://example/p"),
           :o => RDF::Literal(1),
           :g => RDF::URI("data-g3.ttl")

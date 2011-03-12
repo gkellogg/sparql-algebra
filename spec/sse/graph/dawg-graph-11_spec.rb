@@ -73,7 +73,7 @@ describe "W3C test" do
             :g => RDF::URI('data-g3.ttl'),
             :o => RDF::Literal.new('1' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
             :p => RDF::URI('http://example/p'),
-            :s => RDF::Node.new("x"),
+            :s => RDF::Node.new("g3x"),
         },
         { 
             :g => RDF::URI('data-g1.ttl'),
@@ -102,13 +102,13 @@ describe "W3C test" do
             :g => RDF::URI('data-g4.ttl'),
             :o => RDF::Literal.new('2' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
             :p => RDF::URI('http://example/q'),
-            :s => RDF::Node.new("x"),
+            :s => RDF::Node.new("g4x"),
         },
         { 
             :g => RDF::URI('data-g3.ttl'),
             :o => RDF::Literal.new('9' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
             :p => RDF::URI('http://example/p'),
-            :s => RDF::Node.new("a"),
+            :s => RDF::Node.new("g3a"),
         },
         { 
             :o => RDF::Literal.new('9' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
