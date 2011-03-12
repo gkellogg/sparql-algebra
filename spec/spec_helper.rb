@@ -1,6 +1,7 @@
 require "bundler/setup"
 require 'rdf/isomorphic'
 require 'sparql/algebra'
+require 'sparql/spec'
 require 'rdf/spec'
 require 'rdf/n3'
 Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each {|f| require f}
