@@ -416,7 +416,7 @@ describe SPARQL::Algebra::Query do
                 (bgp (triple ?x foaf:name ?name))
                 (bgp (triple ?x foaf:mbox ?mbox)))))
         }
-      ).should == [
+      ).map(&:to_hash).should == [
         {:name => RDF::Literal.new("Alice"), :mbox => RDF::URI("mailto:alice@example.com")},
         {:name => RDF::Literal.new("Alice"), :mbox => RDF::URI("mailto:alice@work.example")},
       ]
@@ -460,7 +460,7 @@ describe SPARQL::Algebra::Query do
                   (bgp (triple ?x foaf:name ?name))
                   (bgp (triple ?x dc:created ?created))))))
         }
-      ).should == [
+      ).map(&:to_hash).should == [
         {:name => RDF::Literal.new("Alice")},
       ]
     end
@@ -489,7 +489,7 @@ describe SPARQL::Algebra::Query do
               (bgp (triple ?y :q ?w))
               (= ?v 2)))
         }
-      ).should =~ [
+      ).map(&:to_hash).should =~ [
         { 
             :v => RDF::Literal.new('2' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
             :w => RDF::Literal.new('4' , :datatype => RDF::URI('http://www.w3.org/2001/XMLSchema#integer')),
@@ -537,7 +537,7 @@ describe SPARQL::Algebra::Query do
                 (bgp (triple ?book dc10:title ?title))
                 (bgp (triple ?book dc11:title ?title)))))
         }
-      ).should =~ [
+      ).map(&:to_hash).should =~ [
         {:title => RDF::Literal.new("SPARQL Query Language Tutorial")},
         {:title => RDF::Literal.new("SPARQL Protocol Tutorial")},
         {:title => RDF::Literal.new("SPARQL")},

@@ -144,6 +144,7 @@ end
 #   :form
 #     :ask, :construct, :select or :describe
 def sparql_query(opts)
+  opts[:to_hash] = true unless opts.has_key?(:to_hash)
   raise "A query is required to be run" if opts[:query].nil?
 
   # Load default and named graphs into repository
@@ -170,6 +171,7 @@ def sparql_query(opts)
   when :ask, :describe, :construct
     query.execute(repo, :debug => ENV['EXEC_DEBUG'])
   else
-    query.execute(repo, :debug => ENV['EXEC_DEBUG']).to_a.map(&:to_hash)
+    results = query.execute(repo, :debug => ENV['EXEC_DEBUG'])
+    opts[:to_hash] ? results.map(&:to_hash) : results
   end
 end
