@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby -s
+#!/usr/bin/env ruby
 require 'rubygems'
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", 'lib')))
 require 'sparql/spec'
@@ -6,7 +6,10 @@ require File.expand_path(File.join(File.dirname(__FILE__), "..", 'spec', 'spec_h
 require 'getoptlong'
 
 def run_tc(t, options = {})
-  puts "run #{t.name}"
+  options[:msg] ||= {}
+  options[:tests] ||= 0
+  options[:tests] += 1
+  STDOUT.write "run #{t.name}" unless options[:quiet]
   puts t.action.sse_string if options[:verbose]
 
   graphs = t.graphs
@@ -14,26 +17,46 @@ def run_tc(t, options = {})
   expected = t.solutions
 
   result = sparql_query(:graphs => graphs, :query => query, :base_uri => t.action.query_file,
-                        :repository => "sparql-spec", :form => t.form)
+                        :repository => "sparql-spec", :form => t.form, :to_hash => false)
 
   case t.form
   when :select, :create, :describe
-    puts "compare:\n#{result.inspect}"
-    puts "\nwith:\n#{expected.inspect}"
-    puts "\nmissing:\n#{(expected - result).inspect}"
-    puts "\nextra:\n#{(result - expected).inspect}"
-    puts "\nresult: #{result == expected}"
+    if result.isomorphic_with?(expected)
+      STDOUT.write(options[:quiet] ? "." : " ok\n")
+    else
+      options[:failures] ||= {}
+      options[:failures][t] = %{
+expected:\n#{expected.inspect}
+actual:\n#{result.inspect}
+}
+      options[:failures][t] += "\nmissing:\n#{(expected - result).inspect}" unless (expected - result).empty?
+      options[:failures][t] += "\nextra:\n#{(expected - result).inspect}" unless (result - expected).empty?
+      STDOUT.write(options[:quiet] ? "F" : (" failed" + options[:failures][t]))
+    end
   when :ask
-    puts "\nresult: #{result}"
+    if result
+      STDOUT.write(options[:quiet] ? "." : " ok\n")
+    else
+      options[:failures] ||= {}
+      options[:failures][t] = "\nFailed"
+      STDOUT.write(options[:quiet] ? "F" : " failed\n")
+    end
+  end
+rescue Exception => e
+  if options[:quiet]
+    STDOUT.write("E")
+    options[:exceptions] ||= {}
+    options[:exceptions][t] = e.message
+  else
+    STDOUT.write(e.message)
   end
 end
 
 options = {
-  :verbose => false,
-  :quite => false
+  :verbose  => false,
+  :quite    => false,
+  :validate => false,
 }
-$output_format = :ntriples
-$validate = false
 suite = "rdfxml"
 opts = GetoptLong.new(
   ["--dbg", GetoptLong::NO_ARGUMENT],
@@ -42,6 +65,7 @@ opts = GetoptLong.new(
 )
 opts.each do |opt, arg|
   case opt
+  when '--validate' then options[:validate] = true
   when '--verbose' then options[:verbose] = true
   when '--quiet' then options[:quiet] = true
   when '--dbg' then ENV['EXEC_DEBUG'] = "true"
@@ -53,4 +77,25 @@ test_cases = SPARQL::Spec.load_sparql1_0_tests
 test_cases.each do |tc|
   next unless ARGV.empty? || ARGV.any? {|n| tc.name.match(/#{n}/)}
   run_tc(tc, options)
+end
+
+if options[:quiet]
+  puts ""
+  if options[:exceptions]
+    puts "\nExceptions:"
+    options[:exceptions].each do |t, m|
+      puts "#{t.name}: #{m}"
+    end
+  end
+  if options[:failures]
+    puts "\nFailures"
+    options[:failures].each do |t, m|
+      puts "#{t.name}:#{m}"
+    end
+  end
+
+  msg = "#{options[:tests]} Tests"
+  msg += ", #{options[:failures].length} Failures" if options[:failures]
+  msg += ", #{options[:exceptions].length} Exceptions" if options[:exceptions]
+  puts msg
 end
