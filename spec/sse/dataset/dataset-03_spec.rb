@@ -17,15 +17,22 @@ describe "W3C test" do
 
     example "dawg-dataset-03" do
     
+      graph_uris = {
+        :g1 => RDF::URI(File.join(File.expand_path(File.dirname(__FILE__)), "data-g1.ttl")),
+        :g2 => RDF::URI(File.join(File.expand_path(File.dirname(__FILE__)), "data-g2.ttl")),
+        :g3 => RDF::URI(File.join(File.expand_path(File.dirname(__FILE__)), "data-g3.ttl")),
+        :g4 => RDF::URI(File.join(File.expand_path(File.dirname(__FILE__)), "data-g4.ttl")),
+      }
+
       graphs = {}
 
       repository = 'dawg-dataset-03'
       expected = [
           {
-            :s => RDF::URI("http://example/x"), :p => RDF::URI("http://example/p"), :o => RDF::Literal(1), :g => RDF::URI("data-g1.ttl")
+            :s => RDF::URI("http://example/x"), :p => RDF::URI("http://example/p"), :o => RDF::Literal(1), :g => graph_uris[:g1]
           },
           {
-            :s => RDF::URI("http://example/a"), :p => RDF::URI("http://example/p"), :o => RDF::Literal(9), :g => RDF::URI("data-g1.ttl")
+            :s => RDF::URI("http://example/a"), :p => RDF::URI("http://example/p"), :o => RDF::Literal(9), :g => graph_uris[:g1]
           },
       ]
 

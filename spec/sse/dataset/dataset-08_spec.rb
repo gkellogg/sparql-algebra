@@ -19,6 +19,13 @@ describe "W3C test" do
 
     example "dawg-dataset-08" do
     
+      graph_uris = {
+        :g1 => RDF::URI(File.join(File.expand_path(File.dirname(__FILE__)), "data-g1.ttl")),
+        :g2 => RDF::URI(File.join(File.expand_path(File.dirname(__FILE__)), "data-g2.ttl")),
+        :g3 => RDF::URI(File.join(File.expand_path(File.dirname(__FILE__)), "data-g3.ttl")),
+        :g4 => RDF::URI(File.join(File.expand_path(File.dirname(__FILE__)), "data-g4.ttl")),
+      }
+
       graphs = {}
 
       repository = 'dawg-dataset-08'
@@ -29,7 +36,7 @@ describe "W3C test" do
             :o => RDF::Literal(1),
             :q => RDF::URI("http://example/q"),
             :v => RDF::Literal(2),
-            :g => RDF::URI("data-g2.ttl")
+            :g => graph_uris[:g2]
           },
       ]
 
