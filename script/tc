@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby -s
+require 'rubygems'
+$:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", 'lib')))
+require 'sparql/spec'
+require File.expand_path(File.join(File.dirname(__FILE__), "..", 'spec', 'spec_helper'))
+require 'getoptlong'
+
+def run_tc(t, options = {})
+  puts "run #{t.name}"
+  puts t.action.sse_string if options[:verbose]
+
+  graphs = t.graphs
+  query = t.action.sse_string
+  expected = t.solutions
+
+  result = sparql_query(:graphs => graphs, :query => query, :base_uri => t.action.query_file,
+                        :repository => "sparql-spec", :form => t.form)
+
+  case t.form
+  when :select, :create, :describe
+    puts "compare:\n#{result.inspect}"
+    puts "\nwith:\n#{expected.inspect}"
+    puts "\nmissing:\n#{(expected - result).inspect}"
+    puts "\nextra:\n#{(result - expected).inspect}"
+    puts "\nresult: #{result == expected}"
+  when :ask
+    puts "\nresult: #{result}"
+  end
+end
+
+options = {
+  :verbose => false,
+  :quite => false
+}
+$output_format = :ntriples
+$validate = false
+suite = "rdfxml"
+opts = GetoptLong.new(
+  ["--dbg", GetoptLong::NO_ARGUMENT],
+  ["--verbose", GetoptLong::NO_ARGUMENT],
+  ["--quiet", GetoptLong::NO_ARGUMENT],
+)
+opts.each do |opt, arg|
+  case opt
+  when '--verbose' then options[:verbose] = true
+  when '--quiet' then options[:quiet] = true
+  when '--dbg' then ENV['EXEC_DEBUG'] = "true"
+  end
+end
+
+test_cases = SPARQL::Spec.load_sparql1_0_tests
+
+test_cases.each do |tc|
+  next unless ARGV.empty? || ARGV.any? {|n| tc.name.match(/#{n}/)}
+  run_tc(tc, options)
+end
