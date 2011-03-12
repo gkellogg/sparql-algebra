@@ -38,8 +38,16 @@ module SPARQL; module Algebra
           load_opts = {}
           case ds
           when Array
+            uri = if self.base_uri
+              u = self.base_uri.join(ds.last)
+              u.lexical = "<#{ds.last}>" unless u.to_s == ds.last.to_s
+              u
+            else
+              ds.last
+            end
             uri = self.base_uri ? self.base_uri.join(ds.last) : ds.last
-            load_opts[:context] = ds.last
+            uri.lexical = ds.last
+            load_opts[:context] = uri
             debug("=> read named data source #{uri}", options)
           else
             uri = self.base_uri ? self.base_uri.join(ds) : ds
