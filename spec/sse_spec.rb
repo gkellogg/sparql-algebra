@@ -1,7 +1,7 @@
 $:.unshift "."
 require File.join(File.dirname(__FILE__), 'spec_helper')
 require 'sparql/spec'
-require 'sparql/client'
+require 'rdf/isomorphic'
 
 describe SPARQL::Algebra do
   describe "w3c dawg SPARQL syntax tests" do
@@ -11,20 +11,24 @@ describe SPARQL::Algebra do
           case t.type
           when MF.QueryEvaluationTest
             it "evaluates #{t.name}" do
-              graphs = {}
-              data = t.action.test_data
-              graphs[:default] = {:data => IO.read(data.path), :format => :ttl} if data
-              t.action.graphData.each do |g|
-                graphs[g] = {:data => IO.read(g.path), :format => :ttl}
-              end
 
+              graphs = t.graphs
               query = t.action.sse_string
-              
-              expected = select_results_snippet(t) if t.result
+              expected = t.solutions
 
-              result = sparql_query(:graphs => graphs, :query => query,
-                                    :repository => "sparql-spec", :form => t.form)
-              result.should =~ expected
+              result = sparql_query(:graphs => graphs, :query => query, :base_uri => t.action.query_file,
+                                    :repository => "sparql-spec", :form => t.form, :to_hash => false)
+
+              case t.form
+              when :select
+                result.should be_a(RDF::Query::Solutions)
+                result.should describe_solutions(expected)
+              when :create, :describe
+                result.should be_a(RDF::Queryable)
+                result.should describe_solutions(expected)
+              when :ask
+                result.should be_true
+              end
             end
           else
             it "??? #{t.name}" do
@@ -34,17 +38,6 @@ describe SPARQL::Algebra do
           end
         end
       end
-    end
-  end
-
-  def select_results_snippet(test)
-    results = if File.extname(test.result.path) == '.srx'
-      SPARQL::Client.parse_xml_bindings(File.read(test.result.path)).map { |result| result.to_hash }
-    else
-      expected_repository = RDF::Repository.new 
-      Spira.add_repository!(:results, expected_repository)
-      expected_repository.load(test.result.path)
-      SPARQL::Spec::ResultBindings.each.first.solutions
     end
   end
 end
