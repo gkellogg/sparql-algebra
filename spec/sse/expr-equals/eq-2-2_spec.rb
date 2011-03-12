@@ -116,7 +116,7 @@ describe "W3C test" do
           },
       ]
 
-      pending("includes solutions for plain/unknown inequality that are inconsistent with open-eq-08") do
+      pending("includes solutions for plain/unknown inequality that are inconsistent with open-eq-08. From manifest, this test was never part of the test suite.") do
         sparql_query(:graphs => graphs, :query => @query,       # unordered comparison in rspec is =~
                      :repository => repository, :form => :select).should =~ expected
       end
