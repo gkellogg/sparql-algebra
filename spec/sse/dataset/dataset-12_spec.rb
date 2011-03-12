@@ -20,6 +20,13 @@ describe "W3C test" do
 
     example "dawg-dataset-12" do
     
+      graph_uris = {
+        :g1 => RDF::URI(File.join(File.expand_path(File.dirname(__FILE__)), "data-g1.ttl")),
+        :g2 => RDF::URI(File.join(File.expand_path(File.dirname(__FILE__)), "data-g2.ttl")),
+        :g3 => RDF::URI(File.join(File.expand_path(File.dirname(__FILE__)), "data-g3.ttl")),
+        :g4 => RDF::URI(File.join(File.expand_path(File.dirname(__FILE__)), "data-g4.ttl")),
+      }
+
       graphs = {}
 
       repository = 'dawg-dataset-12'
@@ -28,7 +35,7 @@ describe "W3C test" do
           :s => RDF::URI("http://example/x"),
           :p => RDF::URI("http://example/q"),
           :o => RDF::Literal(2),
-          :g => RDF::URI("data-g2.ttl")
+          :g => graph_uris[:g2]
         },
         {
           :s => RDF::URI("http://example/x"),
@@ -39,13 +46,13 @@ describe "W3C test" do
           :s => RDF::URI("http://example/x"),
           :p => RDF::URI("http://example/p"),
           :o => RDF::Literal(1),
-          :g => RDF::URI("data-g1.ttl")
+          :g => graph_uris[:g1]
         },
         {
           :s => RDF::Node.new("g3a"),
           :p => RDF::URI("http://example/p"),
           :o => RDF::Literal(9),
-          :g => RDF::URI("data-g3.ttl")
+          :g => graph_uris[:g3]
         },
         {
           :s => RDF::Node.new("x"),
@@ -61,7 +68,7 @@ describe "W3C test" do
           :s => RDF::Node.new("g4x"),
           :p => RDF::URI("http://example/q"),
           :o => RDF::Literal(2),
-          :g => RDF::URI("data-g4.ttl")
+          :g => graph_uris[:g4]
         },
         {
           :s => RDF::URI("http://example/x"),
@@ -72,7 +79,7 @@ describe "W3C test" do
           :s => RDF::URI("http://example/a"),
           :p => RDF::URI("http://example/p"),
           :o => RDF::Literal(9),
-          :g => RDF::URI("data-g1.ttl")
+          :g => graph_uris[:g1]
         },
         {
           :s => RDF::Node.new("a"),
@@ -83,7 +90,7 @@ describe "W3C test" do
           :s => RDF::Node.new("g3x"),
           :p => RDF::URI("http://example/p"),
           :o => RDF::Literal(1),
-          :g => RDF::URI("data-g3.ttl")
+          :g => graph_uris[:g3]
         },
         {
           :s => RDF::URI("http://example/a"),
