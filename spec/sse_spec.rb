@@ -30,7 +30,11 @@ describe SPARQL::Algebra do
               case t.form
               when :select
                 result.should be_a(RDF::Query::Solutions)
-                result.should describe_solutions(expected)
+                if man.to_s =~ /sort/
+                  result.should describe_ordered_solutions(expected)
+                else
+                  result.should describe_solutions(expected)
+                end
               when :create, :describe
                 result.should be_a(RDF::Queryable)
                 result.should describe_solutions(expected)
