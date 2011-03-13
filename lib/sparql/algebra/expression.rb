@@ -25,6 +25,7 @@ module SPARQL; module Algebra
       rescue LoadError
         abort "SPARQL::Algebra::Expression.parse requires the SXP gem (hint: `gem install sxp')."
       end
+      require 'sparql/algebra/sxp_extensions'
       
       sxp = SXP::Reader::SPARQL.new(sse)
       sxp_result = sxp.read
