@@ -29,7 +29,7 @@ Gem::Specification.new do |gem|
   gem.requirements               = []
   gem.add_runtime_dependency     'rdf',             '~> 0.3.1'
   gem.add_runtime_dependency     'rdf-n3',          '~> 0.3.1'
-  gem.add_runtime_dependency     'sxp',             '~> 0.0.14'
+  gem.add_runtime_dependency     'sxp',             '~> 0.0.15'
   gem.add_development_dependency 'yard' ,           '>= 0.6.4'
   gem.add_development_dependency 'rspec',           '>= 2.5.0'
   gem.add_development_dependency 'rdf-spec',        '~> 0.3.1'
