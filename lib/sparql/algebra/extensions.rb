@@ -35,7 +35,7 @@ class Array
   # @return [RDF::Term]
   def evaluate(bindings)
     dt, val = self.map {|o| o.evaluate(bindings)}
-    Expression.cast(*self.map {|o| o.evaluate(bindings)})
+    SPARQL::Algebra::Expression.cast(*self.map {|o| o.evaluate(bindings)})
   end
 end
 
