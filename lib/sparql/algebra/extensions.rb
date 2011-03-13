@@ -43,6 +43,10 @@ end
 # Extensions for `RDF::Term`.
 module RDF::Term
   include SPARQL::Algebra::Expression
+  
+  def evaluate(bindings)
+    self
+  end
 end # RDF::Term
 
 # Override RDF::Queryable to execute against SPARQL::Algebra::Query elements as well as RDF::Query and RDF::Pattern
