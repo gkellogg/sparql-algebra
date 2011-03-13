@@ -15,7 +15,7 @@ end
 
 class RDF::Node
   def inspect
-    RDF::NTriples::Writer.serialize(self)
+    RDF::NTriples::Writer.serialize(self) + "(#{object_id})"
   end
 end
 
