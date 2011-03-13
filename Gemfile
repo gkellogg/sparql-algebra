@@ -9,8 +9,7 @@ group :development do
   gem 'rdf-rdfxml',     '>= 0.3.1', :require => 'rdf/rdfxml'
   gem 'rspec',          '>= 2.1.0'
   gem 'sparql-client'
-  #gem 'sparql-tests',   :git => "https://github.com/gkellogg/sparql-tests.git", :branch => "gkellogg-master", :require => 'sparql/spec'
-  gem 'sparql-tests',   :path => "../sparql-tests", :require => 'sparql/spec'
+  gem 'sparql-tests',   :git => "https://github.com/gkellogg/sparql-tests.git", :branch => "gkellogg-master", :require => 'sparql/spec'
   gem 'spira',          '>= 0.0.12'
   gem 'yard',           '>= 0.6.4'
 end
