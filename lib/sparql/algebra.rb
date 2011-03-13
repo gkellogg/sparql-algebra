@@ -40,7 +40,7 @@ module SPARQL
     #   a SPARQL S-Expression (SSE) string
     # @param  [Hash{Symbol => Object}] options
     #   any additional options (see {Operator#initialize})
-    # @return [Expression]
+    # @return [SPARQL::Algebra::Operator]
     def parse(sse, options = {})
       Expression.parse(sse, options)
     end
@@ -52,7 +52,7 @@ module SPARQL
     #
     # @param  [Array] sse
     #   a SPARQL S-Expression (SSE) form
-    # @return [Expression]
+    # @return [SPARQL::Algebra::Expression]
     def Expression(*sse)
       Expression.for(*sse)
     end

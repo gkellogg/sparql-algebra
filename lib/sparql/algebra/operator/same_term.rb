@@ -33,7 +33,7 @@ module SPARQL; module Algebra
       ##
       # Returns an optimized version of this expression.
       #
-      # @return [Expression]
+      # @return [SPARQL::Algebra::Expression]
       def optimize
         if operand(0).is_a?(Variable) && operand(0).eql?(operand(1))
           RDF::Literal::TRUE

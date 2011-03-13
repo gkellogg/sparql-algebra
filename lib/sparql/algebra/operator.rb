@@ -306,7 +306,7 @@ module SPARQL; module Algebra
     # such as a `TypeError` or `ZeroDivisionError`, which must be conserved
     # at runtime.
     #
-    # @return [Expression]
+    # @return [SPARQL::Algebra::Expression]
     def optimize
       if constant?
         # Note that if evaluation results in a `TypeError` or other error,
