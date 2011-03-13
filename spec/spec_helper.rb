@@ -1,5 +1,4 @@
 require "bundler/setup"
-require 'rdf/isomorphic'
 require 'sparql/algebra'
 require 'sparql/spec'
 require 'rdf/spec'
