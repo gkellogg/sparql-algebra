@@ -226,6 +226,14 @@ class RDF::Query
     end
   end
 
+  # Equivalence for Queries:
+  #   Same Patterns
+  #   Same Context
+  # @return [Boolean]
+  def ==(other)
+    other.is_a?(RDF::Query) && patterns == other.patterns && context == context
+  end
+
   # Transform Query into an Array form of an SSE
   #
   # If Query is named, it's treated as a GroupGraphPattern, otherwise, a BGP
