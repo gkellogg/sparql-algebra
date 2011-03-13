@@ -163,7 +163,7 @@ def sparql_query(opts)
   query_opts = {:debug => ENV['PARSER_DEBUG']}
   query_opts[:base_uri] = opts[:base_uri]
   
-  query = SPARQL::Algebra::Expression.parse(query_str, query_opts)
+  query = SPARQL::Algebra.parse(query_str, query_opts)
 
   case opts[:form]
   when :ask, :describe, :construct
