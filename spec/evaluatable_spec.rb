@@ -1,5 +1,7 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
+include SPARQL::Algebra
+
 describe SPARQL::Algebra do
   EX = RDF::EX = RDF::Vocabulary.new('http://example.org/') unless const_defined?(:EX)
 
@@ -27,7 +29,7 @@ describe SPARQL::Algebra do
   # UNARY OPERATORS
 
   # @see http://www.w3.org/TR/xpath-functions/#func-not
-  context "Operator::Not" do
+  context Operator::Not do
     before :all do
       @op = @not = SPARQL::Algebra::Operator::Not
     end
@@ -42,7 +44,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-plus
-  context "Operator::Plus" do
+  context Operator::Plus do
     before :all do
       @op = @plus = SPARQL::Algebra::Operator::Plus
     end
@@ -57,7 +59,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-unary-minus
-  context "Operator::Minus" do
+  context Operator::Minus do
     before :all do
       @op = @minus = SPARQL::Algebra::Operator::Minus
     end
@@ -72,7 +74,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-bound
-  context "Operator::Bound" do
+  context Operator::Bound do
     before :all do
       @op = @bound = SPARQL::Algebra::Operator::Bound
     end
@@ -95,7 +97,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-isIRI
-  context "Operator::IsIRI" do
+  context Operator::IsIRI do
     before :all do
       @op = @is_iri = SPARQL::Algebra::Operator::IsIRI
     end
@@ -110,7 +112,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-isBlank
-  context "Operator::IsBlank" do
+  context Operator::IsBlank do
     before :all do
       @op = @is_blank = SPARQL::Algebra::Operator::IsBlank
     end
@@ -125,7 +127,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-isLiteral
-  context "Operator::IsLiteral" do
+  context Operator::IsLiteral do
     before :all do
       @op = @is_literal = SPARQL::Algebra::Operator::IsLiteral
     end
@@ -140,7 +142,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-str
-  context "Operator::Str" do
+  context Operator::Str do
     before :all do
       @op = @str = SPARQL::Algebra::Operator::Str
     end
@@ -155,7 +157,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-lang
-  context "Operator::Lang" do
+  context Operator::Lang do
     before :all do
       @op = @lang = SPARQL::Algebra::Operator::Lang
     end
@@ -171,7 +173,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-datatype
-  context "Operator::Datatype" do
+  context Operator::Datatype do
     before :all do
       @op = @datatype = SPARQL::Algebra::Operator::Datatype
     end
@@ -191,7 +193,7 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-logical-or
   # @see http://www.w3.org/TR/rdf-sparql-query/#evaluation
-  context "Operator::Or" do
+  context Operator::Or do
     before :all do
       @op = @or = SPARQL::Algebra::Operator::Or
     end
@@ -207,7 +209,7 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-logical-and
   # @see http://www.w3.org/TR/rdf-sparql-query/#evaluation
-  context "Operator::And" do
+  context Operator::And do
     before :all do
       @op = @and = SPARQL::Algebra::Operator::And
     end
@@ -222,7 +224,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
-  context "Operator::Equal" do
+  context Operator::Equal do
     before :all do
       @op = @eq = SPARQL::Algebra::Operator::Equal
     end
@@ -250,7 +252,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
-  context "Operator::NotEqual" do
+  context Operator::NotEqual do
     before :all do
       @op = @ne = SPARQL::Algebra::Operator::NotEqual
     end
@@ -281,7 +283,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
-  context "Operator::LessThan" do
+  context Operator::LessThan do
     before :all do
       @op = @lt = SPARQL::Algebra::Operator::LessThan
     end
@@ -306,7 +308,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
-  context "Operator::GreaterThan" do
+  context Operator::GreaterThan do
     before :all do
       @op = @gt = SPARQL::Algebra::Operator::GreaterThan
     end
@@ -331,7 +333,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
-  context "Operator::LessThanOrEqual" do
+  context Operator::LessThanOrEqual do
     before :all do
       @op = @le = SPARQL::Algebra::Operator::LessThanOrEqual
     end
@@ -359,7 +361,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#OperatorMapping
-  context "Operator::GreaterThanOrEqual" do
+  context Operator::GreaterThanOrEqual do
     before :all do
       @op = @ge = SPARQL::Algebra::Operator::GreaterThanOrEqual
     end
@@ -387,7 +389,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-multiply
-  context "Operator::Multiply" do
+  context Operator::Multiply do
     before :all do
       @op = @multiply = SPARQL::Algebra::Operator::Multiply
     end
@@ -402,7 +404,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-divide
-  context "Operator::Divide" do
+  context Operator::Divide do
     before :all do
       @op = @divide = SPARQL::Algebra::Operator::Divide
     end
@@ -417,7 +419,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-add
-  context "Operator::Add" do
+  context Operator::Add do
     before :all do
       @op = @add = SPARQL::Algebra::Operator::Add
     end
@@ -432,7 +434,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/xpath-functions/#func-numeric-subtract
-  context "Operator::Subtract" do
+  context Operator::Subtract do
     before :all do
       @op = @subtract = SPARQL::Algebra::Operator::Subtract
     end
@@ -447,7 +449,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
-  context "Operator::Equal" do
+  context Operator::Equal do
     before :all do
       @op = @eq = SPARQL::Algebra::Operator::Equal
     end
@@ -462,7 +464,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-RDFterm-equal
-  context "Operator::NotEqual" do
+  context Operator::NotEqual do
     before :all do
       @op = @ne = SPARQL::Algebra::Operator::NotEqual
     end
@@ -477,7 +479,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-sameTerm
-  context "Operator::SameTerm" do
+  context Operator::SameTerm do
     before :all do
       @op = @same_term = SPARQL::Algebra::Operator::SameTerm
     end
@@ -498,7 +500,7 @@ describe SPARQL::Algebra do
   end
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#func-langMatches
-  context "Operator::LangMatches" do
+  context Operator::LangMatches do
     before :all do
       @op = @lang_matches = SPARQL::Algebra::Operator::LangMatches
     end
@@ -517,7 +519,7 @@ describe SPARQL::Algebra do
 
   # @see http://www.w3.org/TR/rdf-sparql-query/#funcex-regex
   # @see http://www.w3.org/TR/xpath-functions/#func-matches
-  context "Operator::Regex" do
+  context Operator::Regex do
     before :all do
       @op = @regex = SPARQL::Algebra::Operator::Regex
     end

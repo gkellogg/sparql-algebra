@@ -1,5 +1,7 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
+include SPARQL::Algebra
+
 ::RSpec::Matchers.define :have_result_set do |expected|
   match do |result|
     result.map(&:to_hash).to_set.should == expected.to_set
@@ -635,7 +637,6 @@ describe SPARQL::Algebra::Query do
       end
     end
   end
-
 
   context "query forms" do
     {

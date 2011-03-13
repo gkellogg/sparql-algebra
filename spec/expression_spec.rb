@@ -1,7 +1,9 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
+include SPARQL::Algebra
+
 describe SPARQL::Algebra do
-  context "Expression" do
+  context Expression do
     context "cast values" do
       {
         # String
