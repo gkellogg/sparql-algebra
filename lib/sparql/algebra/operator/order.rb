@@ -31,7 +31,7 @@ module SPARQL; module Algebra
         debug("Order", options)
         @solutions = operands.last.execute(queryable, options.merge(:depth => options[:depth].to_i + 1)).order do |a, b|
           operand(0).inject(false) do |memo, op|
-            debug("=> #{op}", options)
+            debug("=> #{op.inspect}", options)
             memo ||= begin
               comp = case op
               when RDF::Query::Variable
