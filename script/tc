@@ -16,8 +16,12 @@ def run_tc(t, options = {})
   query = t.action.sse_string
   expected = t.solutions
 
+  graphs.each {|k, s| puts "#{k}:\n#{s[:data]}\n"} if options[:verbose]
+
   result = sparql_query(:graphs => graphs, :query => query, :base_uri => t.action.query_file,
                         :repository => "sparql-spec", :form => t.form, :to_hash => false)
+
+  puts "result: #{result.inspect}" if options[:verbose]
 
   case t.form
   when :select, :create, :describe
