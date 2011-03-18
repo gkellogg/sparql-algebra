@@ -34,6 +34,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rdf-spec',        '~> 0.3.1'
   gem.add_development_dependency 'rdf-isomorphic',  '~> 0.3.4'
   gem.add_development_dependency 'spira',           '>= 0.0.12'
-  gem.add_development_dependency 'sxp',             '~> 0.0.15'
+  gem.add_development_dependency 'sxp',             '~> 0.0.14'
   gem.post_install_message       = nil
 end
