@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 gem 'rdf',              :git => "https://github.com/gkellogg/rdf.git", :branch => "query-algebra"
-gem 'sxp',              :git => "https://github.com/gkellogg/sxp-ruby.git", :branch => "query-algebra"
+gem 'sxp',              '>= 0.0.5'
 
 group :development do
   gem 'rdf-spec',       :git => "https://github.com/gkellogg/rdf-spec.git", :branch => "query-algebra", :require => 'rdf/spec'
