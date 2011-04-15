@@ -38,7 +38,7 @@ module SPARQL; module Algebra
       # @raise  [TypeError] if the operand is not a variable
       def evaluate(bindings = {})
         case var = operand
-          when Variable, Symbol
+          when Variable
             operand.evaluate(bindings) ? RDF::Literal::TRUE : RDF::Literal::FALSE
           else raise TypeError, "expected an RDF::Query::Variable, but got #{var.inspect}"
         end
