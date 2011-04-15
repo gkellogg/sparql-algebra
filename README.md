@@ -275,6 +275,11 @@ Documentation
     * {SPARQL::Algebra::Operator::Subtract}
     * {SPARQL::Algebra::Operator::Union}
 
+TODO
+====
+* Need to come up with appropriate SXP for SPARQL 1.1
+* Operator#optimize needs to be completed and tested.
+
 Dependencies
 ------------
 

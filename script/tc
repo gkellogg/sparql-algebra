@@ -10,7 +10,7 @@ def run_tc(t, options = {})
   options[:tests] ||= 0
   options[:tests] += 1
   STDOUT.write "run #{t.name}" unless options[:quiet]
-  puts t.action.sse_string if options[:verbose]
+  puts "\n" + t.action.sse_string if options[:verbose]
 
   graphs = t.graphs
   query = t.action.sse_string
@@ -52,7 +52,8 @@ rescue Exception => e
     options[:exceptions] ||= {}
     options[:exceptions][t] = e.message
   else
-    STDOUT.write(e.message)
+    STDOUT.puts("\n#{e.message}")
+    STDOUT.puts e.backtrace
   end
 end
 

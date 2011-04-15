@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 gem 'addressable',      '2.2.4'
-gem 'rdf',              :git => "https://github.com/gkellogg/rdf.git", :branch => "0.4.x"
+gem 'rdf',              :git => "https://github.com/gkellogg/rdf.git", :branch => "type-check-mixin"
 gem 'sxp',              '>= 0.0.5'
 
 group :development do
