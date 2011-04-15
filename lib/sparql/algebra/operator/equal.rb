@@ -23,7 +23,9 @@ module SPARQL; module Algebra
       #
       # @see {RDF::Term#==}
       def apply(term1, term2)
-        RDF::Literal(term1.equal_tc?(term2))
+        term1 = term1.dup.extend(RDF::TypeCheck)
+        term2 = term2.dup.extend(RDF::TypeCheck)
+        RDF::Literal(term1 == term2)
       end
     end # Equal
   end # Operator
