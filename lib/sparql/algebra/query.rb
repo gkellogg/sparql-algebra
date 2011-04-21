@@ -42,6 +42,10 @@ module SPARQL; module Algebra
     #   Query execution debugging
     # @return [RDF::Query::Solutions]
     #   the resulting solution sequence
+    # @raise [TypeError]
+    #   TypeError raised if any operands are invalid
+    # @raise [NotImplementedError]
+    #   If an attempt is made to perform an unsupported operation
     # @see    http://www.w3.org/TR/rdf-sparql-query/#sparqlAlgebra
     def execute(queryable, options = {})
       raise NotImplementedError, "#{self.class}#execute(#{queryable})"
