@@ -1,8 +1,7 @@
 SPARQL Algebra for RDF.rb
 =========================
 
-This is an in-the-works (currently pre-alpha) [Ruby][] implementation of the
-[SPARQL][] algebra for [RDF.rb][].
+This is a [Ruby][] implementation of the [SPARQL][] algebra for [RDF.rb][].
 
 * <http://github.com/gkellogg/sparql-algebra>
 
@@ -348,6 +347,9 @@ Portions of tests are derived from [W3C DAWG tests](http://www.w3.org/2001/sw/Da
 
 [Ruby]:       http://ruby-lang.org/
 [RDF]:        http://www.w3.org/RDF/
+[YARD]:       http://yardoc.org/
+[YARD-GS]:    http://rubydoc.info/docs/yard/file/docs/GettingStarted.md
+[PDD]:        http://lists.w3.org/Archives/Public/public-rdf-ruby/2010May/0013.html
 [SPARQL]:     http://en.wikipedia.org/wiki/SPARQL
 [SPARQL 1.0]: http://www.w3.org/TR/rdf-sparql-query/
 [SPARQL 1.1]: http://www.w3.org/TR/sparql11-query/
