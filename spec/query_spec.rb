@@ -830,7 +830,7 @@ describe SPARQL::Algebra::Query do
       query.execute(queryable)
     end
     
-    it "raises error when loading into non-mutable queryable", :focus => true do
+    it "raises error when loading into non-mutable queryable" do
       queryable = RDF::Repository.new
       query = SPARQL::Algebra::Expression.parse(%q((dataset (<data-g1.ttl>) (bgp))))
       lambda {query.execute(queryable)}.should raise_error(TypeError)

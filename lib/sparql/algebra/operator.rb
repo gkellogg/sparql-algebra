@@ -45,6 +45,7 @@ module SPARQL; module Algebra
     # Query operators
     autoload :Ask,                'sparql/algebra/operator/ask'
     autoload :Base,               'sparql/algebra/operator/base'
+    autoload :BGP,                'sparql/algebra/operator/bgp'
     autoload :Construct,          'sparql/algebra/operator/construct'
     autoload :Dataset,            'sparql/algebra/operator/dataset'
     autoload :Describe,           'sparql/algebra/operator/describe'
@@ -112,7 +113,7 @@ module SPARQL; module Algebra
         # Query forms
         when :ask         then Ask
         when :base        then Base
-        when :bgp         then RDF::Query
+        when :bgp         then BGP
         when :construct   then Construct
         when :describe    then Describe
         when :distinct    then Distinct
